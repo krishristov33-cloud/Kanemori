@@ -69,3 +69,95 @@ WASD move · Shift sprint · Space jump · Q dodge · LMB light · RMB heavy · 
 
 ## Files
 `index.html` (current) · `index_v01_first.html` (first stable build) · `src/` (source parts that are concatenated into index.html) · `concepts/01_warrior.png 02_creatures.png 03_vista.png 04_hud.png` + `jobs.txt` · `test.py` · `shot_v01_*.png`
+
+---
+# v0.2 refinement pass (2026-11-16, 02:56–03:10 EET)
+Backups: `backups/index_v01_final_pre_v02.html`, `index_v02_wip1.html`, `index_v02_wip2_balanced.html`, `index_v02_final.html`. Current = `index.html` (= `index_v02.html`).
+
+## Controls changed
+- **Mouse look (Kris):** uses the Pointer Lock API. **Clicking the canvas only captures the mouse, and that click does not attack.** After that, plain mouse movement orbits the camera. Esc or any menu releases it, and the cursor works normally in menus. A **"Click to look around"** overlay shows during gameplay while the mouse is free. The pause menu has a **sensitivity slider (0.2–3)** and **invert Y**, saved to localStorage (`km_sens`, `km_invy`). Tab is still lock-on (the Tab remap was cancelled).
+- **New:** Z = Earth Wall. Bow: LMB quick shot, RMB power shot.
+
+## Balance (bot playtest, no debug damage)
+Method: `bal.py` + `bot.js` drive the real game through a fixed-step `KM.sim()` at 30 Hz. The bot walks, attacks, cuts anchors, casts fire, dodges (65% success by default), parries the 3rd leg strike (50%), and uses salves below 45% HP. Wild minions near the arena are disabled; spiderlings stay.
+- **Before tuning:** Jorōgumo died in **29–41 s** at level 4 with a katana. Cutting an anchor took 1 hit, the stun dealt ×1.5, and phase 2 was fully exposed. That was far too easy.
+- **Tuning (`BAL` table in the boss code):**
+  - Anchors take **4 hits** and regrow in 15 s.
+  - The anchor stun lasts **2.5 s at ×1.25**.
+  - **Phase 2 guard:** melee deals ×0.3 except during her recovery window (2.2 s after every 3 attacks) or a stun.
+  - She does 4 skitter bursts between attacks.
+  - Fire still does ×1.5.
+- **After tuning:**
+
+| Bot setup | Result |
+|---|---|
+| Level 4, katana, 3 salves, Keen + Fire + Bell Parry | **Win in 65 s** (phase 2 at 41 s, 74 HP left, all salves used). Another trial **died** at 56 s with the boss at 100/900 |
+| Level 5, katana, + Bell Counter, worse reflexes (40% parry, 55% dodge) | **Win in 46 s** (phase 2 at 26 s, 3 salves unused) |
+| Level 3, bokken, 2 salves | **Lost** at 48 s (boss at 358/900, phase 2) |
+
+- Reading: a frame-perfect bot wins about half to most fights at level 4–5 with a katana and loses with the bokken at level 3. That's the intended gate. A human wastes far more time positioning and reading tells, so expect **about 2–4 minutes** at level 4–5 (Krea's target is 3–4). This still needs a real hands-on playtest.
+- **Minion TTK (time to kill, bot, plain light combos):**
+
+| Minion | Bokken | Katana |
+|---|---|---|
+| Tanuki (45 HP) | 6.7 s, 0–13 dmg taken | 3.4–4.4 s, 0–10 dmg taken |
+| Mushroom yokai (60 HP) | 5.6–6.7 s, 0 dmg | 3.4–4.6 s, 0 dmg |
+
+  These are neither trivial nor brutal. They hurt when 2–3 gang up or when you ignore the mushroom's tell. **Kodama can't be caught on foot with melee**: they zigzag at 5.2 m/s and the 60 s test failed. That's by design (Aether: "flee in a zigzag"), and the bow or fire ofuda gets them. It may need a softer chase in a later pass.
+
+## Aether's motion module: integrated
+- `motion/kanemori-motion.js` is loaded **optionally** with a dynamic import. If it's missing or throws, the game keeps its built-in feel (`?motion=0` forces the fallback).
+- **Used:**
+  - `BellRing`: tone, world rings, CSS vignette, ripple state.
+  - `HitSpark`: gold sparks on the finisher and heavy attacks.
+  - `AfterImage`: gold ghosts on a perfect dodge.
+  - `InkFlash`: gold flash on big bells.
+  - `HeroMotion`: on a new `pose` layer between the hero root and the body. It handles lean, squash, shard-tier sway and survival offsets (cold, wet, hungry, low HP).
+- **Bloom fix, done on my side; `motion/` is untouched.** `BellRing` is created **without a renderer**, so it never takes over rendering. I read its ripple state (time, centre, intensity) and apply the same distortion myself:
+  - **with post FX on**, as a `ShaderPass` placed before bloom, grade and OutputPass inside the composer;
+  - **with post FX off**, through a half-float render target and a `ShaderMaterial` that includes three's tone-mapping and colour-space chunks.
+  - Both paths match the normal frame's colour, avoiding the module's raw sRGB blit, which skips ACES tone mapping. Tested with bloom on (`shot_v02_bell_ripple_bloom.png`) and off, with 0 errors.
+- **Not used:** the module's `JorogumoController`, `TimeScale`, `CameraFX` and `TellIndicator`. My boss AI is already wired to damage, parry, anchors and balance, and my hit-stop and slow-mo already run the whole sim. Swapping in the controller would mean re-tuning everything above. This is noted for Aether.
+
+## Aether's 3 motion fixes
+1. **Perfect dodge** only happens when the hit lands in the **first 0.07 s of the i-frames**. Any later dodge is a plain dodge with no slow-mo.
+2. **Per-weapon timing table (`TIMING`):**
+   - Katana: 0.06 s wind-up, long follow-through.
+   - Yari: poke, poke, then a wider sweep (arc 1.3, slower).
+   - Bokken: 0.10 s wind-up.
+   - Heavy attacks: a clear 0.15 s wind-up.
+   - Combo finisher: holds its pose for 0.1 s, 0.06 s hit-stop, gold sparks, ×1.25 crit.
+3. **Shard tiers** cut attack recovery to ×1.0, ×0.85 or ×0.7, and calm the idle sway from loose to almost still. At tier 2+, hits ring a tiny bell tone.
+
+## New features
+- **Bow (Hunter 2, now working):**
+  - Yumi bow: 3 wood, 3 fiber, 1 bamboo at a forge or fire.
+  - Arrows: 6 for 1 wood + 1 stone.
+  - Quick shot 13, power shot 28 (0.5 s draw, faster and flatter); arrows drop with gravity.
+  - Homes in on the lock-on target, hits deer for hunting, and has its own draw pose.
+- **Earth Wall (Kami 3, now working):** Z, 20 spirit. Raises a 3-stone wall with a slab roof in front of you. It blocks minions with real colliders and counts as **storm cover** for 30 s, then sinks away.
+- **Hut tier:** 8 wood, 4 bamboo, 4 fiber (Krea's numbers). It gives full lightning immunity, +1 warmth/s on top of shelter, and is a respawn point. The lean-to now **halves** lightning damage instead of blocking it (Krea: "cuts storm damage by 50%"). The Hearth "Hut Craft" node makes a lean-to count as a hut.
+- **Kanemura shrine (red hall with a shimenawa rope, west of the forge):** E restores health, stamina, spirit and warmth, cures poison, **saves the game**, sets your respawn point, and sleeps until dawn at night.
+- **Swimming:** the Taki Pool is now deep. Ren floats at the surface, moves at half speed, drains 4 stamina/s and loses warmth, and starts drowning at 0 stamina. The river stays wading depth (60% speed).
+- **Ren's look:**
+  - Jingasa straw hat with chin cords; dark indigo haori over the jacket, with flared sleeves and a pale collar.
+  - **Red lacquer sode** shoulder plates; a lighter hakama front panel.
+  - Straw waraji sandals; a back crest (mon).
+  - Two longer scarf tails that stream out with speed.
+  - Gold kintsugi cracks are about 1.7× thicker and brighter so they read at gameplay distance.
+- **Camera:** no longer clips into lean-tos, huts or earth walls; it rises over them.
+
+## Tests (v0.2)
+- `test.py` full scripted run: **0 console errors and 0 page errors**. It covers motion module loaded, gather and craft, camp, storm, combat, levels and skills, bow and arrows, earth wall, hut, shrine, swimming (`P.swim = true`), boss through both phases, kakera caught, map and pause.
+- `tfx.py` with bloom on and a level-up bell ripple: 0 errors and warnings.
+- `bal.py` balance runs: 0 errors.
+- Screenshots: `shot_v02_explore`, `_ren`, `_bow_wall_hut`, `_shrine`, `_swim_falls`, `_combat`, `_camp_storm`, `_skilltree`, `_crafting`, `_boss`, `_boss_p2`, `_kakera`, `_map`, `_pause`, `_bell_ripple_bloom`.
+
+## Remaining gaps after v0.2
+- No hands-on human playthrough yet. Boss timing is estimated from a bot.
+- Kodama are nearly uncatchable in melee.
+- The motion module's Jorōgumo controller and camera FX aren't used (reasons above).
+- No minka tier, ink, antidote, kitsune, tanuki disguise, onsen, or usable Silk Step.
+- Ren is still built from primitives (no rig or skinning).
+- Real-GPU frame rate hasn't been measured. Pointer lock was tested in code paths only; headless Chromium can't grant a real lock, so the first-click-locks behaviour needs a quick manual check in Chrome or Edge.
+- The vault copy includes `motion/kanemori-motion.js` (Aether's file, copied unchanged) so the vault build loads it. Without it, the game falls back to the built-in feel.
