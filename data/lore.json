@@ -1,0 +1,108 @@
+{
+ "lore": [
+  {
+   "id": "l_bell",
+   "title": "The Bell of Kanemura",
+   "text": "For a thousand years the great bell rang at dusk. The village believed it kept away storms. The priests knew it kept something asleep.",
+   "found": "start"
+  },
+  {
+   "id": "l_kakera",
+   "title": "Kakera",
+   "text": "When the bell cracked on the typhoon night, eight shards flew up the mountain. Each landed where something old was waiting to hold it.",
+   "found": "start"
+  },
+  {
+   "id": "l_kodama",
+   "title": "Kodama",
+   "text": "Tree spirits. Harmless, shy, and they remember kindness. A forest whose kodama trust you will open paths.",
+   "found": "quest:q_kiku_kodama"
+  },
+  {
+   "id": "l_orochi_hint",
+   "title": "Serpent Eyes",
+   "text": "Jorōgumo's eyes, when she died, were not a spider's. They were slit and gold, like a snake's.",
+   "found": "shard:1"
+  },
+  {
+   "id": "l_orochi",
+   "title": "Yamata no Orochi",
+   "text": "Eight heads, eight tails, a body longer than eight valleys. It sleeps inside Nemuriyama. Each shard-guardian is one of its heads, dreaming.",
+   "found": "quest:m_three_voices"
+  },
+  {
+   "id": "l_hana_secret",
+   "title": "Silk for Medicine",
+   "text": "Hana sold spider silk to a grey pilgrim before you came. He asked only one question: where does the bell-keeper sleep?",
+   "found": "quest:q_hana_fever"
+  },
+  {
+   "id": "l_genzo_crack",
+   "title": "The Crack in the Bronze",
+   "text": "Forty years ago, a young Genzō poured the bell's repair too cold. The flaw was tiny. It took forty years and one typhoon to open.",
+   "found": "quest:q_genzo_truth"
+  },
+  {
+   "id": "l_rumors",
+   "title": "Tavern Rumors",
+   "text": "A masked woman in the deep grove. Singing behind the falls. A blind man hammering in the sealed cave. A pilgrim in grey who never casts a shadow at noon.",
+   "found": "quest:q_mio_fish"
+  },
+  {
+   "id": "l_pilgrim",
+   "title": "The Pilgrim of Ash",
+   "text": "He serves the serpent. He wants the shards brought together, not to restore the bell, but to wake what it sleeps on.",
+   "found": "mystery:pilgrim"
+  },
+  {
+   "id": "l_jin",
+   "title": "Jin",
+   "text": "Ryū's partner followed the Hermit into the grove. He is still there. He is a kodama now, and he is happy.",
+   "found": "quest:q_ryu_jin"
+  },
+  {
+   "id": "l_koi",
+   "title": "The Koi That Climbs",
+   "text": "A koi that climbs the falls becomes a dragon. One already did. It guards the second shard above Taki.",
+   "found": "quest:q_ume_koi"
+  },
+  {
+   "id": "l_mask",
+   "title": "The Bronze Mask",
+   "text": "The Hermit was the bell priestess before Sōen. When the first crack appeared she cut a piece from the bell's rim and wore it, so the bell would always have one voice awake in the forest.",
+   "found": "quest:q_secret_mask"
+  },
+  {
+   "id": "l_blind_smith",
+   "title": "The Blind Smith",
+   "text": "He forged the bell's clapper. He hears metal the way others see it. He says every weapon has a true name, waiting to be struck out of it.",
+   "found": "mystery:smith"
+  },
+  {
+   "id": "l_priestess",
+   "title": "The Koi Priestess",
+   "text": "Behind the falls, a woman who has not aged in sixty years. She and Grandma Ume were girls together.",
+   "found": "mystery:priestess"
+  }
+ ],
+ "story": [
+  {
+   "id": "s_prologue",
+   "title": "Typhoon Night",
+   "text": "The storm came off the sea and broke against the mountain. At midnight the bell of Kanemura rang once, cracked, and went silent. Eight lights flew up the slopes. The old bell-keeper died before dawn, his hand on your shoulder. 'Kanemori,' he said. Bell-keeper. Now it is you.",
+   "trigger": "start"
+  },
+  {
+   "id": "s_first_shard",
+   "title": "Gold in the Cracks",
+   "text": "The shard did not want to be carried. It wanted to be part of you. Where it touched your skin, a seam of gold opened and did not close. For the first time since the storm, you heard the bell, faintly, inside your own chest.",
+   "trigger": "shard:1"
+  },
+  {
+   "id": "s_hermit",
+   "title": "The Masked Woman",
+   "text": "She knew your name before you spoke it. Her mask was bronze, and it hummed.",
+   "trigger": "mystery:hermit"
+  }
+ ]
+}
