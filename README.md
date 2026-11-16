@@ -1,17 +1,15 @@
 # KANEMORI 鐘守 — Keeper of the Shattered Bell
 
-KANEMORI is a third-person open-world action-survival game on Nemuriyama, the Sleeping Mountain. Ren recovers the kakera, the shards of a shattered bell. v0.3 is the Forest and Waterfall slice with the Jorōgumo boss, now with a living village.
+KANEMORI is a third-person open-world action-survival game on Nemuriyama, the Sleeping Mountain. Ren recovers the kakera, the shards of a shattered bell. v0.4 is the Forest and Waterfall slice with the Jorōgumo boss and the living village.
 
-Play v0.3 in the browser: [https://krishristov33-cloud.github.io/Kanemori/](https://krishristov33-cloud.github.io/Kanemori/)
+Play v0.4 in the browser: [https://krishristov33-cloud.github.io/Kanemori/](https://krishristov33-cloud.github.io/Kanemori/)
 
-## What's new in v0.3
+## What's new in v0.4
 
-- Living village, with NPC dialogue
-- Aether's rig for Ren, villagers, the horse, and the cart
-- Journal
-- Ranged weapons: short bow, longbow, kunai, and fire arrows
-- Music for the village, forest, night, combat, and the boss
-- English UI, with Japanese names optional in settings
+- Combat combos: light chains, heavy branches, sprint attacks, and plunging strikes
+- Charge attacks with a gold ribbon trail and afterimages
+- Smoother movement: ground stick, slope weight, and foot placement on the terrain
+- Terrain and lighting pass: ridged highlands, splat materials, time-of-day light, height fog, and god rays
 
 ## Controls
 
