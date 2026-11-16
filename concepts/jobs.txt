@@ -1,0 +1,8 @@
+KANEMORI concept round (nano_banana_2_1, 16:9, style ref media d63dff3e-979f-4695-bd6a-56619cc07d56 = mountain-drop/concepts/01_master.png)
+FINAL (Kanemori names):
+01_warrior.png 79321bcd-fe32-4c2f-8ad7-8cebcbf7748e
+02_creatures.png 3d68472f-9c6f-4138-b9d2-d88e96fc1031
+03_vista.png decbf732-b51e-49fb-ae77-bdaeb23183f6
+04_hud.png ff354007-de2f-4fe9-add9-bd025d71b89b
+SUPERSEDED (submitted under working name "Kakera" before rename; not downloaded):
+87ba5dc7-cbe4-4d08-88e6-1f1f40153609 5c8443dc-1320-4be9-aa0a-cbc32a59b3e7 aa904f5a-34b5-48fa-ae35-dcc0d74c4ccf 955e3056-0182-4e71-a26c-083045a8d81f

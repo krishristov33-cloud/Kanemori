@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>鐘</text></svg>" />
+  <title>KANEMORI 鐘守 — Motion Module Demo</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0c1028; overflow: hidden; font-family: "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+    canvas { display: block; }
+    #hud {
+      position: fixed; inset: 0; pointer-events: none; color: #e8e0d0;
+      text-shadow: 0 1px 2px #0c1028;
+    }
+    #title {
+      position: absolute; top: 18px; left: 20px; letter-spacing: 0.18em;
+      font-size: 13px; font-weight: 600; color: #e0c15a;
+    }
+    #title small { display: block; letter-spacing: 0.28em; font-size: 10px; color: #9aa3c7; margin-top: 3px; font-weight: 400; }
+    #legend {
+      position: absolute; left: 20px; bottom: 18px; font-size: 11px; line-height: 1.7; color: #c9c4b3;
+      background: rgba(12,16,40,0.55); padding: 10px 14px; border: 1px solid rgba(224,193,90,0.25);
+    }
+    #legend kbd { display: inline-block; min-width: 1.1em; padding: 0 4px; border: 1px solid #e0c15a; color: #e0c15a; font-size: 10px; margin-right: 2px; }
+    #status {
+      position: absolute; top: 18px; right: 20px; text-align: right; font-size: 12px; line-height: 1.65;
+    }
+    #status .gold { color: #e0c15a; }
+    #status .red { color: #e02020; }
+    #status .orange { color: #ff9f1c; }
+    #hpwrap { width: 220px; height: 8px; background: #1c2150; border: 1px solid #e0c15a; margin-left: auto; margin-top: 4px; }
+    #hpbar { height: 100%; width: 100%; background: linear-gradient(90deg, #e02020, #ff9f1c); transform-origin: left; }
+    #banner {
+      position: absolute; top: 46%; left: 0; right: 0; text-align: center;
+      font-size: 28px; letter-spacing: 0.22em; color: #e0c15a; opacity: 0;
+      transition: opacity 200ms ease;
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.1/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <div id="title">KANEMORI 鐘守<small>MOTION MODULE  ·  AETHER</small></div>
+    <div id="status">
+      <div>Tier <span id="tier" class="gold">0</span>  ·  Scale <span id="scale">1.00</span></div>
+      <div id="bossname">Jorōgumo  —  phase <span id="phase">1</span></div>
+      <div id="bossstate" class="orange">idle</div>
+      <div id="hpwrap"><div id="hpbar"></div></div>
+    </div>
+    <div id="legend">
+      <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move
+      &nbsp;<kbd>Shift</kbd> sprint
+      &nbsp;<kbd>Space</kbd> dodge<br>
+      <kbd>J</kbd> light
+      &nbsp;<kbd>K</kbd> heavy
+      &nbsp;<kbd>L</kbd> parry
+      &nbsp;<kbd>B</kbd> bell ring<br>
+      <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> shard tier
+      &nbsp;<kbd>N</kbd> damage boss
+      &nbsp;<kbd>M</kbd> cut anchor<br>
+      <kbd>C</kbd> cold
+      &nbsp;<kbd>V</kbd> wet
+      &nbsp;<kbd>H</kbd> low HP
+      &nbsp;<kbd>F</kbd> lock-on
+    </div>
+    <div id="banner"></div>
+  </div>
+  <script type="module">
+    import * as THREE from 'three';
+    import {
+      FEEL, TimeScale, CameraFX, BellRing, HeroMotion,
+      AfterImage, HitSpark, InkFlash, TellIndicator, JorogumoController,
+    } from './kanemori-motion.js';
+
+    const colors = FEEL.colors;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setClearColor(colors.indigoDeep, 1);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    document.body.prepend(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0c1028, 0.018);
+    scene.background = new THREE.Color(colors.indigoDeep);
+
+    const camera = new THREE.PerspectiveCamera(FEEL.camera.defaultFov, innerWidth / innerHeight, 0.1, 200);
+    camera.position.set(0, 4.2, -1.5);
+
+    const hemi = new THREE.HemisphereLight(0x6a74b8, 0x1a1420, 0.9);
+    scene.add(hemi);
+    const key = new THREE.DirectionalLight(colors.sodiumOrange, 1.35);
+    key.position.set(8, 14, 6);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.camera.near = 1;
+    key.shadow.camera.far = 40;
+    key.shadow.camera.left = key.shadow.camera.bottom = -18;
+    key.shadow.camera.right = key.shadow.camera.top = 18;
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(colors.signalRed, 0.55);
+    rim.position.set(-8, 3, -6);
+    scene.add(rim);
+    const fill = new THREE.DirectionalLight(0x8a96d8, 0.45);
+    fill.position.set(0, 10, -20);
+    scene.add(fill);
+    scene.add(new THREE.AmbientLight(colors.indigo, 0.25));
+
+    // Ground
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(80, 80),
+      new THREE.MeshStandardMaterial({ color: 0x14183a, roughness: 0.92, metalness: 0.05 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+    const grid = new THREE.GridHelper(80, 40, 0x2a3168, 0x181d42);
+    grid.position.y = 0.01;
+    scene.add(grid);
+
+    // A few cedar trunks so the web has something to cling to.
+    function trunk(x, z, h = 10) {
+      const g = new THREE.Group();
+      const wood = new THREE.MeshStandardMaterial({ color: 0x2a1d28, roughness: 0.9 });
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.6, h, 8), wood);
+      mesh.position.y = h / 2;
+      mesh.castShadow = true;
+      g.add(mesh);
+      g.position.set(x, 0, z);
+      scene.add(g);
+      return g;
+    }
+    trunk(-7, -16, 13);
+    trunk(7, -16, 13);
+    trunk(0, -24, 14);
+    trunk(-5, -10, 11);
+    trunk(6, -11, 11);
+
+    const clearing = new THREE.Mesh(
+      new THREE.CircleGeometry(11, 40),
+      new THREE.MeshStandardMaterial({ color: 0x1a2148, roughness: 0.95, metalness: 0 })
+    );
+    clearing.rotation.x = -Math.PI / 2;
+    clearing.position.set(0, 0.02, -16);
+    clearing.receiveShadow = true;
+    scene.add(clearing);
+
+    // --- Hero --------------------------------------------------------------
+    const heroRoot = new THREE.Group();
+    heroRoot.position.set(0, 0, -8);
+    heroRoot.rotation.y = Math.PI;
+    const heroPose = new THREE.Group();
+    heroRoot.add(heroPose);
+
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0x1a1f44, roughness: 0.55, metalness: 0.15,
+      emissive: 0x0a0c20, emissiveIntensity: 0.4,
+    });
+    const goldMat = new THREE.MeshStandardMaterial({
+      color: colors.gold, roughness: 0.35, metalness: 0.8,
+      emissive: colors.gold, emissiveIntensity: 0.35,
+    });
+    const redMat = new THREE.MeshStandardMaterial({
+      color: colors.signalRed, roughness: 0.6, metalness: 0.1,
+      emissive: colors.signalRed, emissiveIntensity: 0.2,
+    });
+
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.28, 0.95, 6, 12), bodyMat);
+    body.position.y = 0.76;
+    body.castShadow = true;
+    heroPose.add(body);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 10), bodyMat);
+    head.position.y = 1.48;
+    head.castShadow = true;
+    heroPose.add(head);
+    // kintsugi seams (visibility ramps with tier)
+    const seams = [];
+    for (let i = 0; i < 3; i++) {
+      const s = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.55, 0.03), goldMat);
+      s.position.set(-0.12 + i * 0.1, 0.85, 0.26);
+      s.rotation.z = (i - 1) * 0.25;
+      s.visible = false;
+      heroPose.add(s);
+      seams.push(s);
+    }
+    const sash = new THREE.Mesh(new THREE.TorusGeometry(0.29, 0.04, 6, 16), redMat);
+    sash.rotation.x = Math.PI / 2;
+    sash.position.y = 0.72;
+    heroPose.add(sash);
+    scene.add(heroRoot);
+
+    // --- Jorōgumo placeholder ---------------------------------------------
+    const boss = new THREE.Group();
+    const ladyMat = new THREE.MeshStandardMaterial({
+      color: 0x2b1a3a, roughness: 0.5, metalness: 0.2,
+      emissive: 0x3a1020, emissiveIntensity: 0.4,
+    });
+    const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 0.7, 6, 10), ladyMat);
+    torso.position.y = 0.2;
+    boss.add(torso);
+    const ladyHead = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 10), ladyMat);
+    ladyHead.position.y = 0.85;
+    boss.add(ladyHead);
+    const eyeMat = new THREE.MeshBasicMaterial({ color: colors.signalRed });
+    for (const sx of [-0.08, 0.08]) {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 6), eyeMat);
+      eye.position.set(sx, 0.88, 0.18);
+      boss.add(eye);
+    }
+    const fan = new THREE.Mesh(
+      new THREE.ConeGeometry(0.28, 0.5, 5, 1, true),
+      new THREE.MeshStandardMaterial({ color: colors.sodiumOrange, side: THREE.DoubleSide, roughness: 0.6 })
+    );
+    fan.name = 'fan';
+    fan.position.set(0.45, 0.45, 0.05);
+    fan.rotation.z = -0.6;
+    boss.add(fan);
+    const legs = new THREE.Group();
+    legs.name = 'legs';
+    const legMat = new THREE.MeshStandardMaterial({ color: 0x1a1020, roughness: 0.7 });
+    for (let i = 0; i < 8; i++) {
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.02, 1.3, 5), legMat);
+      const a = (i / 8) * Math.PI * 2;
+      leg.position.set(Math.cos(a) * 0.45, -0.35, Math.sin(a) * 0.45);
+      leg.rotation.z = Math.cos(a) * 0.9;
+      leg.rotation.x = Math.sin(a) * 0.9;
+      legs.add(leg);
+    }
+    legs.visible = false;
+    boss.add(legs);
+    scene.add(boss);
+
+    const webPoints = [
+      new THREE.Vector3(0, 8.2, -16),
+      new THREE.Vector3(-6.2, 6.4, -16),
+      new THREE.Vector3(-3.2, 7.2, -21),
+      new THREE.Vector3(3.2, 7.2, -21),
+      new THREE.Vector3(6.2, 6.4, -16),
+      new THREE.Vector3(3.4, 6.6, -11.5),
+      new THREE.Vector3(-3.4, 6.6, -11.5),
+      new THREE.Vector3(0, 0.05, -16),
+      new THREE.Vector3(-4.5, 0.05, -12),
+      new THREE.Vector3(4.5, 0.05, -20),
+      new THREE.Vector3(0, 0.05, -10.5),
+    ];
+    const webEdges = [
+      [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6],
+      [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 1],
+      [0, 7], [2, 7], [5, 7], [6, 8], [3, 9], [5, 10], [6, 10],
+    ];
+
+    // --- Minions -----------------------------------------------------------
+    function makeKodama(pos) {
+      const g = new THREE.Group();
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0xcfd6c4, roughness: 0.7,
+        emissive: 0x6b8f4a, emissiveIntensity: 0.15,
+      });
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8), mat);
+      body.position.y = 0.28;
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), mat.clone());
+      head.name = 'head';
+      head.position.y = 0.62;
+      const mark = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 5), new THREE.MeshBasicMaterial({ color: colors.signalRed }));
+      mark.position.set(0, 0.68, 0.16);
+      g.add(body, head, mark);
+      g.position.copy(pos);
+      scene.add(g);
+      return g;
+    }
+    function makeTanuki(pos) {
+      const g = new THREE.Group();
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x6a4a32, roughness: 0.8, emissive: 0x3a2010, emissiveIntensity: 0.2,
+      });
+      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 10), mat);
+      belly.position.y = 0.4;
+      belly.scale.set(1.15, 0.9, 1);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 8), mat.clone());
+      head.position.y = 0.82;
+      g.add(belly, head);
+      g.position.copy(pos);
+      scene.add(g);
+      return g;
+    }
+    function makeMushroom(pos) {
+      const g = new THREE.Group();
+      const stemMat = new THREE.MeshStandardMaterial({ color: 0xd8c8a0, roughness: 0.8 });
+      const capMat = new THREE.MeshStandardMaterial({
+        color: colors.signalRed, roughness: 0.55,
+        emissive: colors.signalRed, emissiveIntensity: 0.15,
+      });
+      const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.5, 10), stemMat);
+      stem.position.y = 0.25;
+      const cap = new THREE.Mesh(new THREE.SphereGeometry(0.38, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55), capMat);
+      cap.name = 'cap';
+      cap.position.y = 0.52;
+      g.add(stem, cap);
+      g.position.copy(pos);
+      scene.add(g);
+      return g;
+    }
+
+    const kodama = makeKodama(new THREE.Vector3(-4.5, 0, -2.5));
+    const tanuki = makeTanuki(new THREE.Vector3(-6.2, 0, -4.2));
+    const mushroom = makeMushroom(new THREE.Vector3(-3.2, 0, -5.0));
+
+    // --- Feel module -------------------------------------------------------
+    const time = new TimeScale();
+    const cameraFX = new CameraFX(camera);
+    const bell = new BellRing({ renderer, scene, camera, overlayParent: document.body, timeScale: time });
+    const heroMotion = new HeroMotion(heroPose);
+    const afterimage = new AfterImage(scene);
+    const sparks = new HitSpark(scene);
+    const ink = new InkFlash(document.body);
+
+    const tellKodama = new TellIndicator(kodama, 'kodama');
+    const tellTanuki = new TellIndicator(tanuki, 'tanuki');
+    const tellShroom = new TellIndicator(mushroom, 'mushroom');
+    const tells = [tellKodama, tellTanuki, tellShroom];
+    let tellCycle = 0;
+    function queueTells() {
+      const t = tells[tellCycle % tells.length];
+      t.play();
+      t.onComplete = () => {
+        setTimeout(queueTells, 700);
+      };
+      tellCycle++;
+    }
+    setTimeout(queueTells, 800);
+
+    const banner = document.getElementById('banner');
+    let bannerTimer = 0;
+    function showBanner(text, ms = 1400) {
+      banner.textContent = text;
+      banner.style.opacity = '1';
+      bannerTimer = ms / 1000;
+    }
+
+    const joro = new JorogumoController(boss, {
+      webPoints, webEdges, anchorIndices: [1, 3, 5],
+      scene, helpers: true, target: heroRoot,
+      timeScale: time, bellRing: bell, inkFlash: ink,
+      onTell: (e) => {
+        document.getElementById('bossstate').textContent = 'TELL  ' + e.type;
+        if (e.type === 'silkPull') showBanner('PARRY  ·  L');
+        if (e.type === 'dropStrike') showBanner('DROP STRIKE');
+      },
+      onAttack: (e) => {
+        document.getElementById('bossstate').textContent = (e.type || 'attack') + (e.parried ? '  PARRIED' : '');
+        if (e.type === 'silkLash' || e.type === 'dropStrike' || (e.type === 'silkPull' && e.hit)) {
+          // If the hero is close, show a hit spark on him; always spark at the boss.
+          const at = e.at ? e.at.clone() : boss.position.clone();
+          sparks.burst(at, new THREE.Vector3(0, 1, 0), e.type === 'dropStrike' ? 18 : 10, 'orange');
+        }
+        if (e.parried) {
+          bell.parryRing({ position: heroRoot.position, timeScale: time });
+          cameraFX.shake('parry');
+          cameraFX.fovKick(FEEL.camera.fovKickParry);
+          ink.flash('gold', 220);
+          showBanner('PARRY');
+        }
+      },
+      onPhaseChange: () => {
+        document.getElementById('phase').textContent = '2';
+        showBanner('PHASE  II', 1800);
+        cameraFX.shake('heavy');
+        cameraFX.fovKick(6);
+      },
+      onDefeat: () => {
+        document.getElementById('bossstate').textContent = 'defeated';
+        showBanner('SHARD  I', 2200);
+        ink.flash('gold', 480);
+        bell.ring({ position: boss.position.clone(), intensity: 1.1 });
+        heroMotion.setShardCount(1);
+        seams[0].visible = true;
+        document.getElementById('tier').textContent = String(heroMotion.tier);
+        sparks.burst(boss.position.clone().add(new THREE.Vector3(0, 1, 0)), new THREE.Vector3(0, 1, 0), 28, 'gold');
+      },
+      onStun: () => {
+        document.getElementById('bossstate').textContent = 'STUNNED';
+        showBanner('STUNNED', 900);
+      },
+    });
+
+    // --- Input -------------------------------------------------------------
+    const keys = Object.create(null);
+    const justPressed = Object.create(null);
+    addEventListener('keydown', (e) => {
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (!keys[k]) justPressed[k] = true;
+      keys[k] = true;
+      if ([' ', 'Spacebar'].includes(e.key)) e.preventDefault();
+    });
+    addEventListener('keyup', (e) => {
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      keys[k] = false;
+    });
+
+    let yaw = Math.PI; // face the web / Jorōgumo
+    let lockOn = true;
+    let dodgeT = 0;
+    let invuln = 0;
+    let onGround = true;
+    let vertVel = 0;
+    let lastY = 0;
+    let cold = 0, wet = 0, lowHp = 0;
+    const vel = new THREE.Vector3();
+    const move = new THREE.Vector3();
+
+    function isDown(k) { return !!keys[k]; }
+
+    function updateSeams(tier) {
+      seams.forEach((s, i) => { s.visible = i <= tier && tier > 0 ? i < (tier === 1 ? 2 : 3) : i === 0 && heroMotion.shardCount > 0; });
+      if (tier === 0 && heroMotion.shardCount === 0) seams.forEach((s) => { s.visible = false; });
+      if (tier >= 1) seams[0].visible = true;
+      if (tier >= 1) seams[1].visible = true;
+      if (tier >= 2) seams[2].visible = true;
+    }
+
+    function tryPerfectDodge() {
+      // Perfect if a minion tell is in its last 4 frames, or a boss tell is live.
+      const window = FEEL.combat.perfectDodgeWindow / FEEL.time.frameRate;
+      const minionPerfect = tells.some((t) => t.playing && (t._duration - t._t) <= window + 0.08);
+      const bossTell = ['lashTell', 'dropTell', 'silkPullTell', 'silkPull'].includes(joro.state);
+      return minionPerfect || bossTell;
+    }
+
+    function fireLight() {
+      time.hitStop(FEEL.time.hitStopLight);
+      heroMotion.attack('light');
+      const p = heroRoot.position.clone().add(new THREE.Vector3(Math.sin(yaw) * 0.8, 1.0, Math.cos(yaw) * 0.8));
+      sparks.burst(p, new THREE.Vector3(Math.sin(yaw), 0.4, Math.cos(yaw)), FEEL.spark.countLight, 'gold');
+      if (heroRoot.position.distanceTo(boss.position) < 3.4) {
+        joro.takeDamage(6);
+        sparks.burst(boss.position.clone().add(new THREE.Vector3(0, 1, 0)), null, 10, 'gold');
+      }
+    }
+    function fireHeavy() {
+      time.hitStop(FEEL.time.hitStopHeavy);
+      cameraFX.shake('heavy');
+      cameraFX.fovKick(FEEL.camera.fovKickHeavy);
+      heroMotion.attack('heavy');
+      const p = heroRoot.position.clone().add(new THREE.Vector3(Math.sin(yaw) * 1.0, 1.0, Math.cos(yaw) * 1.0));
+      sparks.burst(p, new THREE.Vector3(Math.sin(yaw), 0.6, Math.cos(yaw)), FEEL.spark.countHeavy, 'orange');
+      if (heroRoot.position.distanceTo(boss.position) < 3.8) {
+        joro.takeDamage(12);
+        sparks.burst(boss.position.clone().add(new THREE.Vector3(0, 1, 0)), null, 16, 'orange');
+      }
+    }
+    function fireParry() {
+      if (joro.parrySilk()) return;
+      cameraFX.shake('parry');
+      cameraFX.fovKick(FEEL.camera.fovKickParry);
+      bell.parryRing({ position: heroRoot.position, timeScale: time });
+      ink.flash('gold', 180);
+    }
+    function fireDodge() {
+      dodgeT = FEEL.combat.dodgeDuration;
+      invuln = FEEL.combat.dodgeIFrames / FEEL.time.frameRate;
+      vertVel = 2.2;
+      onGround = false;
+      if (tryPerfectDodge()) {
+        time.perfectDodge();
+        afterimage.burst(heroPose, vel.clone().setY(0), FEEL.afterImage.count);
+        ink.flash('gold', 200);
+        showBanner('PERFECT DODGE', 700);
+      }
+    }
+
+    // --- Loop --------------------------------------------------------------
+    const clock = new THREE.Clock();
+    const camOffset = new THREE.Vector3(0, 3.1, 6.4);
+    const lookAt = new THREE.Vector3();
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+      bell.resize();
+    });
+
+    // Kick the world so the first frame is interesting for a screenshot.
+    setTimeout(() => {
+      if (!window.__kanemoriAuto) {
+        // leave idle for the first screenshot; input runner can take over
+      }
+    }, 0);
+
+    function processInput(dt) {
+      if (justPressed['1']) { heroMotion.setShardTier(0); updateSeams(0); }
+      if (justPressed['2']) { heroMotion.setShardTier(1); updateSeams(1); }
+      if (justPressed['3']) { heroMotion.setShardTier(2); updateSeams(2); }
+      if (justPressed['b']) bell.ring({ position: heroRoot.position.clone(), intensity: 1 });
+      if (justPressed['j']) fireLight();
+      if (justPressed['k']) fireHeavy();
+      if (justPressed['l']) fireParry();
+      if (justPressed[' '] || justPressed['space'] || justPressed['Spacebar']) fireDodge();
+      if (justPressed['n']) joro.takeDamage(18);
+      if (justPressed['m']) joro.cutAnchor();
+      if (justPressed['f']) lockOn = !lockOn;
+      if (justPressed['c']) { cold = cold ? 0 : 1; heroMotion.setSurvival({ cold }); }
+      if (justPressed['v']) { wet = wet ? 0 : 1; heroMotion.setSurvival({ wet }); if (wet) heroMotion.shakeOff(); }
+      if (justPressed['h']) { lowHp = lowHp ? 0 : 1; heroMotion.setSurvival({ lowHp }); }
+      for (const k of Object.keys(justPressed)) delete justPressed[k];
+    }
+
+    function tick() {
+      requestAnimationFrame(tick);
+      const rawDt = clock.getDelta();
+      processInput(rawDt);
+      const dt = time.update(rawDt);
+
+      // Movement (uses scaled dt so hit-stop freezes the hero too).
+      const sprint = isDown('shift');
+      const speed = (sprint ? 7.2 : 4.4) / heroMotion.recoveryMul;
+      const camForward = new THREE.Vector3(0, 0, -1);
+      // planar camera-relative axes: use current yaw of hero follow (lock-on may change)
+      const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw));
+      // actually WASD relative to camera yaw, which follows the hero
+      const camYaw = Math.atan2(camera.position.x - heroRoot.position.x, camera.position.z - heroRoot.position.z);
+      const cf = new THREE.Vector3(Math.sin(camYaw + Math.PI), 0, Math.cos(camYaw + Math.PI));
+      const cr = new THREE.Vector3(cf.z, 0, -cf.x);
+      move.set(0, 0, 0);
+      if (isDown('w')) move.add(cf);
+      if (isDown('s')) move.sub(cf);
+      if (isDown('a')) move.sub(cr);
+      if (isDown('d')) move.add(cr);
+      const moving = move.lengthSq() > 0;
+      if (moving) move.normalize();
+
+      if (dodgeT > 0) {
+        const dodgeDir = moving ? move : new THREE.Vector3(Math.sin(heroRoot.rotation.y), 0, Math.cos(heroRoot.rotation.y));
+        heroRoot.position.addScaledVector(dodgeDir, 11 * dt);
+        dodgeT -= dt;
+      } else if (moving && dt > 0) {
+        heroRoot.position.addScaledVector(move, speed * dt);
+        yaw = Math.atan2(move.x, move.z);
+        heroRoot.rotation.y = yaw;
+      }
+
+      // Tiny hop on dodge, land squash.
+      if (!onGround) {
+        vertVel -= 18 * dt;
+        heroRoot.position.y += vertVel * dt;
+        if (heroRoot.position.y <= 0) {
+          heroRoot.position.y = 0;
+          onGround = true;
+          heroMotion.land(0.85 + Math.min(1, Math.abs(vertVel) / 8));
+          vertVel = 0;
+        }
+      }
+      invuln = Math.max(0, invuln - dt);
+
+      vel.copy(move).multiplyScalar(dodgeT > 0 ? 11 : (moving ? speed : 0));
+      // velocity in pose/parent space
+      const lx = vel.x * Math.cos(-heroRoot.rotation.y) - vel.z * Math.sin(-heroRoot.rotation.y);
+      const lz = vel.x * Math.sin(-heroRoot.rotation.y) + vel.z * Math.cos(-heroRoot.rotation.y);
+      heroMotion.setVelocity(lx, lz);
+      heroMotion.update(dt);
+
+      afterimage.update(dt);
+      sparks.update(dt);
+      joro.update(dt);
+      for (const t of tells) t.update(dt);
+      bell.update(dt, rawDt);
+
+      if (bannerTimer > 0) {
+        bannerTimer -= rawDt;
+        if (bannerTimer <= 0) banner.style.opacity = '0';
+      }
+
+      // Camera
+      lookAt.copy(heroRoot.position).add(new THREE.Vector3(0, 1.35, 0));
+      if (lockOn && joro.alive) {
+        cameraFX.lockOnFrame(camera, heroRoot.position, boss.position, joro.phase === 2 ? 2.6 : 2.0, 0.16);
+      } else {
+        const back = new THREE.Vector3(Math.sin(yaw) * -1, 0, Math.cos(yaw) * -1);
+        const ideal = heroRoot.position.clone().add(new THREE.Vector3(back.x * 6.2, 3.1, back.z * 6.2));
+        camera.position.lerp(ideal, 1 - Math.exp(-5 * rawDt));
+        camera.lookAt(lookAt);
+      }
+      cameraFX.apply(camera, rawDt);
+
+      bell.render();
+
+      // HUD
+      document.getElementById('tier').textContent = String(heroMotion.tier);
+      document.getElementById('scale').textContent = time.scale.toFixed(2);
+      document.getElementById('phase').textContent = String(joro.phase);
+      if (!['lashTell', 'dropTell', 'silkPullTell'].some((s) => joro.state === s) && joro.state !== 'stunned') {
+        // don't clobber a tell label mid-frame unless idle-ish
+        if (['weave', 'idle', 'skitter', 'retreat', 'lash', 'dropStrike', 'silkPull', 'webPool', 'phaseChange', 'defeat'].includes(joro.state)) {
+          const el = document.getElementById('bossstate');
+          if (!el.textContent.startsWith('TELL') || joro.state !== 'weave') {
+            if (!el.textContent.includes('PARRIED') || joro.state !== 'stunned') {
+              el.textContent = joro.state;
+            }
+          }
+        }
+      }
+      const hpPct = joro.maxHp ? (joro.hp / joro.maxHp) * 100 : 0;
+      document.getElementById('hpbar').style.width = hpPct + '%';
+    }
+
+    // Expose a tiny hook so a headless runner can drive the scene.
+    window.KanemoriDemo = {
+      time, cameraFX, bell, heroMotion, afterimage, sparks, ink, joro, tells,
+      press(key) {
+        const k = key.length === 1 ? key.toLowerCase() : key;
+        justPressed[k] = true;
+        keys[k] = true;
+      },
+      release(key) {
+        const k = key.length === 1 ? key.toLowerCase() : key;
+        keys[k] = false;
+      },
+      ring() { bell.ring({ position: heroRoot.position.clone(), intensity: 1 }); },
+      damage(n = 18) { joro.takeDamage(n); },
+    };
+
+    tick();
+    joro.start();
+  </script>
+</body>
+</html>
