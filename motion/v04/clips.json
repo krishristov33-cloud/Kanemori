@@ -1,0 +1,2137 @@
+{
+ "version": "0.4",
+ "skeleton": "identical to motion/v03/ren.glb (bone names + rest pose)",
+ "units": {
+  "time": "s",
+  "speed": "m/s (+Z forward in root space)"
+ },
+ "combat": {
+  "katana_light_a": {
+   "duration": 0.62,
+   "loop": false,
+   "hit": [
+    0.17,
+    0.28
+   ],
+   "cancel": [
+    0.38,
+    0.62
+   ],
+   "events": {
+    "hit": 0.17
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 1.82,
+    "end": 0,
+    "distance": 0.22,
+    "knots": [
+     [
+      0,
+      0
+     ],
+     [
+      0.08,
+      0
+     ],
+     [
+      0.19,
+      2
+     ],
+     [
+      0.3,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0.36
+     ],
+     [
+      0.15,
+      1.27
+     ],
+     [
+      0.2,
+      1.82
+     ],
+     [
+      0.25,
+      0.91
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "horizontal",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "katana_light_b": {
+   "duration": 0.66,
+   "loop": false,
+   "hit": [
+    0.2,
+    0.3
+   ],
+   "cancel": [
+    0.42,
+    0.66
+   ],
+   "events": {
+    "hit": 0.2
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 1.44,
+    "end": 0,
+    "distance": 0.18,
+    "knots": [
+     [
+      0,
+      0
+     ],
+     [
+      0.12,
+      0
+     ],
+     [
+      0.22,
+      1.8
+     ],
+     [
+      0.32,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0.54
+     ],
+     [
+      0.2,
+      1.44
+     ],
+     [
+      0.25,
+      1.26
+     ],
+     [
+      0.3,
+      0.36
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "diagonal_down",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "katana_light_c": {
+   "duration": 0.68,
+   "loop": false,
+   "hit": [
+    0.19,
+    0.3
+   ],
+   "cancel": [
+    0.43,
+    0.68
+   ],
+   "events": {
+    "hit": 0.19
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 1.5,
+    "end": 0,
+    "distance": 0.15,
+    "knots": [
+     [
+      0,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.2,
+      1.5
+     ],
+     [
+      0.3,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0.75
+     ],
+     [
+      0.2,
+      1.5
+     ],
+     [
+      0.25,
+      0.75
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "rising",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "katana_light_d": {
+   "duration": 0.64,
+   "loop": false,
+   "hit": [
+    0.2,
+    0.33
+   ],
+   "cancel": [
+    0.42,
+    0.64
+   ],
+   "events": {
+    "hit": 0.2
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 2.13,
+    "end": 0,
+    "distance": 0.216,
+    "knots": [
+     [
+      0,
+      0
+     ],
+     [
+      0.12,
+      0
+     ],
+     [
+      0.21,
+      2.4
+     ],
+     [
+      0.3,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0.8
+     ],
+     [
+      0.2,
+      2.13
+     ],
+     [
+      0.25,
+      1.33
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "thrust",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "katana_heavy_finisher_1": {
+   "duration": 1.3,
+   "loop": false,
+   "hit": [
+    0.34,
+    0.86
+   ],
+   "cancel": [
+    1.05,
+    1.3
+   ],
+   "events": {
+    "hit": 0.36,
+    "hit2": 0.7,
+    "armor": 0.12,
+    "whoosh": 0.34
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ],
+     [
+      0.9,
+      0
+     ],
+     [
+      0.95,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1.05,
+      0
+     ],
+     [
+      1.1,
+      0
+     ],
+     [
+      1.15,
+      0
+     ],
+     [
+      1.2,
+      0
+     ],
+     [
+      1.25,
+      0
+     ],
+     [
+      1.3,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "horizontal_spin",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "katana_heavy_finisher_2": {
+   "duration": 1.45,
+   "loop": false,
+   "hit": [
+    0.46,
+    0.57
+   ],
+   "cancel": [
+    1.1,
+    1.45
+   ],
+   "events": {
+    "hit": 0.48,
+    "impact": 0.55,
+    "armor": 0.1,
+    "camShake": 0.55
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 2.78,
+    "end": 0,
+    "distance": 0.34,
+    "knots": [
+     [
+      0,
+      0
+     ],
+     [
+      0.36,
+      0
+     ],
+     [
+      0.47,
+      3.4
+     ],
+     [
+      0.56,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      1.24
+     ],
+     [
+      0.45,
+      2.78
+     ],
+     [
+      0.5,
+      2.27
+     ],
+     [
+      0.55,
+      0.38
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ],
+     [
+      0.9,
+      0
+     ],
+     [
+      0.95,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1.05,
+      0
+     ],
+     [
+      1.1,
+      0
+     ],
+     [
+      1.15,
+      0
+     ],
+     [
+      1.2,
+      0
+     ],
+     [
+      1.25,
+      0
+     ],
+     [
+      1.3,
+      0
+     ],
+     [
+      1.35,
+      0
+     ],
+     [
+      1.4,
+      0
+     ],
+     [
+      1.45,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "vertical_down",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "jump_attack": {
+   "duration": 0.62,
+   "loop": false,
+   "hit": [
+    0.14,
+    0.27
+   ],
+   "cancel": [
+    0.4,
+    0.62
+   ],
+   "events": {
+    "hit": 0.15
+   },
+   "rootSpeed": {
+    "start": 2,
+    "peak": 2,
+    "end": 2,
+    "distance": 1.24,
+    "knots": [
+     [
+      0,
+      2
+     ],
+     [
+      0.62,
+      2
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      2
+     ],
+     [
+      0.05,
+      2
+     ],
+     [
+      0.1,
+      2
+     ],
+     [
+      0.15,
+      2
+     ],
+     [
+      0.2,
+      2
+     ],
+     [
+      0.25,
+      2
+     ],
+     [
+      0.3,
+      2
+     ],
+     [
+      0.35,
+      2
+     ],
+     [
+      0.4,
+      2
+     ],
+     [
+      0.45,
+      2
+     ],
+     [
+      0.5,
+      2
+     ],
+     [
+      0.55,
+      2
+     ],
+     [
+      0.6,
+      2
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "diagonal_down_air",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "plunge_attack": {
+   "duration": 1.15,
+   "loop": false,
+   "hit": [
+    0.22,
+    0.34
+   ],
+   "cancel": [
+    0.8,
+    1.15
+   ],
+   "events": {
+    "hit": 0.24,
+    "impact": 0.3,
+    "camShake": 0.3
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ],
+     [
+      0.9,
+      0
+     ],
+     [
+      0.95,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1.05,
+      0
+     ],
+     [
+      1.1,
+      0
+     ],
+     [
+      1.15,
+      0
+     ]
+    ],
+    "vertical": "game-driven fall until impact @0.30 s (suggest -12 m/s)"
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "plunge_down",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "sprint_attack": {
+   "duration": 0.86,
+   "loop": false,
+   "hit": [
+    0.27,
+    0.4
+   ],
+   "cancel": [
+    0.55,
+    0.86
+   ],
+   "events": {
+    "hit": 0.28,
+    "footL": 0.4,
+    "footR": 0.2
+   },
+   "rootSpeed": {
+    "start": 7,
+    "peak": 7,
+    "end": 0,
+    "distance": 2.11,
+    "knots": [
+     [
+      0,
+      7
+     ],
+     [
+      0.12,
+      7
+     ],
+     [
+      0.4,
+      1
+     ],
+     [
+      0.7,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      7
+     ],
+     [
+      0.05,
+      7
+     ],
+     [
+      0.1,
+      7
+     ],
+     [
+      0.15,
+      6.36
+     ],
+     [
+      0.2,
+      5.29
+     ],
+     [
+      0.25,
+      4.21
+     ],
+     [
+      0.3,
+      3.14
+     ],
+     [
+      0.35,
+      2.07
+     ],
+     [
+      0.4,
+      1
+     ],
+     [
+      0.45,
+      0.83
+     ],
+     [
+      0.5,
+      0.67
+     ],
+     [
+      0.55,
+      0.5
+     ],
+     [
+      0.6,
+      0.33
+     ],
+     [
+      0.65,
+      0.17
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": false,
+   "plane": "horizontal_lunge",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "charge_windup": {
+   "duration": 1.2,
+   "loop": true,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ],
+     [
+      0.9,
+      0
+     ],
+     [
+      0.95,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1.05,
+      0
+     ],
+     [
+      1.1,
+      0
+     ],
+     [
+      1.15,
+      0
+     ],
+     [
+      1.2,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "charge_release": {
+   "duration": 0.95,
+   "loop": false,
+   "hit": [
+    0.18,
+    0.3
+   ],
+   "cancel": [
+    0.62,
+    0.95
+   ],
+   "events": {
+    "hit": 0.2,
+    "dashStart": 0.08,
+    "dashEnd": 0.3,
+    "iframeStart": 0.08,
+    "iframeEnd": 0.24
+   },
+   "rootSpeed": {
+    "start": 0,
+    "peak": 11,
+    "end": 0,
+    "distance": 2.2,
+    "knots": [
+     [
+      0,
+      0
+     ],
+     [
+      0.08,
+      0
+     ],
+     [
+      0.12,
+      11
+     ],
+     [
+      0.24,
+      11
+     ],
+     [
+      0.36,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      5.5
+     ],
+     [
+      0.15,
+      11
+     ],
+     [
+      0.2,
+      11
+     ],
+     [
+      0.25,
+      10.08
+     ],
+     [
+      0.3,
+      5.5
+     ],
+     [
+      0.35,
+      0.92
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ],
+     [
+      0.9,
+      0
+     ],
+     [
+      0.95,
+      0
+     ]
+    ]
+   },
+   "twoHanded": true,
+   "additive": false,
+   "plane": "horizontal_dash",
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "run_stop": {
+   "duration": 0.7,
+   "loop": false,
+   "hit": null,
+   "cancel": [
+    0.3,
+    0.7
+   ],
+   "events": {
+    "brake": 0,
+    "footR": 0.2
+   },
+   "rootSpeed": {
+    "start": 4.5,
+    "peak": 4.5,
+    "end": 0,
+    "distance": 0.3886,
+    "knots": [
+     [
+      0,
+      4.5
+     ],
+     [
+      0.1727,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      4.5
+     ],
+     [
+      0.05,
+      3.2
+     ],
+     [
+      0.1,
+      1.89
+     ],
+     [
+      0.15,
+      0.59
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": false,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "sprint_stop": {
+   "duration": 0.95,
+   "loop": false,
+   "hit": null,
+   "cancel": [
+    0.45,
+    0.95
+   ],
+   "events": {
+    "brake": 0,
+    "footR": 0.15
+   },
+   "rootSpeed": {
+    "start": 7,
+    "peak": 7,
+    "end": 0,
+    "distance": 0.84,
+    "knots": [
+     [
+      0,
+      7
+     ],
+     [
+      0.24,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      7
+     ],
+     [
+      0.05,
+      5.54
+     ],
+     [
+      0.1,
+      4.08
+     ],
+     [
+      0.15,
+      2.62
+     ],
+     [
+      0.2,
+      1.17
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      0.55,
+      0
+     ],
+     [
+      0.6,
+      0
+     ],
+     [
+      0.65,
+      0
+     ],
+     [
+      0.7,
+      0
+     ],
+     [
+      0.75,
+      0
+     ],
+     [
+      0.8,
+      0
+     ],
+     [
+      0.85,
+      0
+     ],
+     [
+      0.9,
+      0
+     ],
+     [
+      0.95,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": false,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "additive_ref": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "lean_fwd": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "lean_back": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "lean_left": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "lean_right": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "weight_shift_L": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  },
+  "weight_shift_R": {
+   "duration": 0.5,
+   "loop": false,
+   "hit": null,
+   "cancel": null,
+   "events": {},
+   "rootSpeed": {
+    "start": 0,
+    "peak": 0,
+    "end": 0,
+    "distance": 0,
+    "knots": [
+     [
+      0,
+      0
+     ]
+    ],
+    "profile": [
+     [
+      0,
+      0
+     ],
+     [
+      0.05,
+      0
+     ],
+     [
+      0.1,
+      0
+     ],
+     [
+      0.15,
+      0
+     ],
+     [
+      0.2,
+      0
+     ],
+     [
+      0.25,
+      0
+     ],
+     [
+      0.3,
+      0
+     ],
+     [
+      0.35,
+      0
+     ],
+     [
+      0.4,
+      0
+     ],
+     [
+      0.45,
+      0
+     ],
+     [
+      0.5,
+      0
+     ]
+    ]
+   },
+   "twoHanded": false,
+   "additive": true,
+   "plane": null,
+   "check": {
+    "footIkErr": 0,
+    "armIkErr": 0,
+    "footSlide": 0
+   }
+  }
+ },
+ "v03_clips_in_ren_glb": [
+  "idle",
+  "walk",
+  "run",
+  "sprint",
+  "start",
+  "stop",
+  "turn_L",
+  "turn_R",
+  "jump_up",
+  "fall",
+  "land",
+  "dodge_roll",
+  "katana_light_1",
+  "katana_light_2",
+  "katana_light_3",
+  "katana_heavy",
+  "block",
+  "parry",
+  "hit_react",
+  "death",
+  "bow_draw",
+  "bow_hold",
+  "bow_release",
+  "swim",
+  "gather",
+  "cook",
+  "fish_cast",
+  "shiver",
+  "talk_gesture",
+  "bow_greet",
+  "give_item",
+  "pray",
+  "sleep",
+  "command_gesture",
+  "sit_rest",
+  "turn_180",
+  "bow_quick",
+  "kunai_throw",
+  "hand_cannon_fire",
+  "ride_idle",
+  "ride_walk",
+  "ride_trot",
+  "ride_gallop",
+  "mount",
+  "dismount",
+  "cart_drive"
+ ]
+}
