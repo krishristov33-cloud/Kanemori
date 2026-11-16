@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KANEMORI 鐘守 — Keeper of the Shattered Bell (v0.2)</title>
+<title>KANEMORI 鐘守 — Keeper of the Shattered Bell (v0.2.1)</title>
 <style>
 :root{--ink:#0b0d1c;--cream:#f4ead2;--red:#e3402c;--orange:#ffb347;--gold:#ffcf5a;--cyan:#6fe6ff;--panel:rgba(12,14,32,.72)}
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0b0d1c;color:var(--cream);font-family:system-ui,"Segoe UI",sans-serif;user-select:none}
@@ -149,7 +149,7 @@ body.menu #hud{display:none}
   <div class="ctl" id="ctlStart"></div>
   <div class="lbl" style="margin-top:10px">Click the game to look around with the mouse · F1 controls · Esc pause</div>
 </div></div>
-<div id="clickplay" style="position:fixed;inset:0;z-index:15;display:none;align-items:center;justify-content:center;background:rgba(6,8,22,.35);cursor:pointer"><div class="card" style="padding:16px 26px"><h2 style="margin:0">🖱 Click to look around</h2><div class="lbl">Mouse moves the camera · Esc releases it · menus release it</div></div></div>
+<div id="clickplay" style="position:fixed;inset:0;z-index:15;display:none;align-items:center;justify-content:center;background:rgba(6,8,22,.35);cursor:pointer"><div class="card" style="padding:16px 26px"><h2 style="margin:0">🖱 Click to look around</h2><div class="lbl">Mouse moves the camera · Esc pauses and frees the cursor · Esc again resumes</div></div></div>
 <div id="pause" class="overlay hidden"><div class="card">
   <h2>一時停止 PAUSED</h2>
   <button class="btn" id="pRes">RESUME ▶</button><button class="btn cy" id="pSave">SAVE</button><button class="btn cy" id="pLoad">LOAD</button>
@@ -541,7 +541,7 @@ renderer.domElement.addEventListener('mousedown',e=>{audioInit();if(UIopen())ret
 addEventListener('mouseup',e=>{if(e.button===0)mouseL=false;if(e.button===2)mouseR=false;});
 addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('mousemove',e=>{if(UIopen())return;if(locked()||(!PL_OK&&e.buttons)){mdx+=e.movementX*MSET.sens;mdy+=e.movementY*MSET.sens*(MSET.inv?-1:1);}});
-document.addEventListener('pointerlockchange',()=>{updLockOverlay();});document.addEventListener('pointerlockerror',()=>{kmWarn('Mouse capture was refused by the browser. Click the game again.');});
+let autoPauseT=0;document.addEventListener('pointerlockchange',()=>{if(PL_OK&&!locked()&&!UIopen()&&!document.body.classList.contains('menu')&&!QS.has('shots')){show('pause');autoPauseT=performance.now();}updLockOverlay();});document.addEventListener('pointerlockerror',()=>{kmWarn('Mouse capture was refused by the browser. Click the game again.');});
 function updLockOverlay(){const el=$('clickplay');if(!el)return;const show=PL_OK&&!locked()&&!UIopen()&&!document.body.classList.contains('menu')&&!QS.has('shots');el.style.display=show?'flex':'none';}
 const CTL=[['WASD','Move'],['Shift','Sprint'],['Space','Jump'],['Q','Dodge roll'],['LMB','Light attack (combo)'],['RMB','Heavy attack'],['F','Block · tap on hit = PARRY'],['Tab','Lock-on'],['X','Cast Fire ofuda'],['Z','Earth Wall talisman'],['E','Gather / interact / fish at water'],['B','Build (campfire, lean-to)'],['I / C','Inventory & crafting'],['K','Skill tree'],['M','Scroll map'],['1-8','Hotbar: equip / use'],['Esc / P','Pause · save'],['F1','Controls'],['G','Post FX on/off']];
 const ctlHTML=CTL.map(([k,v])=>`<div><kbd>${k}</kbd>${v}</div>`).join('');['ctlStart','ctlPause','ctlHelp'].forEach(i=>$(i).innerHTML=ctlHTML);
@@ -1091,7 +1091,7 @@ function updHUD(){$('bHP').style.width=clamp(S.hp/DERIV.maxHp()*100,0,100)+'%';$
 /* ============ KEYS ============ */
 function onKey(code){
  if(code==='F1'){$('help').classList.contains('hidden')?show('help'):hide('help');return;}
- if(code==='Escape'||code==='KeyP'){const o=UIopen();if(o&&o.id!=='start'&&o.id!=='dead'&&o.id!=='win'){o.classList.add('hidden');if(FISH.on)endFishing();return;}if(!o&&!document.body.classList.contains('menu'))show('pause');updLockOverlay();return;}
+ if(code==='Escape'||code==='KeyP'){const o=UIopen();if(o&&o.id!=='start'&&o.id!=='dead'&&o.id!=='win'){if(o.id==='pause'&&performance.now()-autoPauseT<350)return;o.classList.add('hidden');if(FISH.on)endFishing();if(PL_OK&&!UIopen()&&!QS.has('shots'))requestLock();setTimeout(updLockOverlay,0);return;}if(!o&&!document.body.classList.contains('menu'))show('pause');updLockOverlay();return;}
  if(code==='KeyG'){FXQ.on=!FXQ.on;lsSet('km_fx',FXQ.on?'1':'0');if(FXQ.on&&!composer)initFX();toast('Post FX '+(FXQ.on?'on':'off'));return;}
  const o=UIopen();
  if(code==='KeyI'||code==='KeyC'){if(o&&o.id==='inv'){hide('inv');return;}if(!o)openInv();return;}
@@ -1187,7 +1187,7 @@ const _save=save;save=function(m){S.disc=[...discSet];_save(m);};
 function startGame(cont){audioInit();P.dead=false;hide('dead');if(!(cont&&load())){S=freshState();applyLoaded();setWeather('clear',150);}document.body.classList.remove('menu');hide('start');if(!QS.has('shots')&&PL_OK)requestLock();S.started=true;spawnTick(true);spawnTick(true);
  areaTitle('鐘守','KANEMORI','Kanemura · the bell is broken');refreshHotbar();updQuest();drawBell();}
 $('bNew').onclick=()=>startGame(false);$('bCont').onclick=()=>startGame(true);$('bCont').disabled=!lsGet(SAVE_KEY);
-$('pRes').onclick=()=>hide('pause');$('pSave').onclick=()=>save(true);$('pLoad').onclick=()=>{if(load()){toast('Loaded');hide('pause');}};
+$('pRes').onclick=()=>{hide('pause');if(PL_OK&&!QS.has('shots'))requestLock();};$('pSave').onclick=()=>save(true);$('pLoad').onclick=()=>{if(load()){toast('Loaded');hide('pause');}};
 $('pMute').onclick=()=>{muted=!muted;lsSet('km_mute',muted?'1':'0');if(master)master.gain.value=muted?0:.7;toast(muted?'Muted':'Sound on');};
 $('pFx').onclick=()=>onKey('KeyG');$('pNew').onclick=()=>{if(confirm('Start a new journey? Your save will be overwritten.')){hide('pause');startGame(false);save();}};
 $('bRespawn').onclick=respawn;$('bWin').onclick=()=>hide('win');
