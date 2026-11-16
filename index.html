@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KANEMORI 鐘守 — Keeper of the Shattered Bell (v0.2.1)</title>
+<title>KANEMORI — Keeper of the Shattered Bell (v0.3)</title>
 <style>
 :root{--ink:#0b0d1c;--cream:#f4ead2;--red:#e3402c;--orange:#ffb347;--gold:#ffcf5a;--cyan:#6fe6ff;--panel:rgba(12,14,32,.72)}
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0b0d1c;color:var(--cream);font-family:system-ui,"Segoe UI",sans-serif;user-select:none}
@@ -83,6 +83,13 @@ body.menu #hud{display:none}
 #err b{color:#ff7a90;font:700 15px system-ui,sans-serif;display:block;margin-bottom:6px}#err button{margin-top:10px;margin-right:8px;background:#ff3b5c;color:#fff;border:0;padding:6px 12px;font-weight:700;cursor:pointer}
 #warnbox{position:fixed;left:16px;bottom:56px;z-index:99998;max-width:420px;background:rgba(20,16,40,.92);color:#ffd9a0;border:2px solid #ffb347;padding:8px 12px;font:12px/1.4 system-ui,sans-serif;display:none}
 #loading{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#0b0d1c;font:800 14px system-ui;letter-spacing:.3em}
+body:not(.showjp) .jpx{display:none!important}
+.talkc{width:min(760px,95vw);text-align:left}.tkhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.tkhead h2{margin:0}
+#tkRel{min-width:230px}.relb{display:flex;align-items:center;gap:6px;font:700 11px system-ui;margin:2px 0}.relb span{width:62px}.relb i{flex:1;height:7px;background:rgba(0,0,0,.25);border-radius:4px;overflow:hidden}.relb b{display:block;height:100%}.relb em{width:28px;text-align:right;font-style:normal;opacity:.8}
+#tkLog{height:min(34vh,300px);overflow:auto;margin:10px 0;padding:8px 10px;background:rgba(0,0,0,.18);border-radius:8px}.tkl{margin:5px 0;line-height:1.4}.tkl b{color:var(--gold);margin-right:6px}.tkl.me b{color:#8fd0ff}
+#tkSub{margin-bottom:6px}#tkSub .btn,.btn.sm{padding:5px 9px;font-size:11px;margin:2px}.tkin{display:flex;gap:8px}.tkin textarea{flex:1;resize:none;font:15px/1.35 Georgia,serif;padding:8px;border-radius:6px;border:1px solid rgba(200,160,80,.6);background:rgba(255,250,235,.92);color:#2a2016}
+.tkbtns{margin-top:6px;text-align:center}.jent{margin:8px 0;padding:8px 12px;background:rgba(0,0,0,.14);border-left:3px solid var(--gold);border-radius:4px}.jent h4{margin:0 0 4px}.jent h4 small{margin-left:8px;opacity:.6;font-weight:600;text-transform:uppercase;font-size:10px}.jent.secret{border-left-color:#c58cff}.jent p{margin:4px 0;line-height:1.45}.jn{font-size:13px;opacity:.85;margin:2px 0}
+.setrow{margin:8px 0}.setrow input[type=text],.setrow input:not([type]),.setrow input[type=password]{padding:6px;border-radius:5px;border:1px solid #9a8; background:rgba(255,250,235,.9)}
 </style>
 <script>
 /* Boot guard (from Mountain Drop v5): on-screen errors, CDN fallback (?cdn=1 = jsDelivr), boot watchdog. */
@@ -142,10 +149,10 @@ body.menu #hud{display:none}
 <div id="fish"><div id="fishTxt">Waiting for a bite…</div><div id="fishbar"><div id="fishzone"></div><div id="fishmk"></div></div></div>
 <div id="start" class="overlay hidden"><div class="card">
   <h1>鐘守 <span>KANEMORI</span></h1>
-  <div class="lbl">Keeper of the Shattered Bell · prototype v0.1 · Apex Team</div>
+  <div class="lbl">Keeper of the Shattered Bell · prototype v0.3 · Apex Team</div>
   <p><i>Typhoon night on Nemuriyama, the Sleeping Mountain.</i> For a thousand years the great bell of Kanemura kept something asleep inside the mountain. Tonight it cracked, and its eight shards, the <b>kakera</b>, flew up the slopes. The old bell-keeper died putting his rope belt in your hands.</p>
   <p>You are <b>Ren</b>, the new Kanemori. Survive the cedar forest of <b>Sugi no Mori</b>, arm yourself, and take the first kakera back from <b>Jorōgumo</b>, the spider woman in the canopy.</p>
-  <button class="btn" id="bNew">NEW JOURNEY ▶</button><button class="btn cy" id="bCont">CONTINUE</button>
+  <button class="btn" id="bNew">NEW JOURNEY ▶</button><button class="btn cy" id="bCont">CONTINUE</button><button class="btn cy" id="bSet">SETTINGS</button>
   <div class="ctl" id="ctlStart"></div>
   <div class="lbl" style="margin-top:10px">Click the game to look around with the mouse · F1 controls · Esc pause</div>
 </div></div>
@@ -153,7 +160,7 @@ body.menu #hud{display:none}
 <div id="pause" class="overlay hidden"><div class="card">
   <h2>一時停止 PAUSED</h2>
   <button class="btn" id="pRes">RESUME ▶</button><button class="btn cy" id="pSave">SAVE</button><button class="btn cy" id="pLoad">LOAD</button>
-  <button class="btn cy" id="pMute">MUTE</button><button class="btn cy" id="pFx">POST FX</button><button class="btn cy" id="pNew">NEW GAME</button>
+  <button class="btn cy" id="pMute">MUTE</button><button class="btn cy" id="pSetB">SETTINGS</button><button class="btn cy" id="pFx">POST FX</button><button class="btn cy" id="pNew">NEW GAME</button>
   <div style="margin:10px auto;font:700 13px system-ui;display:flex;gap:16px;justify-content:center;align-items:center;pointer-events:auto"><label>Mouse sensitivity <input id="sens" type="range" min="0.2" max="3" step="0.05" style="vertical-align:middle"> <b id="sensV"></b></label><label><input id="invy" type="checkbox"> Invert Y</label></div>
   <div class="ctl" id="ctlPause"></div>
 </div></div>
@@ -169,6 +176,26 @@ body.menu #hud{display:none}
 <div id="map" class="overlay hidden"><div class="card"><h2>絵巻 NEMURIYAMA — SCROLL MAP</h2><canvas id="mapcv" width="900" height="620"></canvas>
   <div class="lbl">Grey ink = undiscovered · hatched = sealed regions (later versions) · gold bell = kakera</div><button class="btn" data-close>CLOSE (M)</button></div></div>
 <div id="menu2" class="overlay hidden"><div class="card" style="min-width:420px"><h2 id="m2T"></h2><div id="m2B" style="text-align:left"></div><button class="btn" data-close>CLOSE (Esc)</button></div></div>
+<div id="settings" class="overlay hidden"><div class="card" style="width:min(640px,94vw);text-align:left">
+  <h2 style="text-align:center">SETTINGS</h2>
+  <div class="setrow"><label><input type="checkbox" id="sJP"> Show Japanese names (kanji &amp; romaji flavour)</label></div>
+  <div class="setrow"><label>Music volume <input type="range" id="sMus" min="0" max="1" step="0.05"></label> <label>Effects volume <input type="range" id="sSfx" min="0" max="1" step="0.05"></label></div>
+  <div class="setrow"><label>Mouse sensitivity <input type="range" id="sSens" min="0.2" max="3" step="0.05"></label> <label><input type="checkbox" id="sInv"> Invert Y</label></div>
+  <h3 style="margin:12px 0 4px">NPC conversation AI (optional)</h3>
+  <div class="lbl" style="text-transform:none;letter-spacing:0">Villagers answer with the built-in persona engine. To let them answer with your own language model, enter an OpenAI-compatible endpoint, key and model. Stored only in this browser (localStorage), never sent anywhere except that endpoint.</div>
+  <div class="setrow"><button class="btn cy sm" id="sOllama">OLLAMA (LOCAL, FREE)</button><button class="btn cy sm" id="sCustom">CUSTOM OPENAI-COMPATIBLE</button><button class="btn cy sm" id="sOff">OFF (BUILT-IN ONLY)</button></div>
+  <div class="lbl" style="text-transform:none;letter-spacing:0">Ollama: install it, run <code>ollama pull llama3.2</code>, and allow this page's origin: set <code>OLLAMA_ORIGINS=https://krishristov33-cloud.github.io</code> (or <code>*</code> when playing locally), then restart Ollama. If the model doesn't answer within ~8 s, villagers fall back to the built-in persona engine.</div>
+  <div class="setrow"><input id="sLlmUrl" placeholder="https://api.openai.com/v1/chat/completions" style="width:100%"></div>
+  <div class="setrow"><input id="sLlmKey" type="password" placeholder="API key (optional)" style="width:58%"> <input id="sLlmModel" placeholder="model, e.g. gpt-4o-mini" style="width:38%"></div>
+  <div style="text-align:center"><button class="btn cy" id="sClearKey">CLEAR KEY</button><button class="btn" data-close>DONE</button></div>
+</div></div>
+<div id="talk" class="overlay hidden"><div class="card talkc">
+  <div class="tkhead"><div><h2 id="tkName"></h2><div class="lbl" id="tkRole"></div></div><div id="tkRel"></div></div>
+  <div id="tkLog"></div><div id="tkSub"></div>
+  <div class="tkin"><textarea id="tkIn" rows="2" placeholder="Say anything… (Enter to send, Shift+Enter for a new line). Try: “Do you need help?”, “What do you fear?”, “Join me on a hunt”"></textarea><button class="btn" id="tkSend">SAY ⏎</button></div>
+  <div class="tkbtns"><button class="btn cy sm" id="tkGift">GIFT</button><button class="btn cy sm" id="tkTrade">TRADE</button><button class="btn cy sm" id="tkJoin">RECRUIT</button><button class="btn cy sm" id="tkQ">ASK FOR WORK</button><button class="btn sm" id="tkBye">GOODBYE (Esc)</button></div>
+</div></div>
+<div id="journal" class="overlay hidden"><div class="card" style="width:min(820px,94vw);text-align:left"><h2 style="text-align:center">JOURNAL</h2><div class="tabs" id="jTabs"></div><div id="jBody" style="max-height:58vh;overflow:auto"></div><div style="text-align:center"><button class="btn" data-close>CLOSE (J)</button></div></div></div>
 <div id="dead" class="overlay hidden"><div class="card"><h2>倒れた YOU FELL</h2><p id="deadWhy"></p><button class="btn" id="bRespawn">RISE AGAIN ▶</button></div></div>
 <div id="win" class="overlay hidden"><div class="card"><h1 style="font-size:40px">欠片 <span>1/8</span></h1><h2>THE FIRST KAKERA</h2><p id="winTxt"></p><button class="btn" id="bWin">KEEP EXPLORING ▶</button></div></div>
 <script type="module">
@@ -182,6 +209,28 @@ const $=id=>document.getElementById(id);
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const R=mulberry(1337),rnd=(a,b)=>a+(b-a)*R(),pick=a=>a[(R()*a.length)|0];
 const QS=new URLSearchParams(location.search);
+/* ============ LOCALIZATION: English by default, 'Show Japanese names' restores kanji/romaji ============ */
+const CJK_RE=/[\u3000-\u303f\u3040-\u30ff\u3400-\u9fff\uff00-\uffef]+/;const CJK_G=new RegExp(CJK_RE.source,'g');
+let SHOWJP=(()=>{try{return localStorage.getItem('km_jp')==='1'}catch(e){return false}})();
+/* one English name map for romanized labels (people/place names stay) */
+const NAME_EN=[['Hankyū short bow','Short bow'],['Daikyū longbow','Longbow'],['Hankyū','Short bow'],['Daikyū','Longbow'],['Yumi Bow','Bow mastery'],['Yumi bow','Short bow'],
+ ['Yari spear','Spear'],['Yari','Spear'],['Throwing kunai','Throwing knife'],['Kunai','Throwing knives'],['kunai','knives'],['Bokken (wood)','Wooden sword'],['Bokken','Wooden sword'],['Katana','Steel sword'],
+ ['Yomogi herb','Mugwort herb'],['Yomogi','Mugwort'],['Kodama sap','Spirit sap'],['Jorōgumo silk','Spider silk'],['Fire ofuda','Fire charm'],['Fire Ofuda','Fire Charm'],['Earth Wall talisman','Earth Wall charm'],['Ofuda','Charm'],['ofuda','charm'],
+ ['Way of the Kami','Way of the Spirits'],['Kami branch','Spirit branch'],['Kami','Spirit'],['kami','spirits'],['Kakera','Bell shards'],['kakera','bell shards'],['Kodama','Tree spirit'],['kodama','tree spirit'],
+ ['Grilled ayu','Grilled fish'],['Ayu','Grilled fish'],['ayu','grilled fish'],['tanuki trickster','raccoon-dog trickster'],['mushroom yokai','mushroom monster'],['Mushroom yokai','Mushroom monster'],['Tanuki','Raccoon-dog'],['tanuki','raccoon-dog'],['Yokai','Monsters'],['yokai','monsters'],['torii','shrine gate'],['Torii','Shrine gate'],[' mon',' coins']];
+const NAME_RE=(()=>{const v=[];for(const[a,b]of NAME_EN){v.push([a,b]);if(a!==a.toUpperCase())v.push([a.toUpperCase(),b.toUpperCase()]);}v.sort((x,y)=>y[0].length-x[0].length);const map=new Map(v);
+ const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return{map,re:new RegExp('(?<![A-Za-zÀ-ž])('+v.map(x=>esc(x[0])).join('|')+')(?![A-Za-zÀ-ž])','g')};})();
+const EN=s=>String(s).replace(NAME_RE.re,m=>NAME_RE.map.get(m)||m);
+const J=s=>{s=String(s==null?'':s);if(SHOWJP)return s;return EN(s).replace(CJK_G,'').replace(/\(\s*\)/g,'').replace(/^[\s·—:-]+|[\s·—:-]+$/g,'').replace(/\s*·\s*·\s*/g,' · ').replace(/\s{2,}/g,' ').trim();};
+function wrapJP(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),list=[];while(w.nextNode()){const n=w.currentNode;if(CJK_RE.test(n.nodeValue)&&!(n.parentNode&&n.parentNode.classList&&n.parentNode.classList.contains('jpx')))list.push(n);}
+ for(const n of list){const f=document.createDocumentFragment();n.nodeValue.split(new RegExp('('+CJK_RE.source+')')).forEach(part=>{if(!part)return;if(CJK_RE.test(part)){const sp=document.createElement('span');sp.className='jpx';sp.textContent=part;f.appendChild(sp);}else f.appendChild(document.createTextNode(part));});n.parentNode.replaceChild(f,n);}}
+const JP_ORIG=new WeakMap();
+function enNode(n){if(SHOWJP)return;const p=n.parentNode;if(!p||p.closest&&p.closest('textarea,input,.tkl.me,script,style'))return;const v=n.nodeValue;if(!v||!NAME_RE.re.test(v)){NAME_RE.re.lastIndex=0;return;}NAME_RE.re.lastIndex=0;const nv=EN(v);if(nv!==v){if(!JP_ORIG.has(n))JP_ORIG.set(n,v);n.nodeValue=nv;}}
+function enTree(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const l=[];while(w.nextNode())l.push(w.currentNode);l.forEach(enNode);}
+const ENOBS=new MutationObserver(ms=>{if(SHOWJP)return;for(const m of ms){if(m.type==='characterData')enNode(m.target);else for(const a of m.addedNodes){if(a.nodeType===3)enNode(a);else if(a.nodeType===1)enTree(a);}}});
+function setJP(on){SHOWJP=on;try{localStorage.setItem('km_jp',on?'1':'0')}catch(e){}document.body.classList.toggle('showjp',on);
+ if(on){const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);while(w.nextNode()){const n=w.currentNode;if(JP_ORIG.has(n)){n.nodeValue=JP_ORIG.get(n);JP_ORIG.delete(n);}}}else enTree(document.body);
+ if(!ENOBS._on){ENOBS.observe(document.body,{subtree:true,childList:true,characterData:true});ENOBS._on=1;}}
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 
 /* ============ DATA (data-driven so later regions slot in) ============ */
@@ -344,14 +393,16 @@ for(let i=0;i<5200&&trees.length<1100;i++){const x=rnd(WMIN,WMAX),z=rnd(ZMIN+5,1
  const dens=forest?0.85:0.12;if(R()>dens)continue;if(Math.abs(x-RIVX(z))<11||pathDist(x,z)<4.5||nearFlat(x,z,forest?-2:4))continue;
  if(Math.hypot(x+85,z+100)<17)continue;const y=H(x,z);if(y<WATER_SEA+3)continue;
  const s=forest?rnd(1.1,1.9):rnd(.8,1.3);trees.push({x,z,y,s,rot:R()*TAU,wood:3,regrow:0,kind:'tree'});}
-const treeMesh=new THREE.InstancedMesh(cedarGeo,vmat,trees.length);treeMesh.castShadow=true;treeMesh.receiveShadow=true;
+/* v0.3 wind sway (vertex shader, instanced) */
+const WIND={t:{value:0}};function windMat(base,amp=.12){const m=base.clone();m.onBeforeCompile=sh=>{sh.uniforms.uWT=WIND.t;sh.vertexShader='uniform float uWT;\n'+sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n#ifdef USE_INSTANCING\nvec3 ip=vec3(instanceMatrix[3]);\n#else\nvec3 ip=vec3(0.);\n#endif\nfloat hh=max(transformed.y,0.);transformed.x+=sin(uWT*1.7+ip.x*.31+ip.z*.17)*'+amp.toFixed(3)+'*hh;transformed.z+=cos(uWT*1.3+ip.z*.29)*'+(amp*.6).toFixed(3)+'*hh;');};m.customProgramCacheKey=()=>'wind'+amp;return m;}
+const treeMesh=new THREE.InstancedMesh(cedarGeo,windMat(vmat,.012),trees.length);treeMesh.castShadow=true;treeMesh.receiveShadow=true;
 const _m=new THREE.Matrix4(),_q=new THREE.Quaternion(),_s=new V3(),_p=new V3(),_e=new THREE.Euler();
 function setTree(i,shake=0){const t=trees[i];const stump=t.wood<=0;_p.set(t.x,t.y-.1,t.z);_e.set(shake*0.05,t.rot,shake*0.04);_q.setFromEuler(_e);const s=t.s;_s.set(s,stump?0.09:s,s);_m.compose(_p,_q,_s);treeMesh.setMatrixAt(i,_m);treeMesh.instanceMatrix.needsUpdate=true;}
 trees.forEach((t,i)=>{t.i=i;setTree(i);const c={x:t.x,z:t.z,r:.55*t.s,ref:t};colliders.push(c);gAdd(t);});
 scene.add(treeMesh);
 // grass tufts (instanced, cheap)
 {const gg=mergeColored([{g:new THREE.ConeGeometry(.12,.7,3).translate(0,.35,0),c:0x6a9a52},{g:new THREE.ConeGeometry(.1,.55,3).rotateZ(.3).translate(.12,.25,0),c:0x5d8c48},{g:new THREE.ConeGeometry(.1,.6,3).rotateZ(-.3).translate(-.1,.28,.05),c:0x79a85d}]);
- const N=3200,im=new THREE.InstancedMesh(gg,vmat,N);let n=0;for(let i=0;i<N*3&&n<N;i++){const x=rnd(-190,190),z=rnd(-160,175);if(inWater(x,z)||pathDist(x,z)<2)continue;const y=H(x,z);if(y<WATER_SEA+2.5||y>24)continue;
+ const N=4200,im=new THREE.InstancedMesh(gg,windMat(vmat,.16),N);let n=0;for(let i=0;i<N*3&&n<N;i++){const x=rnd(-190,190),z=rnd(-160,175);if(inWater(x,z)||pathDist(x,z)<2)continue;const y=H(x,z);if(y<WATER_SEA+2.5||y>24)continue;
   _p.set(x,y,z);_e.set(0,R()*TAU,0);_q.setFromEuler(_e);const s=rnd(.7,1.6);_s.set(s,s,s);_m.compose(_p,_q,_s);im.setMatrixAt(n++,_m);}im.count=n;scene.add(im);}
 // web-arena canopy darkness & distant ridges
 const ridges=new THREE.Group();scene.add(ridges);
@@ -453,11 +504,11 @@ for(const a of[armL,armR]){const h=new THREE.Mesh(new THREE.SphereGeometry(.07,6
 const weaponPivot=new THREE.Group();weaponPivot.position.y=-.66;armR.add(weaponPivot);let weaponMesh=null;
 const sheath=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,1,5),std(0x111118));sheath.rotation.z=1.2;sheath.position.set(-.3,0,.1);chest.add(sheath);
 function buildWeapon(id){if(weaponMesh)weaponPivot.remove(weaponMesh);const W=WEAPONS[id],g=new THREE.Group();
- if(id==='yumi'){const c=new THREE.Mesh(new THREE.TorusGeometry(.75,.025,4,16,Math.PI*.9),std(0x5a3b2a));c.rotation.z=Math.PI/2;c.position.y=.1;g.add(c);}
+ if(id==='yumi'||id==='daikyu'){const c=new THREE.Mesh(new THREE.TorusGeometry(.75,.025,4,16,Math.PI*.9),std(0x5a3b2a));c.rotation.z=Math.PI/2;c.position.y=.1;g.add(c);}
  else if(id==='yari'){const sh=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,W.len,5),std(0x5a3b2a));sh.position.y=W.len*.25;g.add(sh);const tip=new THREE.Mesh(new THREE.ConeGeometry(.06,.4,4),std(W.col,{metalness:.8,roughness:.3}));tip.position.y=W.len*.75+.2;g.add(tip);}
  else{const grip=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.28,5),std(0x1a1a22));g.add(grip);const tsuba=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.02,8),std(0xb8a060,{metalness:.7}));tsuba.position.y=.15;g.add(tsuba);
   const bl=new THREE.Mesh(new THREE.BoxGeometry(.04,W.len,.012),std(W.col,id==='katana'?{metalness:.85,roughness:.25,emissive:0x223040,emissiveIntensity:.3}:{}));bl.position.y=.15+W.len/2;bl.rotation.z=.04;g.add(bl);}
- if(id!=='yumi')g.rotation.x=Math.PI/2;g.traverse(o=>{if(o.isMesh)o.castShadow=true});weaponPivot.add(g);weaponMesh=g;sheath.visible=id==='katana';}
+ if(id==='daikyu')g.scale.set(1,1.45,1);if(id!=='yumi'&&id!=='daikyu')g.rotation.x=Math.PI/2;g.traverse(o=>{if(o.isMesh)o.castShadow=true});weaponPivot.add(g);weaponMesh=g;sheath.visible=id==='katana';}
 // slash trail
 const trailGeo=new THREE.BufferGeometry();const TRN=14;trailGeo.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array(TRN*2*3),3));{const idx=[];for(let i=0;i<TRN-1;i++){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}trailGeo.setIndex(idx);}
 const trailMat=new THREE.MeshBasicMaterial({color:0xfff2d0,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending});
@@ -521,16 +572,16 @@ function bellRing(pos,big=1){if(KMF.ok&&KMF.bell){try{KMF.bell.ring({position:po
  grassPulse=1;}
 let grassPulse=0;
 const dnLayer=$('dmg'),dns=[];
-function dmgNum(pos,txt,cls=''){const d=document.createElement('div');d.className='dn '+cls;d.textContent=txt;dnLayer.appendChild(d);dns.push({d,p:pos.clone().add(new V3(rnd(-.4,.4),0,rnd(-.4,.4))),t:0});}
+function dmgNum(pos,txt,cls=''){const d=document.createElement('div');d.className='dn '+cls;d.textContent=J(txt)||txt;dnLayer.appendChild(d);dns.push({d,p:pos.clone().add(new V3(rnd(-.4,.4),0,rnd(-.4,.4))),t:0});}
 const _v=new V3();
 function updDns(dt){for(let i=dns.length-1;i>=0;i--){const n=dns[i];n.t+=dt;n.p.y+=dt*1.4;if(n.t>1){n.d.remove();dns.splice(i,1);continue;}
  _v.copy(n.p).project(camera);if(_v.z>1){n.d.style.display='none';continue;}n.d.style.display='';n.d.style.left=((_v.x+1)/2*innerWidth)+'px';n.d.style.top=((1-_v.y)/2*innerHeight)+'px';n.d.style.opacity=String(1-Math.max(0,n.t-.6)/.4);}}
-function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;const c=$('toasts');c.appendChild(e);while(c.children.length>6)c.firstChild.remove();setTimeout(()=>e.remove(),3200);}
-let titleT=0;function areaTitle(a,b,c){$('tA').textContent=a;$('tB').textContent=b;$('tC').textContent=c||'';$('title').style.opacity='1';titleT=4;}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=J(t);const c=$('toasts');c.appendChild(e);while(c.children.length>6)c.firstChild.remove();setTimeout(()=>e.remove(),3200);}
+let titleT=0;function areaTitle(a,b,c){if(!SHOWJP){const a2=J(a);if(!a2){a=b;b='';}else a=a2;b=J(b);c=J(c);}$('tA').textContent=a;$('tB').textContent=b;$('tC').textContent=c||'';$('title').style.opacity='1';titleT=4;}
 /* ============ INPUT ============ */
 const keys={},pressed={};let mouseL=false,mouseR=false,mdx=0,mdy=0;
 const UIopen=()=>document.querySelector('.overlay:not(.hidden)');
-addEventListener('keydown',e=>{audioInit();if(e.code==='Tab'||e.code==='F1'||e.code==='Space')e.preventDefault();if(!keys[e.code])pressed[e.code]=true;keys[e.code]=true;onKey(e.code);});
+addEventListener('keydown',e=>{const tg=e.target&&e.target.tagName;if(tg==='TEXTAREA'||tg==='INPUT'){if(e.code==='Escape'&&TALK.n){closeTalk();}return;}audioInit();if(e.code==='Tab'||e.code==='F1'||e.code==='Space')e.preventDefault();if(!keys[e.code])pressed[e.code]=true;keys[e.code]=true;onKey(e.code);});
 addEventListener('keyup',e=>{keys[e.code]=false;});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;});
 const PL_OK='requestPointerLock' in Element.prototype;const locked=()=>document.pointerLockElement===renderer.domElement;
@@ -543,7 +594,7 @@ addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('mousemove',e=>{if(UIopen())return;if(locked()||(!PL_OK&&e.buttons)){mdx+=e.movementX*MSET.sens;mdy+=e.movementY*MSET.sens*(MSET.inv?-1:1);}});
 let autoPauseT=0;document.addEventListener('pointerlockchange',()=>{if(PL_OK&&!locked()&&!UIopen()&&!document.body.classList.contains('menu')&&!QS.has('shots')){show('pause');autoPauseT=performance.now();}updLockOverlay();});document.addEventListener('pointerlockerror',()=>{kmWarn('Mouse capture was refused by the browser. Click the game again.');});
 function updLockOverlay(){const el=$('clickplay');if(!el)return;const show=PL_OK&&!locked()&&!UIopen()&&!document.body.classList.contains('menu')&&!QS.has('shots');el.style.display=show?'flex':'none';}
-const CTL=[['WASD','Move'],['Shift','Sprint'],['Space','Jump'],['Q','Dodge roll'],['LMB','Light attack (combo)'],['RMB','Heavy attack'],['F','Block · tap on hit = PARRY'],['Tab','Lock-on'],['X','Cast Fire ofuda'],['Z','Earth Wall talisman'],['E','Gather / interact / fish at water'],['B','Build (campfire, lean-to)'],['I / C','Inventory & crafting'],['K','Skill tree'],['M','Scroll map'],['1-8','Hotbar: equip / use'],['Esc / P','Pause · save'],['F1','Controls'],['G','Post FX on/off']];
+const CTL=[['WASD','Move'],['Shift','Sprint'],['Space','Jump'],['Q','Dodge roll'],['LMB','Light attack (combo)'],['RMB','Heavy attack'],['F','Block · tap on hit = PARRY'],['Tab','Lock-on'],['X','Cast Fire ofuda'],['Z','Earth Wall talisman'],['J','Journal'],['H','Mount / dismount horse'],['R','Swap arrow type'],['E','Talk · gather · interact · fish'],['B','Build (campfire, lean-to)'],['I / C','Inventory & crafting'],['K','Skill tree'],['M','Scroll map'],['1-8','Hotbar: equip / use'],['Esc / P','Pause · save'],['F1','Controls'],['G','Post FX on/off']];
 const ctlHTML=CTL.map(([k,v])=>`<div><kbd>${k}</kbd>${v}</div>`).join('');['ctlStart','ctlPause','ctlHelp'].forEach(i=>$(i).innerHTML=ctlHTML);
 
 /* ============ PLAYER ============ */
@@ -636,7 +687,7 @@ function spawnMinion(type,x,z){const D=MINION_DEF[type],{g,parts}=buildMinion(ty
    if(this.hp<=0)killMinion(this);},
   stagger(t,big){this.stun=Math.max(this.stun,t);if(big)P.counter=3;if(this.state==='tell'||this.state==='attack'){this.state='recover';this.t=0;}if(big)dmgNum(this.pos.clone().add(new V3(0,1.8,0)),'STAGGER','crit');}};
  minions.push(m);return m;}
-function killMinion(m){m.alive=false;S.stat.kills+=m.D.animal?0:1;if(m.D.animal)S.stat.hunts=(S.stat.hunts||0)+1;gainXP(Math.round(m.D.xp*(m.night?1.5:1)));
+function killMinion(m){m.alive=false;try{questEvent('kill',m.type||m.D.id);}catch(e){}S.stat.kills+=m.D.animal?0:1;if(m.D.animal)S.stat.hunts=(S.stat.hunts||0)+1;gainXP(Math.round(m.D.xp*(m.night?1.5:1)));
  burst(m.pos.clone().add(new V3(0,.8,0)),0xffffff,16,5,.7);
  for(const[it,a,b]of m.D.loot){let n=a+Math.floor(R()*(b-a+1));if(n>0)dropLoot(m.pos,it,n);}
  if(m.stolen){dropLoot(m.pos,m.stolen,1);}if(m.D.animal&&has('skinner'))dropLoot(m.pos,'hide',1);
@@ -748,7 +799,7 @@ function updBoss(dt,time){const B=boss;
    silkLine.visible=false;if(shardMesh.visible){const gy=H(shardMesh.position.x,shardMesh.position.z)+1.4;shardMesh.position.y=Math.max(gy,shardMesh.position.y-dt*2.2);shardMesh.rotation.y+=dt*2;
     if(Math.hypot(shardMesh.position.x-hero.position.x,shardMesh.position.z-hero.position.z)<3.2&&shardMesh.position.y<gy+3)claimShard();}}
   return;}
- if(!B.active){if(dP<24&&!P.dead){B.active=true;B.state='idle';B.t=0;$('bossbar').style.display='block';$('bossNm').textContent='女郎蜘蛛 JORŌGUMO — LADY OF THE CANOPY';areaTitle('女郎蜘蛛','JORŌGUMO','Lady of the Canopy · cut her anchor threads');bellTone(1);if(!S.stat.foundWeb){S.stat.foundWeb=true;}}
+ if(!B.active){if(dP<24&&!P.dead){B.active=true;B.state='idle';B.t=0;$('bossbar').style.display='block';$('bossNm').textContent=J('女郎蜘蛛 JORŌGUMO — LADY OF THE CANOPY');areaTitle('女郎蜘蛛','JORŌGUMO','Lady of the Canopy · cut her anchor threads');bellTone(1);if(!S.stat.foundWeb){S.stat.foundWeb=true;}}
   else{B.pos.copy(webNodes[0]);B.pos.y=webNodes[0].y-2+Math.sin(time)*.3;bossG.rotation.y=time*.2;}}
  else if(dP>48||P.dead){B.reset();toast('Jorōgumo withdraws into the canopy.');}
  $('bossHP').style.width=(Math.max(0,B.hp)/B.max*100)+'%';
@@ -875,7 +926,7 @@ function gainXP(n){S.xp+=n;dmgNum(hero.position.clone().add(new V3(0,2.4,0)),'+'
 Object.assign(DERIV,{maxHp:()=>100+(S.lvl-1)*10+S.shards*20,maxSp:()=>50+(S.lvl-1)*5+S.shards*10+(has('well')?25:0),maxSt:()=>100+(S.lvl-1)*5});
 function canCraft(r){if(r.skill&&!has(r.skill))return false;for(const k in r.cost)if((S.inv[k]||0)<costOf(r,k))return false;if(r.need==='forge'&&!nearForge())return false;if(r.need==='fire'&&!nearFire())return false;return true;}
 function costOf(r,k){let c=r.cost[k];if(has('thrift')){const top=Object.keys(r.cost).sort((a,b)=>r.cost[b]-r.cost[a])[0];if(k===top&&c>1)c--;}return c;}
-function craft(id){const r=RECIPES.find(x=>x.id===id);if(!r||!canCraft(r))return;for(const k in r.cost)S.inv[k]-=costOf(r,k);
+function craft(id){const r=RECIPES.find(x=>x.id===id);if(!r||!canCraft(r))return;try{questEvent('craft',id);}catch(e){}for(const k in r.cost)S.inv[k]-=costOf(r,k);
  if(r.out.startsWith('w:')){const w=r.out.slice(2);if(!S.weapons.includes(w))S.weapons.push(w);equip(w);areaTitle(WEAPONS[w].icon,'FORGED: '+WEAPONS[w].name.toUpperCase(),'Equipped');}
  else if(r.out.startsWith('b:')){give(r.out.slice(2)+'_kit',1);toast('Press B to place it.');}else give(r.out,r.n||1);
  if(r.cat==='Cooking')S.stat.cooked++;S.crafted=S.crafted||{};if(!S.crafted[id]){S.crafted[id]=1;gainXP(10);}SFX.craft();renderInv();}
@@ -898,7 +949,9 @@ function castFire(){if(!has('fire')){toast('Learn the Fire talisman first: Way o
  P.castT=.35;projs.push({m:card,v:dir.multiplyScalar(26),t:0});if(has('emberward'))S.warm=Math.min(100,S.warm+20);}
 function updProjs(dt){for(let i=projs.length-1;i>=0;i--){const p=projs[i];p.t+=dt;p.m.position.addScaledVector(p.v,dt);p.m.rotation.z+=dt*12;if(R()<.6)burst(p.m.position,0xff8a2a,1,1,.3,.8,0);
  if(p.arrow){p.v.y-=p.grav*dt;p.m.quaternion.setFromUnitVectors(new V3(0,1,0),p.v.clone().normalize());let ah=null;for(const e of [...enemiesAll(),...minions.filter(m=>m.alive&&m.D.animal)]){if(e.pos.clone().add(new V3(0,e.isBoss?1.8:.8,0)).distanceTo(p.m.position)<(e.isBoss?2.2:1.1)){ah=e;break;}}
-  const gy2=H(p.m.position.x,p.m.position.z);if(ah||p.t>2.5||p.m.position.y<gy2){if(ah){if(ah.isBoss&&!ah.alive){}else ah.damage(p.dmg,p.v.clone().normalize(),false,false);SFX.hit();hitstop(.03);}scene.remove(p.m);projs.splice(i,1);}continue;}
+  const gy2=H(p.m.position.x,p.m.position.z);if(p.fire&&R()<.7)burst(p.m.position,0xff7a2a,1,1,.25,.6,0);if(p.thrown)p.m.rotation.x+=dt*20;
+  if(ah||p.t>2.5||p.m.position.y<gy2){if(ah){if(ah.isBoss&&!ah.alive){}else ah.damage(p.dmg,p.v.clone().normalize(),false,false);if(p.fire){ah.burn=3;burst(p.m.position,0xff6a1a,10,4,.4);}SFX.hit();hitstop(.03);if(p.thrown&&R()<.5&&!ah.isBoss)dropLoot(ah.pos,'kunai',1);}
+   else if(p.m.position.y<gy2+.5&&!p.fire&&R()<(p.thrown?.85:.6)){dropLoot(new V3(p.m.position.x,gy2,p.m.position.z),p.ammo||'arrow',1);}scene.remove(p.m);projs.splice(i,1);}continue;}
  let hit=null;for(const e of enemiesAll()){if(e.pos.clone().add(new V3(0,e.isBoss?1.8:.8,0)).distanceTo(p.m.position)<(e.isBoss?2.4:1.2)){hit=e;break;}}
  for(const s of structures)if(s.type==='campfire'&&!s.lit&&Math.hypot(s.x-p.m.position.x,s.z-p.m.position.z)<1.5&&p.m.position.y<H(s.x,s.z)+2){s.lit=true;s.fuel=240;toast('The ofuda lights the fire!');hit=hit||'fire';}
  const gy=H(p.m.position.x,p.m.position.z);
@@ -915,18 +968,18 @@ function updFishing(dt){if(!FISH.on)return;FISH.t+=dt;if(FISH.bob)FISH.bob.posit
  if(FISH.state==='wait'&&FISH.t>FISH.bite){FISH.state='bite';FISH.t=0;$('fishTxt').textContent='BITE! Press E when the marker is in the green!';$('fishbar').style.visibility='visible';const w=.18;const c=rnd(.25,.75);FISH.zone=[c-w/2,c+w/2];
   $('fishzone').style.left=(FISH.zone[0]*100)+'%';$('fishzone').style.width=(w*100)+'%';FISH.mk=0;FISH.dir=1;SFX.splash();if(FISH.bob)FISH.bob.position.y-=.15;}
  if(FISH.state==='bite'){FISH.mk+=FISH.dir*dt*1.1;if(FISH.mk>1||FISH.mk<0){FISH.dir*=-1;FISH.mk=clamp(FISH.mk,0,1);}$('fishmk').style.left=(FISH.mk*100)+'%';if(FISH.t>5)endFishing('The fish slipped the hook.');}}
-function reel(){if(FISH.state!=='bite')return;if(FISH.mk>=FISH.zone[0]&&FISH.mk<=FISH.zone[1]){const gold=FISH.atPool&&R()<.03;give('fish',1);S.stat.fish++;gainXP(2);if(gold){toast('✨ GOLDEN KOI! (quest item for v0.2)');give('koi',1,true);}endFishing('Caught an ayu!');}else endFishing('Missed! The fish got away.');}
+function reel(){if(FISH.state!=='bite')return;if(FISH.mk>=FISH.zone[0]&&FISH.mk<=FISH.zone[1]){const gold=FISH.atPool&&R()<.12;give('fish',1);S.stat.fish++;gainXP(2);if(gold){toast('✨ GOLDEN KOI! Someone in the valley would treasure this.');give('koi',1,true);}endFishing('Caught an ayu!');}else endFishing('Missed! The fish got away.');}
 ITEMS.koi=['🎏','Golden koi'];
 
 /* ============ INTERACTION ============ */
-function findInteract(){const p=hero.position;let best=null,bd=3.2;
+function findInteract(){const p=hero.position;let best=null,bd=3.2;{const ni=PEOPLE.length?npcNear():null;if(ni)return ni;}
  for(const o of gNear(p.x,p.z,4,_near)){const d=Math.hypot(o.x-p.x,o.z-p.z);if(o.kind==='tree'){if(o.wood>0&&d<1.2*o.s+1.6&&d<bd){bd=d;best={o,verb:'Chop cedar (wood)'};}}else if(o.charges>0&&d<bd){bd=d;best={o,verb:NODE_DEF[o.kind].verb};}}
  for(const s of structures){const d=Math.hypot(s.x-p.x,s.z-p.z);if(s.type==='campfire'&&d<2.6){return{fire:s,verb:s.lit?'Cook / craft at the fire':'Relight fire (1 wood)'};}}
  if(Math.hypot(p.x-FORGE.x,p.z-FORGE.z)<3)return{forge:1,verb:'Use the Kanemura forge'};if(Math.hypot(p.x-SHRINE.x,p.z-SHRINE.z)<3.6)return{shrine:1,verb:'Pray & rest at the shrine (heal, save)'};
  if(best)return best;
  const ahead=new V3(p.x+Math.sin(P.yaw)*3,0,p.z+Math.cos(P.yaw)*3);if(inWater(ahead.x,ahead.z)&&!P.inWater)return{fish:1,verb:'Fish'};return null;}
 function interact(){if(FISH.on){reel();return;}const it=findInteract();if(!it)return;
- if(it.fish){startFishing();return;}if(it.shrine){shrineRest();return;}if(it.forge){openInv('Weapons');return;}
+ if(it.npc){openTalk(it.npc);return;}if(it.horse){if(S.cart)openCart();else toggleRide();return;}if(it.fish){startFishing();return;}if(it.shrine){shrineRest();return;}if(it.forge){openInv('Weapons');return;}
  if(it.fire){if(!it.fire.lit){if((S.inv.wood||0)>=1){S.inv.wood--;it.fire.lit=true;it.fire.fuel=240;SFX.fire();toast('Fire relit');}else toast('Need 1 wood');return;}openInv('Cooking');return;}
  const o=it.o;P.gatherT=.35;
  if(o.kind==='tree'){o.wood--;setTree(o.i,1);setTimeout(()=>setTree(o.i,0),120);SFX.chop();give('wood',1);if(R()<.25)give('sap',1);burst(new V3(o.x,o.y+1.2,o.z),0xb08850,6,3,.5);if(o.wood<=0){o.regrow=180;setTree(o.i);}}
@@ -940,17 +993,27 @@ function placeBuild(){const opts=['hut','campfire','leanto'].filter(k=>S.inv[k+'
  S.inv[type+'_kit']--;buildStruct(type,x,z);if(type==='campfire'){S.stat.fires++;SFX.fire();}else{noise(.15,300,.4);setTimeout(()=>noise(.15,300,.4),150);setTimeout(()=>noise(.15,300,.4),300);}
  toast(({campfire:'Campfire',leanto:'Lean-to',hut:'Hut'})[type]+' built');S._bPref=type==='campfire'?'leanto':'campfire';refreshHotbar();save();}
 /* ============ v0.2: BOW (Hunter 2) ============ */
-WEAPONS.yumi={name:'Yumi bow',icon:'🏹',dmg:13,heavy:28,stL:6,stH:14,combo:1,speed:1,reach:30,arc:.3,len:1.2,col:0x6a4a30,ranged:true};
-ITEMS.arrow=['➶','Arrows'];
+WEAPONS.yumi={name:'Hankyū short bow',ammo:'arrow',icon:'🏹',dmg:13,heavy:28,stL:6,stH:14,combo:1,speed:1,reach:30,arc:.3,len:1.2,col:0x6a4a30,ranged:true};
+ITEMS.arrow=['➶','Arrows'];ITEMS.firearrow=['🔥','Fire arrows'];ITEMS.kunai=['🗡️','Kunai'];
+/* ---- v0.3 ranged: daikyū longbow upgrade, throwing kunai, fire arrows, arrow pickup, draw-charge ---- */
+WEAPONS.daikyu={name:'Daikyū longbow',icon:'🏹',dmg:19,heavy:42,stL:7,stH:16,combo:1,speed:1,reach:42,arc:.3,len:1.7,col:0x3a2414,ranged:true,ammo:'arrow'};
+WEAPONS.kunai={name:'Throwing kunai',icon:'🗡️',dmg:11,heavy:22,stL:4,stH:9,combo:1,speed:1,reach:22,arc:.3,len:.45,col:0x50505a,ranged:true,thrown:true,ammo:'kunai'};
 RECIPES.splice(2,0,{cat:'Weapons',id:'yumi',out:'w:yumi',cost:{wood:3,fiber:3,bamboo:1},need:'forge',skill:'bow',ds:'Needs Hunter: Yumi Bow. LMB quick shot 13, RMB power shot 28. Uses arrows.'},
  {cat:'Weapons',id:'arrow',out:'arrow',n:6,cost:{wood:1,stone:1},skill:'bow',ds:'6 arrows. Needs Hunter: Yumi Bow.'});
-TIMING.yumi={L:[[.12,.45]],H:[.15+.35,.85]};
-function fireArrow(heavy){if(!(S.inv.arrow>0)){toast('No arrows. Craft them (I → Weapons).');return;}const w=W(),cost=heavy?w.stH:w.stL;if(S.st<cost*.5){toast('Too tired!');return;}useSt(cost);
- const hitAt=heavy?.5:.12;P.atk={heavy,t:0,dur:heavy?.85:.45,hitAt,hit:false,idx:0,bow:true};P.comboT=0;}
-function releaseArrow(heavy){S.inv.arrow--;refreshHotbar();const from=hero.position.clone().add(new V3(0,1.45,0));let dir;const tgt=P.lock&&P.lock.alive!==false?P.lock:null;
+TIMING.yumi={L:[[.12,.45]],H:[.15+.35,.85]};TIMING.daikyu={L:[[.16,.55]],H:[.62,1.0]};TIMING.kunai={L:[[.07,.28]],H:[.16,.45]};
+RECIPES.splice(4,0,{cat:'Weapons',id:'daikyu',out:'w:daikyu',cost:{bamboo:3,fiber:4,silk:1,wood:2},need:'forge',skill:'bow',ds:'Longbow upgrade: 19 quick / 42 power shot, longer range, flatter arc.'},
+ {cat:'Weapons',id:'kunai_w',out:'w:kunai',cost:{iron:1,wood:1},need:'forge',ds:'Throwing kunai (weapon). Quick throws 11, heavy throw 22. Uses kunai ammo; recover them after throwing.'},
+ {cat:'Weapons',id:'kunai',out:'kunai',n:6,cost:{iron:1,stone:1},need:'forge',ds:'6 kunai (ammo for the throwing kunai).'},
+ {cat:'Weapons',id:'firearrow',out:'firearrow',n:3,cost:{arrow:3,sap:1,fiber:1},need:'fire',skill:'bow',ds:'3 fire arrows: burn the target. R switches arrow type.'});
+
+function ammoFor(w){if(w.thrown)return'kunai';const pref=S.ammo||'arrow';if((S.inv[pref]||0)>0)return pref;const alt=pref==='arrow'?'firearrow':'arrow';return(S.inv[alt]||0)>0?alt:pref;}
+function toggleAmmo(){S.ammo=(S.ammo||'arrow')==='arrow'?'firearrow':'arrow';toast('Arrows: '+(S.ammo==='firearrow'?'🔥 fire arrows ('+(S.inv.firearrow||0)+')':'➶ arrows ('+(S.inv.arrow||0)+')'));refreshHotbar();}
+function fireArrow(heavy){const w=W(),am=ammoFor(w);if(!(S.inv[am]>0)){toast(w.thrown?'No kunai left. Pick them up or craft more (I → Weapons).':'No arrows. Craft them (I → Weapons) or pick spent ones up.');return;}const cost=heavy?w.stH:w.stL;if(S.st<cost*.5){toast('Too tired!');return;}useSt(cost);
+ const T=TIMING[S.eq]||TIMING.yumi;const[hitAt,dur]=heavy?T.H:T.L[0];P.atk={heavy,t:0,dur,hitAt,hit:false,idx:0,bow:true};P.comboT=0;}
+function releaseArrow(heavy){const w=W(),am=ammoFor(w);if(!(S.inv[am]>0))return;S.inv[am]--;refreshHotbar();const fire=am==='firearrow',thrown=!!w.thrown;const from=hero.position.clone().add(new V3(0,1.45,0));let dir;const tgt=P.lock&&P.lock.alive!==false?P.lock:null;
  if(tgt)dir=new V3().subVectors(tgt.pos.clone().add(new V3(0,tgt.isBoss?1.8:.8,0)),from).normalize();else{dir=new V3();camera.getWorldDirection(dir);dir.y+=.04;dir.normalize();}
- const m=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.9,4),std(0xe8dcc0,{emissive:heavy?0xffcf5a:0x000000,emissiveIntensity:heavy?1.5:0}));m.position.copy(from);m.quaternion.setFromUnitVectors(new V3(0,1,0),dir);scene.add(m);
- projs.push({m,v:dir.multiplyScalar(heavy?48:36),t:0,arrow:true,dmg:Math.round((heavy?28:13)*(has('keen')?1.1:1)),grav:heavy?2:6});noise(.08,3500,.15);}
+ const m=thrown?new THREE.Mesh(new THREE.OctahedronGeometry(.16,0),std(0x50505a,{metalness:.8,roughness:.3})):new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.9,4),std(fire?0xff7a2a:0xe8dcc0,{emissive:fire?0xff5a10:heavy?0xffcf5a:0x000000,emissiveIntensity:fire||heavy?1.5:0}));m.position.copy(from);m.quaternion.setFromUnitVectors(new V3(0,1,0),dir);scene.add(m);
+ const spd=(heavy?48:36)*(S.eq==='daikyu'?1.2:thrown?.75:1);projs.push({m,v:dir.multiplyScalar(spd),t:0,arrow:true,fire,thrown,ammo:am,dmg:Math.round((heavy?w.heavy:w.dmg)*(has('keen')?1.1:1)*(fire?1.15:1)),grav:(heavy?2:6)*(S.eq==='daikyu'?.6:thrown?1.6:1)});noise(.08,thrown?2200:3500,.15);}
 /* ============ v0.2: EARTH WALL (Kami 3) ============ */
 const walls=[];
 function castEarth(){if(!has('earth')){toast('Learn Earth Wall first: Way of the Kami (K).');return;}if(S.sp<20){toast('Not enough spirit 霊力');return;}S.sp-=20;
@@ -971,7 +1034,7 @@ const SHRINE={x:-24,z:134};
  const rope=new THREE.Mesh(new THREE.TorusGeometry(.7,.06,4,12,Math.PI),std(0xe8dcb0));rope.position.set(0,2,.95);rope.rotation.z=Math.PI;g.add(rope);
  for(const sx of[-.6,.6]){const s=new THREE.Mesh(new THREE.PlaneGeometry(.15,.35),new THREE.MeshStandardMaterial({color:0xffffff,side:THREE.DoubleSide,emissive:0xffffff,emissiveIntensity:.3}));s.position.set(sx,1.7,.96);g.add(s);}
  const l=new THREE.PointLight(0xffb060,5,9,1.6);l.position.set(0,2,1.6);g.add(l);g.traverse(o=>{if(o.isMesh)o.castShadow=true});scene.add(g);colliders.push({x:SHRINE.x,z:SHRINE.z,r:1.6});}
-function shrineRest(){S.hp=DERIV.maxHp();S.st=DERIV.maxSt();S.sp=DERIV.maxSp();S.warm=100;S.wet=0;P.poison=0;S.restPoint=[SHRINE.x+2.5,SHRINE.z+2.5];
+function shrineRest(){try{if(V03.anim&&V03.anim.clips.pray)V03.anim.play('pray',{fade:.2});}catch(e){}S.hp=DERIV.maxHp();S.st=DERIV.maxSt();S.sp=DERIV.maxSp();S.warm=100;S.wet=0;P.poison=0;S.restPoint=[SHRINE.x+2.5,SHRINE.z+2.5];
  if(isNight())S.time=0.02;save();bellRing(hero.position.clone(),1);areaTitle('祈り','RESTED AT THE SHRINE','Health, stamina, spirit and warmth restored · game saved'+(S.time<0.05?' · you slept until dawn':''));}
 /* ============ v0.2: SWIMMING (Taki Pool is deep; river is wading) ============ */
 const inDeep=(x,z)=>Math.hypot(x-66,z+104)<7.5;
@@ -1003,6 +1066,544 @@ async function loadMotion(){if(QS.get('motion')==='0')return;try{const M=await i
 function motionUpdate(dt,raw){if(!KMF.ok)return;try{const sp=P.vel;const lx=Math.cos(P.yaw)*sp.x-Math.sin(P.yaw)*sp.z,lz=Math.sin(P.yaw)*sp.x+Math.cos(P.yaw)*sp.z;
  KMF.hero.setVelocity(lx,lz);KMF.hero.setShardCount(S.shards);KMF.hero.setSurvival({cold:clamp((30-S.warm)/30,0,1),wet:S.wet/100,hungry:S.hun<20?1:0,lowHp:S.hp<DERIV.maxHp()*.25?1:0});
  KMF.hero.update(P.dodge>0?0:dt);KMF.sparks.update(dt);KMF.after.update(dt);KMF.bell.update(dt,raw);}catch(e){kmWarn('Motion module error, switching to built-in feel: '+e.message);KMF.ok=false;pose.rotation.set(0,0,0);pose.position.set(0,0,0);pose.scale.set(1,1,1);}}
+/* =====================================================================
+   v0.3 SECTION: VILLAGE · NPCs · DIALOGUE · RELATIONSHIPS · FACTIONS ·
+   JOURNAL · QUESTS · MYSTERY CHARACTERS · STABLE (horse & cart)
+   Data-driven: loads data/npcs.json, quests.json, lore.json, mystery.json
+   (see data/SCHEMA.md); built-in placeholder data has the same shape.
+   ===================================================================== */
+const DATA={factions:[
+ {id:'village',name:'Kanemura Folk',desc:'Townsfolk of the shrine town under the broken bell.',area:'kanemura'},
+ {id:'forest',name:'Forest Folk',desc:'Charcoal burners and kodama keepers of Sugi no Mori.',area:'sugi'},
+ {id:'river',name:'River People',desc:'Fishers and ferrymen of Kawa Valley.',area:'kawa'}],
+npcs:[
+ {id:'oharu',name:'Oharu',nameJp:'お春',role:'Shopkeeper',faction:'village',home:'house2',work:'shop',schedule:[{from:6,to:19,at:'work'},{from:19,to:22,at:'wander'},{from:22,to:6,at:'home'}],
+  persona:{personality:'warm, gossipy, shrewd with money',fears:['the yokai that come at night','her son Taro leaving for the city'],wants:['rare mushrooms','news from the river'],speech:'brisk, calls Ren "young bell-keeper"',secret:'She hid a bell shard fragment for years, thinking it was a lucky charm. It was just brass.'},
+  greeting:'Ah, the young bell-keeper! Buying or just admiring my shelves?',
+  lines:{bell:['That bell rang every dusk for as long as I have lived. The silence since the typhoon makes my teeth ache.'],forest:['Mushrooms from Sugi no Mori sell well. The red ones are for soup, not for eating raw, mind you.'],trade:['Coins for goods, goods for coins. Fair and simple.'],fear:['At night I hear scratching on the shutters. Silk threads on the door in the morning.']},
+  likes:['mushroom','tea','silk'],dislikes:['meat'],shop:{sells:[{item:'salve',price:14},{item:'tea',price:10},{item:'arrow',price:2},{item:'ofuda',price:18},{item:'gfish',price:9}],buys:['fish','hide','mushroom','herb','silk','meat','sap','bamboo']},
+  recruitable:false,quests:['q_mushrooms'],start:{affinity:10,trust:5,fear:0},look:{robe:'#b4533a',hair:'#2b1d14'}},
+ {id:'genzo',name:'Genzo',nameJp:'源蔵',role:'Blacksmith',faction:'village',home:'house1',work:'smith',schedule:[{from:7,to:20,at:'work'},{from:20,to:6,at:'home'}],
+  persona:{personality:'gruff, proud, secretly soft-hearted',fears:['his hands going weak','that the bell was cast badly by his grandfather'],wants:['iron ore','a worthy apprentice'],speech:'few words, metal metaphors'},
+  greeting:'Hm. Ren. If it is not iron you bring, keep it short.',
+  lines:{bell:['My grandfather cast the bell. Bronze, gold seams. If it cracked, the mountain cracked it, not his hands.'],trade:['Steel costs. Bring ore and I will sharpen your edge for less.'],forest:['Rust rocks by the river. Iron blood in them.'],fear:['Fear is a flaw in the casting. You hammer it out.']},
+  likes:['iron','flint','tea'],dislikes:['mushroom'],shop:{sells:[{item:'kunai',price:4},{item:'arrow',price:2},{item:'iron',price:12},{item:'flint',price:4}],buys:['iron','stone','flint','wood','hide']},
+  recruitable:true,combat:{hp:160,dmg:12},quests:['q_ore'],start:{affinity:0,trust:10,fear:0},look:{robe:'#3b3a40',hair:'#555'}},
+ {id:'shinobu',name:'Shinobu',nameJp:'忍',role:'Temple Priestess',faction:'village',home:'temple',work:'temple',schedule:[{from:5,to:21,at:'work'},{from:21,to:5,at:'home'}],
+  persona:{personality:'calm, learned, quietly frightened of what sleeps in the mountain',fears:['Orochi waking','losing her faith'],wants:['the eight kakera returned','old prayer strips'],speech:'measured, uses proverbs'},
+  greeting:'Welcome, Keeper. The kami are listening, even when the bell is not.',
+  lines:{bell:['The bell does not ring to be heard. It rings so that something below can keep sleeping.'],orochi:['Eight heads, eight shards. That is not coincidence, Ren.'],fear:['I pray every hour now. I am afraid the prayers are only for me.'],jorogumo:['The Lady of the Canopy was a weaver once. Grief turned her silk to iron.']},
+  likes:['ofuda','herb','tea'],dislikes:['meat','fish'],recruitable:true,combat:{hp:110,dmg:8},quests:['q_prayers'],start:{affinity:15,trust:15,fear:0},look:{robe:'#e9e4da',hair:'#111'}},
+ {id:'kenta',name:'Kenta',nameJp:'健太',role:'Stable Keeper',faction:'village',home:'house3',work:'stable',schedule:[{from:6,to:20,at:'work'},{from:20,to:6,at:'home'}],
+  persona:{personality:'cheerful, horse-mad, talks too fast',fears:['wolves near the paddock','debt'],wants:['customers','carrots (he means any vegetable)'],speech:'excited, lots of exclamation'},
+  greeting:'Hey hey, Ren! Looking for four legs? Best horses this side of the mountain!',
+  lines:{trade:['A horse is 120 coins, a horse with cart 200. The cart carries a chest for your loot!'],forest:['Do not ride into the web woods. Horses hate silk.'],fear:['Something spooked the mares last night. Big. Lots of legs.']},
+  likes:['herb','mushroom','fish'],dislikes:['silk'],shop:{sells:[{item:'horse',price:120},{item:'cart',price:200}],buys:['herb','fiber']},recruitable:false,quests:[],start:{affinity:5,trust:5,fear:0},look:{robe:'#5a7a3a',hair:'#4a2a14'}},
+ {id:'aiko',name:'Aiko',nameJp:'愛子',role:'Hunter',faction:'forest',home:'house4',work:{x:-30,z:118},schedule:[{from:5,to:17,at:'work'},{from:17,to:22,at:'wander'},{from:22,to:5,at:'home'}],
+  persona:{personality:'sharp-tongued, brave, competitive',fears:['being pitied','spiders, though she hides it'],wants:['to hunt the Jorogumo','a better bow'],speech:'short, teasing'},
+  greeting:'Bell-keeper. Still in one piece? Impressive.',
+  lines:{forest:['Deer run at dawn near the cedars. Shoot early, shoot once.'],jorogumo:['I will put an arrow in that spider queen. With or without you.'],hunt:['Want to hunt together? I lead, you keep up.'],fear:['Spiders? Me? ...just the big ones.']},
+  likes:['arrow','meat','hide'],dislikes:['silk'],recruitable:true,combat:{hp:120,dmg:10,ranged:true},quests:['q_hunt'],start:{affinity:0,trust:0,fear:0},look:{robe:'#6b4a2a',hair:'#1a1a1a'}},
+ {id:'jiro',name:'Old Jiro',nameJp:'次郎',role:'Fisherman',faction:'river',home:'house5',work:{x:58,z:120},schedule:[{from:5,to:15,at:'work'},{from:15,to:20,at:'wander'},{from:20,to:5,at:'home'}],
+  persona:{personality:'slow, kind, full of river tales',fears:['the river rising','being forgotten'],wants:['someone to listen','a golden koi'],speech:'rambling, warm'},
+  greeting:'Sit, sit. The fish are patient, so am I.',
+  lines:{river:['The river people say a koi with gold scales swims below the waterfall. Catch it and your luck turns.'],bell:['When the bell rang, the fish jumped. Now they hide.'],fear:['The water rose twice this month. Mountains should not breathe.']},
+  likes:['fish','gfish','tea'],dislikes:[],recruitable:false,quests:['q_koi'],start:{affinity:10,trust:10,fear:0},look:{robe:'#3a5a7a',hair:'#ccc'}},
+ {id:'yui',name:'Yui',nameJp:'結衣',role:'Innkeeper',faction:'village',home:'inn',work:'inn',schedule:[{from:7,to:23,at:'work'},{from:23,to:7,at:'home'}],
+  persona:{personality:'gentle, observant, hides worry with hospitality',fears:['the missing bell-ringer never coming home'],wants:['news of her brother, the bell-ringer Sota'],speech:'polite, soft'},
+  greeting:'Please, rest a while. You look like the mountain chewed on you.',
+  lines:{bell:['My brother Sota rang the bell. On the typhoon night he went up to the frame and did not come back.'],ringer:['If you hear a small bell in the mist near the waterfall... please, follow it.'],fear:['I set his bowl every evening.']},
+  likes:['tea','fish','herb'],dislikes:[],recruitable:false,quests:['q_sota'],start:{affinity:10,trust:5,fear:0},look:{robe:'#8a5a9a',hair:'#221'}},
+ {id:'daisuke',name:'Daisuke',nameJp:'大輔',role:'Charcoal Burner',faction:'forest',home:{x:-46,z:70},work:{x:-46,z:70},schedule:[{from:6,to:22,at:'work'},{from:22,to:6,at:'home'}],
+  persona:{personality:'suspicious of town folk, loyal once won',fears:['the kodama punishing him for cutting trees'],wants:['respect from the village','sap for his kilns'],speech:'grumbling, dry humour'},
+  greeting:'Town boy. What do you want in my smoke?',
+  lines:{forest:['Every tree I burn, I thank. The kodama watch. They remember.'],trade:['Sap for coin. Not much coin.'],fear:['Little white faces in the branches at night. Counting.']},
+  likes:['sap','wood','tea'],dislikes:['ofuda'],recruitable:true,combat:{hp:140,dmg:11},quests:['q_sap'],start:{affinity:-10,trust:-5,fear:0},look:{robe:'#2e2a26',hair:'#3a2a1a'}}
+],
+quests:[
+ {id:'q_mushrooms',title:'Mushrooms for Oharu',type:'side',giver:'oharu',desc:'Oharu wants 5 mushrooms from Sugi no Mori for her soup stall.',steps:[{text:'Gather 5 mushrooms',goal:{type:'collect',item:'mushroom',n:5}},{text:'Bring them to Oharu',goal:{type:'give',item:'mushroom',n:5,target:'oharu'}}],reward:{xp:60,coins:25,items:{salve:1},affinity:{oharu:15},rep:{village:10}}},
+ {id:'q_ore',title:'Iron for the Forge',type:'side',giver:'genzo',desc:'Genzo needs 4 iron ore from the rust rocks by the river.',steps:[{text:'Bring Genzo 4 iron ore',goal:{type:'give',item:'iron',n:4,target:'genzo'}}],reward:{xp:80,coins:30,items:{kunai:8},affinity:{genzo:20},rep:{village:10},lore:['l_casting']}},
+ {id:'q_prayers',title:'Prayer Strips',type:'side',giver:'shinobu',desc:'Shinobu asks for 2 ofuda to re-seal the temple gate.',steps:[{text:'Bring Shinobu 2 ofuda',goal:{type:'give',item:'ofuda',n:2,target:'shinobu'}}],reward:{xp:70,coins:15,items:{tonic:1},affinity:{shinobu:20},rep:{village:8},lore:['l_orochi']}},
+ {id:'q_hunt',title:'The Hunter\'s Wager',type:'side',giver:'aiko',desc:'Aiko bets you cannot hunt 3 deer before she does.',steps:[{text:'Hunt 3 deer',goal:{type:'kill',target:'deer',n:3}},{text:'Tell Aiko',goal:{type:'talk',target:'aiko'}}],reward:{xp:90,coins:20,items:{arrow:15},affinity:{aiko:20},rep:{forest:10}}},
+ {id:'q_koi',title:'The Golden Koi',type:'side',giver:'jiro',desc:'Old Jiro dreams of a golden koi below the waterfall. Fish at Taki Pool.',steps:[{text:'Catch 3 fish at the falls (or anywhere)',goal:{type:'collect',item:'fish',n:3}},{text:'Show Jiro',goal:{type:'give',item:'fish',n:3,target:'jiro'}}],reward:{xp:70,coins:20,items:{koi:1},affinity:{jiro:20},rep:{river:15},lore:['l_koi']}},
+ {id:'q_sap',title:'Sap for the Kilns',type:'side',giver:'daisuke',desc:'Daisuke needs 4 cedar sap for his charcoal kilns.',steps:[{text:'Bring Daisuke 4 sap',goal:{type:'give',item:'sap',n:4,target:'daisuke'}}],reward:{xp:60,coins:15,affinity:{daisuke:25},rep:{forest:15}}},
+ {id:'q_sota',title:'The Lost Bell-Ringer',type:'secret',giver:'yui',desc:'Yui\'s brother Sota vanished on the typhoon night. A small bell was heard near the waterfall.',steps:[{text:'Find the lost bell-ringer near Taki Pool',goal:{type:'talk',target:'ringer'}},{text:'Bring word to Yui',goal:{type:'talk',target:'yui'}}],reward:{xp:150,coins:40,affinity:{yui:30},rep:{village:15},lore:['l_sota']}},
+ {id:'q_mask',title:'The Hermit\'s Mask',type:'secret',giver:'hermit',desc:'The masked hermit wants you to defeat the Lady of the Canopy without fleeing the web.',steps:[{text:'Defeat the Jorogumo',goal:{type:'kill',target:'jorogumo',n:1}},{text:'Return to the hermit',goal:{type:'talk',target:'hermit'}}],reward:{xp:200,items:{ofuda:3},lore:['l_hermit']}},
+ {id:'q_fox',title:'Three Riddles',type:'secret',giver:'fox',desc:'The fox traveler wants a gift of tea, a gift of fish and a gift of silk.',steps:[{text:'Give the fox tea',goal:{type:'give',item:'tea',n:1,target:'fox'}},{text:'Give the fox fish',goal:{type:'give',item:'fish',n:1,target:'fox'}},{text:'Give the fox silk',goal:{type:'give',item:'silk',n:1,target:'fox'}}],reward:{xp:150,coins:60,items:{firearrow:6},lore:['l_fox']}}
+],
+lore:[
+ {id:'l_bell',title:'The Bell of Kanemura',text:'Cast a thousand years ago with gold in its seams, the bell was rung each dusk so that something under Nemuriyama would keep sleeping.',found:'start'},
+ {id:'l_casting',title:'The Casting',text:'Genzo\'s grandfather recast the bell\'s lip after a quake. He swore it would hold for another thousand years. It held for sixty.',found:'quest:q_ore'},
+ {id:'l_orochi',title:'Eight Heads, Eight Shards',text:'Temple scrolls tell of Yamata no Orochi, the eight-headed serpent bound beneath the summit. Each kakera holds one head\'s dream.',found:'quest:q_prayers'},
+ {id:'l_koi',title:'The Golden Koi',text:'River people say the koi of Taki Pool was once a bell-keeper who chose to swim forever rather than let the river forget the bell\'s song.',found:'quest:q_koi'},
+ {id:'l_jorogumo',title:'Lady of the Canopy',text:'The Jorogumo was a weaver of Kanemura who lost her children to a flood. She climbed the cedars to never see water again.',found:'shard:1'},
+ {id:'l_sota',title:'Sota\'s Last Peal',text:'Sota rang the bell as it cracked. The shock flung him into the mist. He has been ringing a hand-bell ever since, keeping the dark at bay one step at a time.',found:'quest:q_sota'},
+ {id:'l_hermit',title:'The Masked Hermit',text:'Beneath the mask is the face of the last Keeper. He failed. He has been waiting for someone who will not.',found:'quest:q_mask'},
+ {id:'l_fox',title:'The Fox\'s Bargain',text:'Kitsune never lie. They only tell truths you are not ready for. Her ninth tail is a shard\'s shadow.',found:'quest:q_fox'}],
+story:[
+ {id:'s_prologue',title:'Typhoon Night',text:'The great bell cracked and its eight kakera scattered across Nemuriyama. I am Ren, and the village calls me Keeper now.',trigger:'start'},
+ {id:'s_first',title:'The First Kakera',text:'The Lady of the Canopy is still. Gold runs through my cracks. One shard home, seven to go.',trigger:'shard:1'}],
+mystery:[
+ {id:'hermit',name:'The Masked Hermit',nameJp:'面の隠者',area:'sugi',x:-118,z:20,look:'hermit',time:'any',persona:{personality:'cryptic, weary, kind underneath',fears:['seeing his own face'],wants:['a Keeper who will not run'],speech:'riddles and short koans'},
+  greeting:'A bell-keeper with a cracked bell. How fitting. Sit.',lines:{bell:['A bell is mostly silence shaped by bronze.'],orochi:['The serpent dreams. Every shard you take, it dreams less.'],jorogumo:['Do not flee her web. Fleeing is how I lost mine.']},lore:['l_bell'],quest:'q_mask'},
+ {id:'fox',name:'Fox-Spirit Traveler',nameJp:'狐の旅人',area:'kawa',x:84,z:30,look:'fox',time:'any',persona:{personality:'playful, teasing, ancient',fears:['iron bells','being named'],wants:['gifts and good manners'],speech:'teasing, answers questions with questions'},
+  greeting:'Oh? A human who can see me. How rude of you. How delightful.',lines:{bell:['Bells keep things asleep. Are you sure you want everything asleep?'],orochi:['I knew him when he had one head. Charming fellow.']},lore:[],quest:'q_fox'},
+ {id:'ringer',name:'The Lost Bell-Ringer',nameJp:'迷いの鐘撞き',area:'taki',x:52,z:-92,look:'ringer',time:'any',persona:{personality:'dazed, gentle, repeating himself',fears:['the silence','forgetting his sister'],wants:['to go home','to hear the great bell again'],speech:'drifting, half-remembered sentences'},
+  greeting:'...ring, ring... is it dusk? Yui will be setting my bowl...',lines:{bell:['I struck it and it screamed. Gold dust everywhere. Then the mist.'],yui:['Yui... tell her I am still ringing. Tell her I will come home.']},lore:[]}
+]};
+const PRICE={wood:2,stone:2,flint:4,iron:10,fiber:1,herb:3,mushroom:4,sap:3,hide:8,meat:4,fish:5,silk:9,bamboo:3,ofuda:15,salve:12,tea:8,tonic:20,gfish:8,gmeat:7,skewer:10,arrow:2,firearrow:5,kunai:3,koi:60};
+async function loadData(){for(const f of['npcs','quests','lore','mystery']){try{const r=await fetch('data/'+f+'.json',{cache:'no-store'});if(!r.ok)continue;const j=await r.json();
+  for(const k of['factions','npcs','quests','lore','story','mystery'])if(Array.isArray(j[k])&&j[k].length)DATA[k]=j[k];console.log('[kanemori] loaded data/'+f+'.json');}catch(e){/* placeholder data stays */}}
+ for(const q of DATA.quests)for(const s of(q.steps||[]))if(s.goal&&s.goal.item&&!ITEMS[s.goal.item])ITEMS[s.goal.item]=['🎴',s.goal.item];
+ for(const n of DATA.npcs){for(const it of(n.likes||[]))if(!ITEMS[it])ITEMS[it]=['🎴',it];}
+ buildPeople();}
+Object.assign(ITEMS,{coin:['🪙','Coins'],koi:['🐟','Golden koi'],silk:ITEMS.silk||['🕸️','Spider silk']});
+/* ---------- village buildings ---------- */
+const BLD={shop:{x:16,z:138,door:[13.6,141]},house1:{x:-16,z:140,door:[-14,143]},house2:{x:-14,z:164,door:[-13,161]},inn:{x:18,z:165,door:[17,162]},house3:{x:-26,z:152,door:[-23,152]},
+ smith:{x:-6,z:142,door:[-6,144.5]},temple:{x:-4,z:176,door:[-4,171]},stable:{x:30,z:150,door:[27,148]},house4:{x:-32,z:122,door:[-30,124]},house5:{x:44,z:132,door:[42,130]},shrine:{x:-24,z:134,door:[-22,136]},well:{x:2,z:136,door:[3.5,136]},bellframe:{x:4,z:150,door:[4,146]}};
+function bldPos(id){if(id&&typeof id==='object')return[id.x,id.z];const b=BLD[id];return b?b.door:[0,148];}
+{// temple (pagoda-ish hall)
+ const g=new THREE.Group(),x=-4,z=176;g.position.set(x,H(x,z),z);const red=std(0xc8402c,{emissive:0x3a0800,emissiveIntensity:.25}),roofM=std(0x2a2e3e),wall=std(0xeae0c8);
+ const base=new THREE.Mesh(new THREE.BoxGeometry(11,1,9),std(0x8a8580));base.position.y=.5;g.add(base);const hall=new THREE.Mesh(new THREE.BoxGeometry(9,4,7),wall);hall.position.y=3;g.add(hall);
+ for(const[px,pz]of[[-4.3,3.4],[4.3,3.4],[-4.3,-3.4],[4.3,-3.4],[-1.5,3.4],[1.5,3.4]]){const p=new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,4,8),red);p.position.set(px,3,pz);g.add(p);}
+ for(let i=0;i<2;i++){const r=new THREE.Mesh(new THREE.CylinderGeometry(i?3.6:1.2,i?7.6:6.2,i?1.6:1.8,4),roofM);r.rotation.y=Math.PI/4;r.scale.z=.8;r.position.y=i?5.8:7.6;g.add(r);}
+ const ft=new THREE.Mesh(new THREE.ConeGeometry(.3,1.6,6),std(0xd8b04a,{metalness:.7,roughness:.3}));ft.position.y=9.2;g.add(ft);
+ const lt=new THREE.PointLight(0xffa040,6,14,1.6);lt.position.set(0,3,5.5);g.add(lt);g.traverse(o=>{if(o.isMesh)o.castShadow=o.receiveShadow=true});scene.add(g);colliders.push({x,z,r:5.2});
+ torii(-4,166,0,.85);}
+{// stable with paddock fence + sign
+ const g=new THREE.Group(),x=30,z=150;g.position.set(x,H(x,z),z);g.rotation.y=-Math.PI/2;const wood=std(0x7a5232),roofM=std(0x4a3a2e);
+ const back=new THREE.Mesh(new THREE.BoxGeometry(8,3,.3),wood);back.position.set(0,1.5,-2.5);g.add(back);for(const sx of[-4,4]){const s=new THREE.Mesh(new THREE.BoxGeometry(.3,3,5),wood);s.position.set(sx,1.5,0);g.add(s);}
+ const roof=new THREE.Mesh(new THREE.BoxGeometry(9,.3,6.4),roofM);roof.position.y=3.3;roof.rotation.x=-.15;g.add(roof);
+ for(let i=-5;i<=5;i++){const p=new THREE.Mesh(new THREE.BoxGeometry(.16,1.1,.16),wood);p.position.set(i*1.1,.55,5);g.add(p);}const rail=new THREE.Mesh(new THREE.BoxGeometry(11.4,.12,.12),wood);rail.position.set(0,.95,5);g.add(rail);
+ const hay=new THREE.Mesh(new THREE.CylinderGeometry(.7,.7,1,10),std(0xd8c070));hay.rotation.z=Math.PI/2;hay.position.set(2.5,.6,-1.2);g.add(hay);
+ g.traverse(o=>{if(o.isMesh)o.castShadow=true});scene.add(g);colliders.push({x:x+1.5,z,r:2.6});}
+[[-8,132],[12,156],[-20,170],[26,140],[-2,160]].forEach(([x,z])=>lamp(x,z));
+// small shop awning + smith roof markers
+{const a=new THREE.Mesh(new THREE.BoxGeometry(4,.12,1.6),std(0x2f6aa8));a.position.set(13.2,H(13.2,141)+2.6,141.2);a.rotation.set(.25,-.4,0);scene.add(a);
+ const sr=new THREE.Mesh(new THREE.BoxGeometry(4.5,.2,3.6),std(0x33384f));sr.position.set(-5,H(-5,142)+3,142);scene.add(sr);for(const[a2,b2]of[[-7,140.4],[-3,140.4],[-7,143.6],[-3,143.6]]){const p=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,3,5),std(0x5a3b2a));p.position.set(a2,H(a2,b2)+1.5,b2);scene.add(p);}}
+/* ---------- villager / mystery figure fallback models (Aether's GLB replaces when present) ---------- */
+function mkFigure(look={},kind){const g=new THREE.Group();const robeC=new THREE.Color(look.robe||'#6a5a4a');
+ const robe=new THREE.Mesh(new THREE.CylinderGeometry(.28,.5,1.25,8),std(robeC));robe.position.y=.7;g.add(robe);
+ const sash=new THREE.Mesh(new THREE.CylinderGeometry(.3,.33,.12,8),std(0x2a2430));sash.position.y=1.05;g.add(sash);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.22,10,8),std(0xe8c8a8));head.position.y=1.58;g.add(head);
+ const hair=new THREE.Mesh(new THREE.SphereGeometry(.235,10,8,0,TAU,0,Math.PI*.55),std(new THREE.Color(look.hair||'#222')));hair.position.y=1.6;g.add(hair);
+ const arms=[];for(const sx of[-1,1]){const a=new THREE.Mesh(new THREE.CylinderGeometry(.09,.12,.62,6),std(robeC.clone().multiplyScalar(.85)));a.position.set(sx*.36,1.1,0);a.geometry.translate(0,-.28,0);a.position.y=1.38;g.add(a);arms.push(a);}
+ if(kind==='hermit'){const m=new THREE.Mesh(new THREE.SphereGeometry(.2,10,8,0,TAU,0,Math.PI*.6),emis(0xf2efe6,.4));m.rotation.x=Math.PI/2;m.position.set(0,1.58,.1);g.add(m);
+  const hat=new THREE.Mesh(new THREE.ConeGeometry(.6,.35,12),std(0xb89a5a));hat.position.y=1.92;g.add(hat);}
+ if(kind==='fox'){for(const sx of[-1,1]){const e=new THREE.Mesh(new THREE.ConeGeometry(.08,.25,4),std(0xe8742a));e.position.set(sx*.13,1.86,0);g.add(e);}
+  const mk=new THREE.Mesh(new THREE.ConeGeometry(.12,.3,4),std(0xffffff));mk.rotation.x=Math.PI/2;mk.position.set(0,1.55,.24);g.add(mk);
+  for(let i=0;i<3;i++){const t=new THREE.Mesh(new THREE.ConeGeometry(.16,1,6),emis(0xff9a3a,.5));t.position.set((i-1)*.25,.6,-.55);t.rotation.x=-1.0;t.rotation.z=(i-1)*.4;g.add(t);}
+  const wisp=new THREE.PointLight(0xff8a3a,3,8,1.8);wisp.position.y=2.2;g.add(wisp);}
+ if(kind==='ringer'){const b=new THREE.Mesh(new THREE.ConeGeometry(.16,.24,10,1,true),std(0xd8b04a,{metalness:.8,roughness:.3,emissive:0x5a4010,emissiveIntensity:.6}));b.position.set(.42,.86,.12);g.add(b);
+  const wisp=new THREE.PointLight(0xffd27a,3,9,1.8);wisp.position.y=2;g.add(wisp);robe.material.transparent=true;robe.material.opacity=.85;}
+ g.scale.setScalar(look.scale||1);g.traverse(o=>{if(o.isMesh)o.castShadow=true});g.userData.arms=arms;return g;}
+/* ---------- people runtime ---------- */
+const PEOPLE=[];// {d,mesh,x,z,yaw,tgt,mode,mystery,comp,hp}
+let horseMesh=null,cartMesh=null;
+function relOf(id){S.rel=S.rel||{};if(!S.rel[id]){const d=findDef(id)||{},st=d.start||{};S.rel[id]={aff:st.affinity||0,trust:st.trust||0,fear:st.fear||0,met:0,mem:[],talks:0,gifts:0};}return S.rel[id];}
+function findDef(id){return DATA.npcs.find(n=>n.id===id)||DATA.mystery.find(n=>n.id===id);}
+function repOf(f){S.rep=S.rep||{};return S.rep[f]||0;}
+function addRep(f,n){if(!f)return;S.rep=S.rep||{};S.rep[f]=clamp((S.rep[f]||0)+n,-100,100);}
+function dispName(d){return SHOWJP&&d.nameJp?d.name+' '+d.nameJp:d.name;}
+function buildPeople(){for(const p of PEOPLE)scene.remove(p.mesh);PEOPLE.length=0;
+ for(const d of DATA.npcs){const m=(window.KMV03&&KMV03.makeVillager&&KMV03.makeVillager(d))||mkFigure(d.look||{});const[x,z]=bldPos(d.work||d.home);m.position.set(x,H(x,z),z);scene.add(m);PEOPLE.push({d,mesh:m,x,z,yaw:0,tgt:[x,z],mode:'work',wT:0,hp:(d.combat&&d.combat.hp)||100,atkT:0});}
+ for(const d of DATA.mystery){const m=mkFigure(d.look==='fox'?{robe:'#e8742a',hair:'#f0f0f0'}:d.look==='ringer'?{robe:'#cfd6e6',hair:'#333'}:d.look==='hermit'?{robe:'#4a4a3a',hair:'#666'}:{},d.look);const x=d.x,z=d.z;m.position.set(x,H(x,z),z);scene.add(m);
+  PEOPLE.push({d,mesh:m,x,z,yaw:0,tgt:[x,z],mode:'idle',mystery:true,home:[x,z],wT:0});}
+ ensureRel();}
+function ensureRel(){S.rel=S.rel||{};S.rep=S.rep||{village:0,forest:0,river:0};S.q2=S.q2||{};S.jr=S.jr||{lore:[],story:[],notes:[]};S.inv.coin=S.inv.coin==null?60:S.inv.coin;
+ for(const l of DATA.lore)if(l.found==='start'&&!S.jr.lore.includes(l.id))S.jr.lore.push(l.id);for(const s of DATA.story)if(s.trigger==='start'&&!S.jr.story.includes(s.id))S.jr.story.push(s.id);}
+function hourNow(){return((S.time%1)*24+24)%24;}
+function schedAt(d){const h=hourNow();for(const s of(d.schedule||[])){const a=s.from,b=s.to;if(a<b?(h>=a&&h<b):(h>=a||h<b))return s.at;}return'work';}
+function npcNear(){const p=hero.position;let best=null,bd=2.8;for(const n of PEOPLE){if(!n.mesh.visible)continue;const d=Math.hypot(n.x-p.x,n.z-p.z);if(d<bd){bd=d;best=n;}}
+ if(best)return{npc:best,verb:'Talk to '+dispName(best.d)+(best.d.role?' ('+best.d.role+')':'')+(best.comp?' · companion':'')};
+ if(S.horse&&horseMesh&&!RIDE.on&&Math.hypot(horseMesh.position.x-p.x,horseMesh.position.z-p.z)<2.6)return{horse:1,verb:'Mount horse (H)'+(S.cart?' · cart chest':'')};return null;}
+function villageUpdate(dt){if(!PEOPLE.length)return;const p=hero.position,t=performance.now()/1000;
+ for(const n of PEOPLE){const d=n.d;let mode=n.mystery?'idle':schedAt(d);if(n.comp)mode='follow';
+  if(n.mystery&&d.time==='night'){const night=hourNow()>19||hourNow()<5;n.mesh.visible=night;}
+  if(mode!==n.mode||n.wT<=0){n.mode=mode;n.wT=6+R()*6;
+   if(mode==='work')n.tgt=bldPos(d.work).map(v=>v+rnd(-1.5,1.5));else if(mode==='home')n.tgt=bldPos(d.home);else if(mode==='wander')n.tgt=[rnd(-18,22),rnd(132,168)];else if(n.mystery)n.tgt=[n.home[0]+rnd(-4,4),n.home[1]+rnd(-4,4)];}
+  n.wT-=dt;
+  if(mode==='follow'){const ang=PEOPLE.indexOf(n)*1.3;n.tgt=[p.x-Math.sin(P.yaw+ang*.3)*2.6-Math.cos(ang)*1.2,p.z-Math.cos(P.yaw+ang*.3)*2.6+Math.sin(ang)*1.2];companionFight(n,dt);}
+  const dx=n.tgt[0]-n.x,dz=n.tgt[1]-n.z,dist=Math.hypot(dx,dz);const talking=TALK.n===n;
+  let sp=mode==='follow'?(dist>12?(RIDE.on?13:8.5):dist>3?5.5:0):dist>.4?1.6:0;if(talking)sp=0;
+  if(dist>80&&mode==='follow'){n.x=p.x-2;n.z=p.z-2;}
+  if(sp>0){n.x+=dx/dist*sp*dt;n.z+=dz/dist*sp*dt;const ty=Math.atan2(dx,dz);n.yaw+=Math.atan2(Math.sin(ty-n.yaw),Math.cos(ty-n.yaw))*Math.min(1,dt*6);}
+  else if(talking||Math.hypot(p.x-n.x,p.z-n.z)<4){const ty=Math.atan2(p.x-n.x,p.z-n.z);n.yaw+=Math.atan2(Math.sin(ty-n.yaw),Math.cos(ty-n.yaw))*Math.min(1,dt*4);}
+  const home=mode==='home'&&dist<.6&&!n.comp;n.mesh.visible=!home&&(n.mystery&&d.time==='night'?n.mesh.visible:true);
+  const y=H(n.x,n.z);const walk=sp>0?Math.sin(t*sp*3.2+n.x):0;n.mesh.position.set(n.x,Math.max(y,WATER_SEA-.3)+Math.abs(walk)*.05+(sp?0:Math.sin(t*1.6+n.z)*.012),n.z);n.mesh.rotation.y=n.yaw;
+  if(n.mesh.userData.anim){try{v03NpcAnim(n,sp,dt,talking);}catch(e){n.mesh.userData.anim=null;}}
+  const ar=n.mesh.userData.arms;if(ar){ar[0].rotation.x=walk*.5;ar[1].rotation.x=-walk*.5;if(n.mystery&&d.look==='ringer'){ar[1].rotation.x=-.4+Math.sin(t*5)*.3;}}
+  if(n.mystery&&d.look==='ringer'&&Math.hypot(p.x-n.x,p.z-n.z)<40&&R()<dt*.4&&AC){try{tone(1320,.5,'sine',.05)}catch(e){}}
+  if(n.atkT>0)n.atkT-=dt;}
+ if(S.horse){if(!horseMesh)mkHorse();const ha=horseMesh.userData.anim;if(ha){ha.setMove(RIDE.on?P.vel.length():0,0);ha.update(dt);}
+  if(RIDE.on){horseMesh.position.set(p.x,H(p.x,p.z),p.z);horseMesh.rotation.y=P.yaw;const gait=Math.min(1,P.vel.length()/12);horseMesh.userData.legs.forEach((l,i)=>l.rotation.x=Math.sin(t*12+i*1.6)*.6*gait);
+   if(horseMesh.userData.saddle){horseMesh.updateMatrixWorld(true);const sp2=new V3();horseMesh.userData.saddle.getWorldPosition(sp2);hero.position.y=sp2.y-(V03.anim&&V03.anim.ride?0:.85);}else hero.position.y+=1.05;
+   if(cartMesh){const bx=p.x-Math.sin(P.yaw)*3.4,bz=p.z-Math.cos(P.yaw)*3.4;cartMesh.position.lerp(new V3(bx,H(bx,bz),bz),Math.min(1,dt*6));cartMesh.lookAt(p.x,cartMesh.position.y,p.z);}}
+  else if(cartMesh&&horseMesh){}}
+ questTick(dt);}
+/* ---------- companions: follow, fight in organized hunts / boss raids ---------- */
+function companionFight(n,dt){const c=n.d.combat||{dmg:9,hp:120};let tgt=null,bd=c.ranged?18:11;for(const e of enemiesAll()){if(!e.alive&&e.alive!==undefined)continue;const d=Math.hypot(e.pos.x-n.x,e.pos.z-n.z);if(d<bd){bd=d;tgt=e;}}
+ if(!tgt)return;if(!c.ranged)n.tgt=[tgt.pos.x-(tgt.pos.x-n.x)/Math.max(bd,.1)*1.4,tgt.pos.z-(tgt.pos.z-n.z)/Math.max(bd,.1)*1.4];
+ if(n.atkT<=0&&(c.ranged||bd<2.2)){if(tgt.isBoss&&!c.ranged&&boss.canMelee&&!boss.canMelee())return;n.atkT=c.ranged?1.6:1.1;const dir=new V3(tgt.pos.x-n.x,0,tgt.pos.z-n.z).normalize();
+  try{tgt.damage(Math.round(c.dmg*(.85+R()*.3)),dir,false,false);}catch(e){}burst(new V3(tgt.pos.x,tgt.pos.y+1,tgt.pos.z),c.ranged?0xffe0a0:0xffffff,6,3,.3);
+  const ar=n.mesh.userData.arms;if(ar){ar[1].rotation.x=-2.2;}}}
+/* ---------- stable: horse & cart ---------- */
+const RIDE={on:false};
+function mkHorse(){const g=new THREE.Group(),c=std(0x6a4426),dk=std(0x2a1a10);const body=new THREE.Mesh(new THREE.BoxGeometry(.8,.85,2),c);body.position.y=1.35;g.add(body);
+ const neck=new THREE.Mesh(new THREE.BoxGeometry(.4,1,.45),c);neck.position.set(0,1.95,.95);neck.rotation.x=-.5;g.add(neck);const hd=new THREE.Mesh(new THREE.BoxGeometry(.32,.35,.75),c);hd.position.set(0,2.35,1.35);g.add(hd);
+ const mane=new THREE.Mesh(new THREE.BoxGeometry(.12,.9,.3),dk);mane.position.set(0,2.05,.8);mane.rotation.x=-.5;g.add(mane);const tail=new THREE.Mesh(new THREE.ConeGeometry(.14,.9,5),dk);tail.position.set(0,1.2,-1.15);tail.rotation.x=-2.6;g.add(tail);
+ const legs=[];for(const[a,b]of[[-.28,.75],[.28,.75],[-.28,-.75],[.28,-.75]]){const l=new THREE.Mesh(new THREE.BoxGeometry(.16,1,.16),c);l.geometry.translate(0,-.5,0);l.position.set(a,1.05,b);g.add(l);legs.push(l);}
+ const saddle=new THREE.Mesh(new THREE.BoxGeometry(.85,.15,.7),std(0xa8302a));saddle.position.y=1.82;g.add(saddle);g.userData.legs=legs;g.traverse(o=>{if(o.isMesh)o.castShadow=true});
+ horseMesh=(window.KMV03&&KMV03.makeHorse&&KMV03.makeHorse())||g;horseMesh.userData.legs=horseMesh.userData.legs||[];const sx=27,sz=154;horseMesh.position.set(sx,H(sx,sz),sz);scene.add(horseMesh);
+ if(S.cart&&!cartMesh&&window.KMV03&&KMV03.makeCart){cartMesh=KMV03.makeCart();cartMesh.position.set(sx,H(sx,sz),sz-3.5);scene.add(cartMesh);}
+ if(S.cart&&!cartMesh){const cg=new THREE.Group(),w=std(0x8a6a42);const bed=new THREE.Mesh(new THREE.BoxGeometry(1.6,.5,2.2),w);bed.position.y=.9;cg.add(bed);
+  for(const sx2 of[-.95,.95]){const wh=new THREE.Mesh(new THREE.CylinderGeometry(.55,.55,.12,12),dk);wh.rotation.z=Math.PI/2;wh.position.set(sx2,.55,0);cg.add(wh);}const box=new THREE.Mesh(new THREE.BoxGeometry(1.1,.6,.9),std(0x5a3b2a));box.position.set(0,1.45,-.3);cg.add(box);
+  cg.position.set(sx,H(sx,sz),sz-3.5);scene.add(cg);cartMesh=cg;}}
+function toggleRide(){if(!S.horse){toast('You have no horse. Kenta at the stable sells them.');return;}if(!horseMesh)mkHorse();
+ if(RIDE.on){RIDE.on=false;const p=hero.position;horseMesh.position.set(p.x+1.3,H(p.x+1.3,p.z),p.z);toast('Dismounted');return;}
+ const p=hero.position;if(Math.hypot(horseMesh.position.x-p.x,horseMesh.position.z-p.z)>4){toast('Your horse is too far away (it waits where you left it)');return;}RIDE.on=true;toast('Riding — W to gallop, H to dismount');}
+function openCart(){const inv=S.cartInv=S.cartInv||{};const rows=Object.keys(S.inv).filter(k=>S.inv[k]>0&&k!=='coin'&&!k.endsWith('_kit')).map(k=>`<button class="btn cy sm" data-dep="${k}">${ITEMS[k]?ITEMS[k][0]:''} ${J(ITEMS[k]?ITEMS[k][1]:k)} ×${S.inv[k]}</button>`).join('');
+ const rows2=Object.keys(inv).filter(k=>inv[k]>0).map(k=>`<button class="btn sm" data-wd="${k}">${ITEMS[k]?ITEMS[k][0]:''} ${J(ITEMS[k]?ITEMS[k][1]:k)} ×${inv[k]}</button>`).join('')||'<i>empty</i>';
+ $('m2T').textContent='Cart chest';$('m2B').innerHTML=`<div class="lbl">In the cart (click to take)</div><div>${rows2}</div><div class="lbl" style="margin-top:8px">Your pack (click to store all)</div><div>${rows}</div>`;show('menu2');
+ $('m2B').querySelectorAll('[data-dep]').forEach(b=>b.onclick=()=>{const k=b.dataset.dep;inv[k]=(inv[k]||0)+S.inv[k];S.inv[k]=0;refreshHotbar();openCart();});
+ $('m2B').querySelectorAll('[data-wd]').forEach(b=>b.onclick=()=>{const k=b.dataset.wd;S.inv[k]=(S.inv[k]||0)+inv[k];inv[k]=0;refreshHotbar();openCart();});}
+/* ---------- quests ---------- */
+function qDef(id){return DATA.quests.find(q=>q.id===id);}
+function qState(id){S.q2=S.q2||{};return S.q2[id];}
+function startQuest(id){const q=qDef(id);if(!q||qState(id))return;S.q2[id]={step:0,n:0,done:false};toast('New '+(q.type==='main'?'story':q.type)+' quest: '+q.title);journalNote(`Took the quest “${q.title}”.`);SFX.pick&&SFX.pick();}
+function questAvail(id){const q=qDef(id);return q&&!qState(id)&&(!q.after||(qState(q.after)&&qState(q.after).done));}
+function qGoal(id){const q=qDef(id),s=qState(id);if(!q||!s||s.done)return null;return q.steps[s.step]&&q.steps[s.step].goal;}
+function advanceQuest(id){const q=qDef(id),s=qState(id);s.step++;s.n=0;if(s.step>=q.steps.length){s.done=true;rewardQuest(q);}else toast(q.title+': '+q.steps[s.step].text);}
+function rewardQuest(q){const r=q.reward||{};toast('Quest complete: '+q.title);if(r.xp)gainXP(r.xp);if(r.coins)give('coin',r.coins);for(const k in(r.items||{}))give(k,r.items[k]);
+ for(const k in(r.affinity||{})){const rl=relOf(k);rl.aff=clamp(rl.aff+r.affinity[k],-100,100);rl.trust=clamp(rl.trust+r.affinity[k]*.6,-100,100);}for(const k in(r.rep||{}))addRep(k,r.rep[k]);
+ for(const l of(r.lore||[]))unlockLore(l);for(const st of DATA.story)if(st.trigger==='quest:'+q.id&&!S.jr.story.includes(st.id)){S.jr.story.push(st.id);}for(const l of DATA.lore)if(l.found==='quest:'+q.id)unlockLore(l.id);journalNote(`Completed “${q.title}”.`);try{bellRing(hero.position.clone(),1)}catch(e){}}
+function unlockLore(id){if(S.jr.lore.includes(id))return;const l=DATA.lore.find(x=>x.id===id);if(!l)return;S.jr.lore.push(id);toast('Lore discovered: '+l.title+' (J)');}
+function journalNote(t){S.jr=S.jr||{lore:[],story:[],notes:[]};S.jr.notes.unshift({day:Math.floor(S.day||0),t});if(S.jr.notes.length>60)S.jr.notes.pop();}
+let qT=0;function questTick(dt){qT-=dt;if(qT>0)return;qT=.5;ensureRel();
+ for(const id in S.q2){const g=qGoal(id);if(!g)continue;const s=S.q2[id];
+  if(g.type==='collect'&&(S.inv[g.item]||0)>=g.n)advanceQuest(id);
+  else if(g.type==='shard'&&S.shards>=g.n)advanceQuest(id);
+  else if(g.type==='visit'&&Math.hypot(hero.position.x-g.x,hero.position.z-g.z)<(g.r||8))advanceQuest(id);
+  else if(g.type==='kill'&&g.target==='jorogumo'&&S.boss&&S.boss.dead)advanceQuest(id);
+  else if(g.type==='recruit'&&PEOPLE.some(n=>n.comp&&n.d.id===g.target))advanceQuest(id);}
+ for(const s of DATA.story)if(s.trigger&&s.trigger.startsWith('shard:')&&S.shards>=+s.trigger.split(':')[1]&&!S.jr.story.includes(s.id)){S.jr.story.push(s.id);toast('Journal: '+s.title);}
+ for(const l of DATA.lore)if(l.found&&l.found.startsWith('shard:')&&S.shards>=+l.found.split(':')[1])unlockLore(l.id);
+ for(const l of DATA.lore)if(l.found&&l.found.startsWith('place:')){const[x,z,r]=l.found.slice(6).split(',').map(Number);if(Math.hypot(hero.position.x-x,hero.position.z-z)<(r||8))unlockLore(l.id);}}
+function questEvent(type,target,extra){if(type==='kill'){S.bestiary=S.bestiary||{};S.bestiary[target]=(S.bestiary[target]||0)+1;}if(!S.q2)return;for(const id in S.q2){const g=qGoal(id);if(!g||g.type!==type)continue;if(g.target&&g.target!==target&&g.item!==target)continue;
+  if(type==='kill'){S.q2[id].n++;if(S.q2[id].n>=(g.n||1))advanceQuest(id);}else if(type==='craft'&&g.item===target)advanceQuest(id);else if(type==='talk')advanceQuest(id);}}
+/* ---------- dialogue panel with free text input + persona engine (+ optional LLM) ---------- */
+const TALK={n:null,hist:[],busy:false};
+const INTENTS=[['bye',/\b(bye|goodbye|farewell|see you|later|leave)\b/],['greet',/^(hi|hello|hey|good (morning|evening|day)|greetings|yo)\b/],['name',/\b(who are you|your name|what.*called|about you(rself)?)\b/],
+ ['job',/\b(job|work|do you do|role|trade here)\b/],['insult',/\b(stupid|idiot|ugly|hate you|useless|fool|shut up)\b/],['threat',/\b(kill you|i('| wi)ll hurt|die|threat|burn (your|this))\b/],
+ ['thanks',/\b(thank|thanks|kind|beautiful|appreciate|great|wonderful|friend)\b/],['fear',/\b(afraid|fear|scared|worry|worried|frighten)\b/],['want',/\b(want|wish|dream|hope|desire)\b/],
+ ['quest',/\b(help|quest|task|job for me|anything i can do|favou?r|errand)\b/],['trade',/\b(buy|sell|trade|shop|price|cost|coin|horse|cart|wares)\b/],['join',/\b(join|come with|follow me|companion|hunt (with|together)|fight with|raid|party)\b/],
+ ['dismiss',/\b(go home|wait here|stay here|dismiss|leave the party)\b/],['bell',/\b(bell|kakera|shard)\b/],['jorogumo',/\b(jor[oō]gumo|spider|canopy|web)\b/],['orochi',/\b(orochi|serpent|summit|eight)\b/],
+ ['forest',/\b(forest|sugi|tree|cedar|kodama|mushroom|deer)\b/],['river',/\b(river|kawa|fish|koi|water|waterfall|taki)\b/],['ringer',/\b(sota|ringer|brother|small bell)\b/],['yui',/\b(yui|sister)\b/],
+ ['hunt',/\b(hunt|hunting|bow|arrow)\b/],['weather',/\b(weather|storm|rain|typhoon|cold)\b/],['secret',/\b(secret|hide|hiding|truth|really)\b/],['rumor',/\b(news|rumou?r|gossip|heard|happening)\b/],['feel',/\b(how are you|feel|mood|okay|alright)\b/]];
+function intentOf(t){t=t.toLowerCase();const out=[];for(const[k,re]of INTENTS)if(re.test(t))out.push(k);return out.length?out:['chat'];}
+const pk=a=>a[Math.floor(R()*a.length)];
+function moodOf(rl){const s=rl.aff+rl.trust*.5-rl.fear*.6;return s>45?'devoted':s>15?'friendly':s>-15?'neutral':s>-45?'cold':'hostile';}
+function personaReply(n,text){const d=n.d,rl=relOf(d.id),ps=d.persona||{},it=intentOf(text),mood=moodOf(rl),L=d.lines||{};let out=[];const nm=d.name;
+ const seen=k=>rl.mem.filter(m=>m===k).length;
+ for(const k of it){if(['insult'].includes(k)){rl.aff-=8;rl.trust-=4;out.push(mood==='devoted'?'That stung, Ren. I will pretend I did not hear it.':pk(['Watch your tongue, bell-keeper.','Charming. Truly.','Say that again and we are done talking.']));}
+  else if(k==='threat'){rl.fear=clamp(rl.fear+15,0,100);rl.trust-=10;rl.aff-=6;out.push(pk(['...I hear you. Please, there is no need for that.','You would not dare. ...Would you?','Keeper or not, the kami see what you do.']));}
+  else if(k==='thanks'){rl.aff+=3;rl.trust+=1;out.push(pk(['You are kinder than the mountain, Ren.','Hm. Kind words cost nothing, but I will take them.','That warms me more than tea.']));}
+  else if(k==='greet'&&!out.length)out.push(rl.talks>2?pk([`Back again, Ren?`,`Ren. Good to see you.`]):d.greeting||'Hello.');
+  else if(k==='name')out.push(`I am ${nm}${d.role?', '+d.role.toLowerCase():''}. ${ps.personality?('People say I am '+ps.personality.split(',')[0]+'.'):''}`);
+  else if(k==='job')out.push(d.role?`I'm the ${d.role.toLowerCase()} here.`+(L.trade?' '+pk(L.trade):''):'I keep to myself.');
+  else if(k==='fear'){if(rl.trust>=10||mood==='friendly'||mood==='devoted'){out.push(L.fear?pk(L.fear):'');if(ps.fears&&ps.fears.length)out.push('If I am honest, I fear '+pk(ps.fears)+'.');rl.trust+=2;}else out.push('Why would I tell you what scares me? We barely know each other.');}
+  else if(k==='want')out.push(ps.wants&&ps.wants.length?`What I want? ${pk(ps.wants).replace(/^./,c=>c.toUpperCase())}. ${d.likes&&d.likes.length?'Bring me some '+J(ITEMS[d.likes[0]]?ITEMS[d.likes[0]][1]:d.likes[0]).toLowerCase()+' and you will see me smile.':''}`:'Peace. Just peace.');
+  else if(k==='secret'){if(ps.secret&&rl.trust>=40){out.push('Since it is you... '+ps.secret);if(!rl.mem.includes('secret'))journalNote(nm+' told me a secret: '+ps.secret);}else out.push(rl.trust>=15?'Some things need more trust than we have yet.':'Secrets? Not for strangers.');}
+  else if(k==='feel')out.push({devoted:'Better now that you are here.',friendly:'Tired, but well. You?',neutral:'Getting by.',cold:'Fine. Why?',hostile:'Worse for seeing you.'}[mood]);
+  else if(k==='rumor'){const o=pk(PEOPLE.filter(p=>p!==n&&!p.mystery));out.push(o?`Have you met ${o.d.name}, the ${(o.d.role||'').toLowerCase()}? ${o.d.persona&&o.d.persona.wants?'They say '+o.d.name+' wants '+pk(o.d.persona.wants)+'.':''}`:'Quiet days. Too quiet.');}
+  else if(k==='weather')out.push(S.weather==='storm'?'A storm! Get under a roof, fool!':S.weather==='warn'||S.weather==='rain'?'Rain coming. Build a hut or find a fire before the storm.':'Clear skies. The mountain is pretending to be kind.');
+  else if(L[k])out.push(seen(k)?'As I said before: '+pk(L[k]):pk(L[k]));
+  else if(k==='bell')out.push('The bell is broken, and you are the Keeper now. Find the kakera.');
+  else if(k==='jorogumo')out.push('The Lady of the Canopy weaves west of the river, in the old cedars. Burn her mist with fire ofuda.');
+  else if(k==='forest')out.push('Sugi no Mori is wide. Herbs, mushrooms, and things that bite.');
+  else if(k==='river')out.push('The river runs cold from the falls. Good fishing at Taki Pool.');
+  if(['insult','threat','thanks'].includes(k))rl.mem.push(k);else if(k!=='chat')rl.mem.push(k);}
+ if(it.includes('quest')){const av=(d.quests||[]).filter(questAvail),act=(d.quests||[]).filter(id=>qState(id)&&!qState(id).done);
+  if(av.length&&(rl.aff>-20)){const q=qDef(av[0]);out.push(q.desc+' Will you do it? (I added it to your journal.)');startQuest(av[0]);}else if(act.length)out.push('You already promised me: '+qDef(act[0]).title+'.');else out.push(d.quest&&!qState(d.quest)?'Hm.':'Nothing right now. Ask around the village.');
+  if(d.quest&&questAvail(d.quest)&&rl.talks>=1){startQuest(d.quest);out.push(qDef(d.quest).desc);}}
+ if(it.includes('trade'))out.push(d.shop?'Take a look. (Use the Trade button.)':'I have nothing to sell, but I might accept a gift.');
+ if(it.includes('join'))out.push(recruit(n,true));if(it.includes('dismiss')&&n.comp){n.comp=false;out.push('I will head home then. Call on me again.');}
+ if(it.includes('bye'))out.push(pk(d.lines&&d.lines.bye||['Walk safely, Keeper.','Until next time.','Mind the mist.']));
+ out=out.filter(Boolean);if(!out.length){out.push(pk(mood==='hostile'?['I have nothing to say to you.']:mood==='cold'?['Mm.','Is that so.','Get to the point.']:[`Hm? ${pk(['Say that another way','I do not follow','Strange words'])}, Ren.`,(ps.wants&&ps.wants.length?'Speaking of things... I have been thinking about '+pk(ps.wants)+'.':'The bell has been silent too long.'),'Ask me about the bell, the forest, or what I fear. Or ask if I need help.']));}
+ rl.aff=clamp(rl.aff,-100,100);rl.trust=clamp(rl.trust,-100,100);if(rl.mem.length>40)rl.mem.splice(0,rl.mem.length-40);
+ return out.slice(0,3).join(' ');}
+function recruit(n,talkMode){const d=n.d,rl=relOf(d.id);if(n.mystery)return'I walk my own path, Keeper.';if(!d.recruitable)return'Me? Fight? I would only slow you down.';if(n.comp)return'I am already at your side.';
+ const need=25-repOf(d.faction)*.2;if(rl.aff+rl.trust*.5<need&&rl.fear<60)return`Earn my trust first. (Affinity needed: ~${Math.ceil(need)})`;if(PEOPLE.filter(p=>p.comp).length>=2)return'You already have two companions. Dismiss one first.';
+ n.comp=true;try{if(V03.anim&&V03.anim.clips.command_gesture)V03.anim.play('command_gesture',{layer:'upper',fade:.1});}catch(e){}questEvent('recruit',d.id);journalNote(`${d.name} joined me as a companion.`);return rl.fear>=60&&rl.aff<10?'...Fine. I will come. Not that I have a choice.':pk(['Let us hunt, then. I am with you.','Lead the way, Keeper.','About time someone asked.']);}
+function relBar(lbl,v,col){const w=Math.round((v+100)/2);return`<div class="relb"><span>${lbl}</span><i><b style="width:${w}%;background:${col}"></b></i><em>${Math.round(v)}</em></div>`;}
+function renderTalkHead(){const n=TALK.n;if(!n)return;const d=n.d,rl=relOf(d.id);$('tkName').textContent=dispName(d);$('tkRole').textContent=(d.role||'Wanderer')+(d.faction?' · '+(DATA.factions.find(f=>f.id===d.faction)||{name:d.faction}).name:'')+' · '+moodOf(rl);
+ $('tkRel').innerHTML=relBar('Affinity',rl.aff,'#e8b04a')+relBar('Trust',rl.trust,'#6fb8ff')+relBar('Fear',rl.fear*2-100,'#e85a4a');
+ $('tkJoin').textContent=n.comp?'DISMISS':'RECRUIT';$('tkJoin').style.display=d.recruitable?'':'none';$('tkTrade').style.display=d.shop?'':'none';}
+function tkLog(who,t){const e=document.createElement('div');e.className='tkl '+(who==='me'?'me':'them');e.innerHTML=`<b>${who==='me'?'Ren':dispName(TALK.n.d)}</b> ${t.replace(/</g,'&lt;')}`;$('tkLog').appendChild(e);$('tkLog').scrollTop=1e6;}
+function openTalk(n){TALK.n=n;TALK.hist=[];const d=n.d,rl=relOf(d.id);$('tkLog').innerHTML='';renderTalkHead();show('talk');
+ const first=!rl.met;rl.met=1;rl.talks++;try{const va=V03.anim;if(va&&!RIDE.on){if(first&&va.clips.bow_greet)va.play('bow_greet',{layer:'upper',fade:.15});}const na=n.mesh.userData.anim;if(na&&first&&na.clips.bow_greet)na.play('bow_greet',{fade:.15});}catch(e){}tkLog('them',first?(d.greeting||'Hello.'):({devoted:'Ren! I was hoping you would come by.',friendly:'Good to see you again, Ren.',neutral:d.greeting||'Yes?',cold:'You again.',hostile:'What do you want?'}[moodOf(rl)]));
+ if(first){for(const l of DATA.lore)if(l.found==='npc:'+d.id||l.found==='mystery:'+d.id)unlockLore(l.id);for(const st of DATA.story)if((st.trigger==='npc:'+d.id||st.trigger==='mystery:'+d.id)&&!S.jr.story.includes(st.id)){S.jr.story.push(st.id);toast('Journal: '+st.title);}for(const l of(d.lore||[]))unlockLore(l);journalNote('Met '+d.name+(d.role?', the '+d.role.toLowerCase():'')+'.');if(n.mystery&&d.quest)setTimeout(()=>{if(TALK.n===n&&questAvail(d.quest)){startQuest(d.quest);tkLog('them',qDef(d.quest).desc);}},600);}
+ questEvent('talk',d.id);{const mq=(d.quests||[]).find(id=>{const q=qDef(id);return q&&q.type==='main'&&questAvail(id);});if(mq)setTimeout(()=>{if(TALK.n===n&&questAvail(mq)){startQuest(mq);tkLog('them',qDef(mq).desc);}},700);}setTimeout(()=>{$('tkIn').focus();},50);}
+function closeTalk(){TALK.n=null;hide('talk');}
+async function sendTalk(){const ta=$('tkIn'),text=ta.value.trim();if(!text||!TALK.n||TALK.busy)return;ta.value='';tkLog('me',text);const n=TALK.n;
+ let reply=personaReply(n,text);// local engine always runs (updates relationship + quest hooks)
+ if(LLM.url&&LLM.model){TALK.busy=true;$('tkSend').textContent='…';try{const r=await llmReply(n,text,reply);if(r)reply=r;}catch(e){kmWarn('NPC AI unavailable, using built-in replies.');}TALK.busy=false;$('tkSend').textContent='SAY ⏎';}
+ if(TALK.n!==n)return;TALK.hist.push({role:'user',content:text},{role:'assistant',content:reply});if(TALK.hist.length>12)TALK.hist.splice(0,2);tkLog('them',reply);renderTalkHead();ta.focus();}
+async function llmReply(n,text,fallback){const d=n.d,rl=relOf(d.id),ps=d.persona||{};
+ const sys=`You are ${d.name}${d.role?', the '+d.role:''} in Kanemura, a shrine village at the foot of Nemuriyama (the Sleeping Mountain) in a stylized Japanese-folklore world. Stay fully in character; reply in 1-3 short sentences, plain English, no stage directions.
+Personality: ${ps.personality||'reserved'}. Speech style: ${ps.speech||'natural'}. Fears: ${(ps.fears||[]).join('; ')}. Wants: ${(ps.wants||[]).join('; ')}.${ps.secret&&rl.trust>=40?' Secret you may now share: '+ps.secret:''}
+You are talking to Ren, the young Keeper of the shattered bell (${S.shards} of 8 kakera recovered). Your feelings toward Ren: affinity ${Math.round(rl.aff)}, trust ${Math.round(rl.trust)}, fear ${Math.round(rl.fear)} (mood: ${moodOf(rl)}). Time: ${Math.floor(hourNow())}:00, weather ${S.weather}.
+Things you know: ${Object.values(d.lines||{}).flat().slice(0,8).join(' ')}
+Topics Ren raised before: ${rl.mem.slice(-8).join(', ')||'none'}. A sensible in-character answer would be like: "${fallback}"
+Answer ONLY with JSON: {"reply":"...","emotion":"calm|wary|warm|angry|afraid","trust_delta":0,"fear_delta":0,"action":"none|offer_trade|give_quest|join_raid|refuse|flee|tell_rumor","memory":"short note"}`;
+ const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),8000);
+ const r=await fetch(LLM.url,{method:'POST',signal:ctl.signal,headers:Object.assign({'Content-Type':'application/json'},LLM.key?{Authorization:'Bearer '+LLM.key}:{}),body:JSON.stringify({model:LLM.model,max_tokens:160,temperature:.8,messages:[{role:'system',content:sys},...TALK.hist,{role:'user',content:text}]})});
+ clearTimeout(to);if(!r.ok)throw new Error('LLM '+r.status);const j=await r.json();let txt=(j.choices&&j.choices[0]&&(j.choices[0].message?j.choices[0].message.content:j.choices[0].text)||'').trim();
+ const mm=txt.match(/\{[\s\S]*\}/);if(mm){try{const o=JSON.parse(mm[0]);const cl=v=>clamp(+v||0,-5,5);rl.trust=clamp(rl.trust+cl(o.trust_delta),-100,100);rl.fear=clamp(rl.fear+cl(o.fear_delta),0,100);if(o.memory)rl.mem.push(String(o.memory).slice(0,60));
+  if(o.action==='offer_trade'&&d.shop)setTimeout(tradeMenu,300);if(o.action==='give_quest'){const av=(d.quests||[]).filter(questAvail);if(av.length)startQuest(av[0]);}if(o.action==='join_raid'&&d.recruitable&&!n.comp)recruit(n);txt=String(o.reply||'').trim();}catch(e){}}
+ return txt;}
+function giftMenu(){const n=TALK.n;if(!n)return;const d=n.d;const needCoin=Object.keys(S.q2||{}).some(id=>{const g=qGoal(id);return g&&g.type==='give'&&g.item==='coin'&&(g.target||qDef(id).giver)===d.id;});const items=Object.keys(S.inv).filter(k=>S.inv[k]>0&&(k!=='coin'||needCoin)&&!k.endsWith('_kit'));
+ $('tkSub').innerHTML='<div class="lbl">Give an item</div>'+(items.map(k=>`<button class="btn cy sm" data-g="${k}">${ITEMS[k]?ITEMS[k][0]:''} ${J(ITEMS[k]?ITEMS[k][1]:k)} ×${S.inv[k]}</button>`).join('')||'<i>Your pack is empty.</i>');
+ $('tkSub').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{const k=b.dataset.g,rl=relOf(d.id);
+  // quest give goals first
+  for(const id in(S.q2||{})){const g=qGoal(id);if(g&&g.type==='give'&&(g.target||qDef(id).giver)===d.id&&g.item===k){if((S.inv[k]||0)>=g.n){S.inv[k]-=g.n;tkLog('me',`(hands over ${g.n} ${J(ITEMS[k][1])})`);tkLog('them','Exactly what I asked for. Thank you, Ren.');advanceQuest(id);refreshHotbar();renderTalkHead();$('tkSub').innerHTML='';return;}else{tkLog('them',`I need ${g.n} of those, you have ${S.inv[k]}.`);return;}}}
+  try{if(V03.anim&&V03.anim.clips.give_item)V03.anim.play('give_item',{layer:'upper',fade:.1});}catch(e){}S.inv[k]--;rl.gifts++;const liked=(d.likes||[]).includes(k),dis=(d.dislikes||[]).includes(k);const v=liked?14:dis?-8:4;rl.aff=clamp(rl.aff+v/(1+rl.gifts*.08),-100,100);rl.trust=clamp(rl.trust+(liked?4:1),-100,100);addRep(d.faction,liked?3:1);
+  tkLog('me',`(gives ${J(ITEMS[k]?ITEMS[k][1]:k)})`);tkLog('them',liked?pk(['For me? Oh, this is perfect!','You remembered! Thank you.']):dis?pk(['...I do not care for this.','Hm. Keep it next time.']):pk(['Thank you, Ren.','How thoughtful.']));refreshHotbar();renderTalkHead();giftMenu();});}
+function priceFor(d,k,buy){const base=PRICE[k]||5;const rl=relOf(d.id),rep=repOf(d.faction);const disc=clamp(1-(rl.aff*.002+rep*.002),.7,1.25);return Math.max(1,Math.round(buy?base*disc:base*.45/disc));}
+function tradeMenu(){const n=TALK.n;if(!n||!n.d.shop)return;const d=n.d,sh=d.shop;let h=`<div class="lbl">Buy · you have 🪙 ${S.inv.coin||0}</div>`;
+ for(const s of sh.sells||[]){const pr=s.item==='horse'?Math.min(s.price,180):s.item==='cart'?Math.min(s.price,320):Math.round(s.price*priceFor(d,s.item,true)/(PRICE[s.item]||s.price)||s.price);const owned=(s.item==='horse'&&S.horse)||(s.item==='cart'&&S.cart);
+  h+=`<button class="btn sm" data-b="${s.item}" data-p="${pr}" ${owned?'disabled':''}>${s.item==='horse'?'🐎 Horse':s.item==='cart'?'🐎🛒 Horse + cart':(ITEMS[s.item]?ITEMS[s.item][0]+' '+J(ITEMS[s.item][1]):s.item)} · 🪙${pr}${owned?' (owned)':''}</button>`;}
+ h+=`<div class="lbl" style="margin-top:6px">Sell</div>`;for(const k of sh.buys||[])if((S.inv[k]||0)>0){const pr=priceFor(d,k,false);h+=`<button class="btn cy sm" data-s="${k}" data-p="${pr}">${ITEMS[k]?ITEMS[k][0]:''} ${J(ITEMS[k]?ITEMS[k][1]:k)} ×${S.inv[k]} · 🪙${pr}</button>`;}
+ $('tkSub').innerHTML=h;
+ $('tkSub').querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const k=b.dataset.b,p=+b.dataset.p;if((S.inv.coin||0)<p){tkLog('them','Not enough coin, Ren.');return;}S.inv.coin-=p;
+  if(k==='horse'){S.horse=1;mkHorse();tkLog('them','She is yours! Her name is Kaze. She waits by the stable. Press H near her to ride.');journalNote('Bought a horse, Kaze.');}
+  else if(k==='cart'){S.horse=1;S.cart=1;if(horseMesh){scene.remove(horseMesh);horseMesh=null;}mkHorse();tkLog('them','Horse and cart! The cart has a chest. Talk to... well, walk up to the horse to open it.');journalNote('Bought a horse and cart.');}
+  else{give(k,1);tkLog('them',pk(['Pleasure doing business.','A fine choice.']));}relOf(d.id).aff+=1;addRep(d.faction,1);refreshHotbar();tradeMenu();});
+ $('tkSub').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const k=b.dataset.s,p=+b.dataset.p;S.inv[k]--;give('coin',p,1);refreshHotbar();tradeMenu();});}
+/* ---------- journal ---------- */
+let jTab='Quests';
+function renderJournal(){ensureRel();const tabs=['Story','Quests','People','Factions','Rumors','Bestiary','Lore'];$('jTabs').innerHTML=tabs.map(t=>`<button class="tab ${t===jTab?'on':''}" data-t="${t}">${t}</button>`).join('');
+ $('jTabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{jTab=b.dataset.t;renderJournal();});let h='';
+ if(jTab==='Story'){h+=DATA.story.filter(s=>S.jr.story.includes(s.id)).map(s=>`<div class="jent"><h4>${s.title}</h4><p>${s.text}</p></div>`).join('');h+=`<div class="jent"><h4>Main path</h4><p>${QUEST.map((q,i)=>(i<S.quest?'✔ ':i===S.quest?'➤ ':'· ')+q.t).join('<br>')}</p></div>`;
+  h+='<h4 style="margin:8px 0 2px">Notes</h4>'+S.jr.notes.slice(0,20).map(n=>`<div class="jn">${n.t}</div>`).join('');}
+ if(jTab==='Quests'){const act=[],done=[];for(const id in S.q2){const q=qDef(id);if(!q)continue;(S.q2[id].done?done:act).push(q);}
+  h+=act.map(q=>{const s=S.q2[q.id];return`<div class="jent ${q.type}"><h4>${q.type==='secret'?'✦ ':''}${q.title}<small>${q.type}</small></h4><p>${q.desc}</p><p>${q.steps.map((st,i)=>(i<s.step?'✔ ':i===s.step?'➤ ':'· ')+st.text).join('<br>')}</p></div>`}).join('')||'<p><i>No active side quests. Talk to villagers and ask if they need help.</i></p>';
+  if(done.length)h+='<h4>Completed</h4>'+done.map(q=>`<div class="jn">✔ ${q.title}</div>`).join('');}
+ if(jTab==='People'){h+=PEOPLE.filter(n=>S.rel[n.d.id]&&S.rel[n.d.id].met).map(n=>{const rl=S.rel[n.d.id],ps=n.d.persona||{};return`<div class="jent"><h4>${dispName(n.d)}<small>${n.d.role||'?'} · ${moodOf(rl)}${n.comp?' · companion':''}</small></h4>${relBar('Affinity',rl.aff,'#e8b04a')}${relBar('Trust',rl.trust,'#6fb8ff')}${relBar('Fear',rl.fear*2-100,'#e85a4a')}<p>${ps.personality?'<i>'+ps.personality+'</i>. ':''}${rl.mem.includes('fear')&&ps.fears?'Fears '+ps.fears.join(', ')+'. ':''}${rl.mem.includes('want')&&ps.wants?'Wants '+ps.wants.join(', ')+'.':''} ${n.d.likes?'Likes: '+n.d.likes.map(k=>J(ITEMS[k]?ITEMS[k][1]:k)).join(', '):''}</p></div>`}).join('')||'<p><i>You have not met anyone yet. Kanemura is just down the path.</i></p>';}
+ if(jTab==='Factions')h+=DATA.factions.map(f=>`<div class="jent"><h4>${f.name}</h4><p>${f.desc}</p>${relBar('Reputation',repOf(f.id),'#e8b04a')}</div>`).join('');
+ if(jTab==='Rumors'){const met=Object.values(S.rel||{}).filter(r=>r.met).length;const AREA={sugi:'deep in Sugi no Mori, the cedar forest',kawa:'along the river, where the ferry once ran',taki:'in the mist below Taki falls',web:'near the old web woods',cave:'by the sealed cave mouth in the north-west',kanemura:'on the edge of Kanemura'};
+  h+='<p class="lbl" style="text-transform:none;letter-spacing:0">Rumours are never marked on the map. Talk to more people to hear more.</p>';DATA.mystery.forEach((m,i)=>{const known=met>=1+i*2,found=S.rel&&S.rel[m.id]&&S.rel[m.id].met;if(!known)return;
+   h+=`<div class="jent secret"><h4>${found?'✔ ':''}${found?m.name:'A whispered tale'}<small>${found?'found':'rumour'}</small></h4><p>Folk speak of someone ${m.look==='hermit'?'masked, who sits alone':m.look==='fox'?'with a fox-like smile who never casts a shadow right':m.look==='ringer'?'carrying a small bell that rings by itself':'strange and quiet'} ${AREA[m.area]||'somewhere in the valley'}${m.time==='night'?', seen only after dark':''}.</p></div>`;});
+  if(!met)h+='<p><i>No rumours yet.</i></p>';}
+ if(jTab==='Bestiary'){const B=S.bestiary||{};const DESC={kodama:'Tree spirit. Harmless alone, dangerous in groups at night.',tanuki:'Trickster. Steals from your pack; get it back by beating it.',mushroom:'Mushroom yokai. Puffs poison spores. Fire works well.',deer:'Wild deer. Hunt for meat and hide.',spiderling:'Brood of the Jorōgumo.',jorogumo:'Lady of the Canopy. Burn her mist, cut the anchor threads.'};
+  h+=Object.keys(DESC).map(k=>`<div class="jent"><h4>${B[k]?k[0].toUpperCase()+k.slice(1):'???'}<small>${B[k]?B[k]+' defeated':'not yet met'}</small></h4><p>${B[k]?DESC[k]:'…'}</p></div>`).join('');}
+ if(jTab==='Lore')h+=DATA.lore.filter(l=>S.jr.lore.includes(l.id)).map(l=>`<div class="jent"><h4>${l.title}</h4><p>${l.text}</p></div>`).join('')+`<p class="lbl">${S.jr.lore.length} / ${DATA.lore.length} discovered</p>`;
+ $('jBody').innerHTML=h;}
+function openJournal(){renderJournal();show('journal');}
+function afterStateReset(){ensureRel();RIDE.on=false;if(horseMesh){scene.remove(horseMesh);horseMesh=null;}if(cartMesh){scene.remove(cartMesh);cartMesh=null;}for(const n of PEOPLE){n.comp=false;n.x=n.mesh.position.x;n.z=n.mesh.position.z;}if(S.horse)mkHorse();}
+$('tkIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendTalk();}});
+$('tkSend').onclick=sendTalk;$('tkBye').onclick=closeTalk;$('tkGift').onclick=giftMenu;$('tkTrade').onclick=tradeMenu;
+$('tkJoin').onclick=()=>{const n=TALK.n;if(!n)return;if(n.comp){n.comp=false;tkLog('them','Back to my work, then. Call me any time.');}else tkLog('them',recruit(n));renderTalkHead();};
+$('tkQ').onclick=()=>{$('tkIn').value='Do you need help with anything?';sendTalk();};
+ensureRel();loadData();
+/* =====================================================================
+   v0.3 SECTION: UI THEME (ink-wash paper, brush borders, kintsugi) ·
+   CANVAS ITEM ICONS (rarity rims, tooltips) · AUDIO MANAGER (Wavy's OGGs)
+   ===================================================================== */
+const RARITY=k=>{const p=PRICE[k]||0;return k==='koi'||p>=40?'legend':p>=15?'rare':p>=7?'fine':'common';};
+const RAR_COL={common:'#8a7a5a',fine:'#4e8a4a',rare:'#3a6ab8',legend:'#d8a030'};
+const ICON_CACHE={};
+function iconURL(k,glyph){const key=k+'|'+glyph;if(ICON_CACHE[key])return ICON_CACHE[key];const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');
+ const rc=RAR_COL[RARITY(k)]||RAR_COL.common;// paper disc with ink wash
+ const grd=g.createRadialGradient(28,26,4,32,32,30);grd.addColorStop(0,'#fbf3dc');grd.addColorStop(.75,'#e8d8b0');grd.addColorStop(1,'#c9b282');g.fillStyle=grd;g.beginPath();g.arc(32,32,29,0,TAU);g.fill();
+ // brush ring: several jittered strokes
+ g.strokeStyle=rc;g.lineCap='round';for(let i=0;i<3;i++){g.lineWidth=3.2-i;g.globalAlpha=.85-i*.2;g.beginPath();const a0=i*1.9;g.arc(32+i*.4,32-i*.3,29-i*.8,a0,a0+TAU*.93);g.stroke();}
+ g.globalAlpha=1;if(RARITY(k)==='legend'||RARITY(k)==='rare'){g.strokeStyle='#e8b84a';g.lineWidth=1.2;g.beginPath();g.moveTo(10,20);g.lineTo(18,26);g.lineTo(15,34);g.moveTo(52,42);g.lineTo(46,47);g.lineTo(49,55);g.stroke();}
+ g.font='30px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif';g.textAlign='center';g.textBaseline='middle';g.shadowColor='rgba(40,20,0,.35)';g.shadowBlur=3;g.fillText(glyph||'?',32,35);
+ return ICON_CACHE[key]=c.toDataURL();}
+const ITEM_DESC={wood:'Cedar wood. Building, fuel, hafts.',stone:'Plain stone.',flint:'Strikes sparks. Arrowheads.',iron:'Rust-rock ore. Forge into blades.',fiber:'Plant fiber. Cord and bowstrings.',herb:'Yomogi. Heals when brewed.',
+ mushroom:'Forest mushroom. Cook it first.',sap:'Kodama sap. Glue and fire.',hide:'Animal hide.',meat:'Raw meat. Cook at a fire.',fish:'Raw fish.',silk:'Jorōgumo silk. Strong as wire.',bamboo:'Bamboo. Bows and arrows.',
+ ofuda:'Paper talisman for magic.',salve:'Healing salve.',tea:'Fever tea. Warms and cures.',tonic:'Stamina tonic.',arrow:'Arrow. Ammo for bows.',firearrow:'Fire arrow. Burns on hit.',kunai:'Throwing kunai. Equip from the hotbar.',coin:'Coins (mon).',koi:'A golden koi. Someone would treasure it.'};
+function decorateIcons(root){root.querySelectorAll('.it').forEach(el=>{if(el.dataset.ic)return;const ic=el.querySelector('.ic');if(!ic)return;const glyph=ic.textContent.trim();const k=el.dataset.k||Object.keys(ITEMS).find(x=>ITEMS[x][0]===glyph&&el.textContent.includes(J(ITEMS[x][1])))||'';
+  el.dataset.ic=1;el.classList.add('r-'+RARITY(k));ic.innerHTML=`<img src="${iconURL(k,glyph)}" width="40" height="40" alt="">`;el.title=(J(ITEMS[k]?ITEMS[k][1]:k))+' — '+(ITEM_DESC[k]||'')+' ['+RARITY(k)+']'+(PRICE[k]?' · worth ~'+PRICE[k]+' mon':'');});}
+new MutationObserver(()=>decorateIcons(document.getElementById('items'))).observe(document.getElementById('items'),{childList:true});
+// theme stylesheet
+{const st=document.createElement('style');st.textContent=`
+:root{--paper:#efe3c4;--paper2:#e2d2a8;--inkc:#231a10;--seal:#b8321f;--gold:#e8b84a}
+.card{background:radial-gradient(ellipse at 18% 12%,rgba(255,255,255,.5),transparent 40%),radial-gradient(ellipse at 85% 90%,rgba(120,90,40,.22),transparent 45%),linear-gradient(170deg,var(--paper),var(--paper2));color:var(--inkc);border:0;border-radius:6px 14px 8px 12px/12px 6px 14px 8px;box-shadow:0 0 0 2px #3a2a16,0 0 0 5px rgba(232,184,74,.55),0 18px 50px rgba(0,0,0,.55);position:relative}
+.card:before{content:"";position:absolute;inset:8px;border:1.5px solid rgba(35,26,16,.35);border-radius:4px 10px 6px 9px;pointer-events:none}
+.card:after{content:"";position:absolute;right:14px;top:12px;width:70px;height:46px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 46'%3E%3Cpath d='M2 4 L18 14 L14 24 L30 30 L28 40 L44 44 M30 30 L48 22 L66 26' fill='none' stroke='%23e8b84a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat;opacity:.9}
+.card h1,.card h2,.card h3{font-family:Georgia,"Palatino Linotype","Book Antiqua",serif;color:var(--inkc);letter-spacing:.12em}.card h1 span{color:var(--seal)}
+.card .lbl{color:#5a4630;opacity:.9}.card p{color:#2e2416}
+.btn{background:var(--seal);color:#fbf1dc;font-family:Georgia,serif;letter-spacing:.14em;box-shadow:none;border-radius:3px 8px 4px 7px/7px 3px 8px 4px;border:2px solid #5a170c;text-shadow:0 1px 0 #0006}
+.btn.cy{background:#2c2a26;border-color:#0e0d0b;color:#efe3c4}.btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.overlay{background:radial-gradient(ellipse at center,rgba(20,14,8,.35),rgba(8,6,4,.75))}
+.it{background:rgba(255,250,235,.55);border:1.5px solid rgba(60,40,20,.35);border-radius:6px;color:var(--inkc);cursor:pointer;transition:transform .1s}.it:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(60,40,10,.3)}
+.it.r-fine{border-color:#4e8a4a}.it.r-rare{border-color:#3a6ab8;box-shadow:inset 0 0 8px rgba(58,106,184,.3)}.it.r-legend{border-color:#d8a030;box-shadow:inset 0 0 10px rgba(216,160,48,.45)}.it .n{color:#8a4a10}.it img{display:block;margin:0 auto 2px}
+.rec{background:rgba(255,250,235,.5);border:1px solid rgba(60,40,20,.25);border-radius:5px;color:var(--inkc)}.rec .cost{color:#8a4a10}.rec .cost .ok{color:#2e7a2a}.rec .cost .no{color:#a8241a}.rec button{background:var(--seal);border-radius:3px}
+.tabs button{background:#2c2a26;color:#efe3c4;border-radius:3px 6px 3px 6px;font-family:Georgia,serif}.tabs button.on{background:var(--gold);color:#231a10}
+.node{background:rgba(255,250,235,.5);border:2px solid rgba(60,40,20,.25);color:var(--inkc);border-radius:6px}.node.own{border-color:#c8941a;background:rgba(232,184,74,.3)}.node.can{border-color:#2e7a2a}
+.branch h3{color:var(--inkc)}
+#tkLog{background:rgba(255,250,235,.45);border:1px solid rgba(60,40,20,.2)}.tkl b{color:#a8321f}.tkl.me b{color:#2a4a7a}.jent{background:rgba(255,250,235,.45);border-left-color:#c8941a}.relb i{background:rgba(60,40,20,.18)}
+.st,.toast,#prompt,#time,#quest{background:linear-gradient(90deg,rgba(18,12,6,.78),rgba(18,12,6,.55));border-color:var(--gold)}
+#quest{background:linear-gradient(90deg,transparent,rgba(18,12,6,.7) 14%);font-family:Georgia,serif}#quest h4{color:var(--gold);font-family:Georgia,serif}
+.slot{background:radial-gradient(circle at 40% 35%,rgba(60,48,30,.85),rgba(14,10,6,.85));border:2px solid rgba(232,184,74,.35);border-radius:8px 4px 8px 4px}.slot.eq{border-color:var(--gold);box-shadow:0 0 12px rgba(232,184,74,.6)}
+.slot img{width:30px;height:30px;display:block;margin:0 auto}
+.bar{background:rgba(20,12,4,.6);border-radius:2px}.bar b{font-family:Georgia,serif;letter-spacing:.2em}
+#title .a{font-family:Georgia,"Palatino Linotype",serif;letter-spacing:.2em}#title .b{font-family:Georgia,serif}
+#start{background:radial-gradient(ellipse at 50% 30%,rgba(232,184,74,.12),transparent 50%),radial-gradient(ellipse at center,rgba(20,14,8,.25),rgba(8,6,4,.8))}
+#start .card h1{font-size:58px}
+.card{box-shadow:0 0 0 3px #1a1008,0 0 0 11px #4a3420,0 0 0 12px #6a4a2a,0 0 0 14px #1a1008,0 0 0 15px rgba(232,184,74,.55),0 22px 60px rgba(0,0,0,.6);margin:16px}
+.tabs{background:linear-gradient(180deg,#5a3e24,#3a2614);padding:6px 8px 0;border-radius:4px;box-shadow:inset 0 -2px 0 #1a1008;margin-bottom:8px}
+.tabs button{background:linear-gradient(180deg,#f2e6c8,#d8c49a);color:#231a10;border:1px solid #2a1a0a;border-bottom:0;border-radius:4px 4px 0 0;font:700 13px Georgia,serif;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;margin:0 4px 0 0;opacity:.75}
+.tabs button.on{background:linear-gradient(180deg,#fff6dc,#efe3c4);color:#a8321f;opacity:1;box-shadow:0 -2px 0 #e8b84a inset}
+.it img,.slot img{filter:sepia(.35) contrast(1.05)}.items{gap:8px}.it{min-height:84px;background:linear-gradient(160deg,rgba(255,250,235,.75),rgba(226,210,168,.65));box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+#mapcv{border-radius:6px;box-shadow:0 0 0 3px #2a2016,0 0 0 6px rgba(232,184,74,.5)}
+`;document.head.appendChild(st);}
+// hotbar icons: swap emoji glyphs to painted icons after each refresh
+{const hb=document.getElementById('hotbar');if(hb)new MutationObserver(()=>{hb.querySelectorAll('.ic').forEach(ic=>{if(ic.querySelector('img'))return;const g=ic.textContent.trim();if(!g)return;const k=Object.keys(ITEMS).find(x=>ITEMS[x][0]===g)||'w_'+g;ic.innerHTML=`<img src="${iconURL(k,g)}" alt="">`;});}).observe(hb,{childList:true,subtree:true});}
+
+/* ---------- AUDIO MANAGER: area/day/night/combat/boss/storm loops with crossfade + stingers ---------- */
+const AUDIO={tracks:{},bus:null,stBus:null,cur:null,storm:0,failed:{},lastLvl:0,lastShard:0,
+ LOOPS:['forest_explore','village_day','night_ambient','combat','boss_jorogumo','title_theme','storm_ambience'],
+ init(){if(this.bus||!AC)return;this.bus=AC.createGain();this.bus.gain.value=AUDSET.mus;this.bus.connect(AC.destination);this.stBus=AC.createGain();this.stBus.gain.value=AUDSET.sfx;this.stBus.connect(AC.destination);},
+ setVol(){if(this.bus)this.bus.gain.setTargetAtTime(AUDSET.mus,AC.currentTime,.1);if(this.stBus)this.stBus.gain.setTargetAtTime(AUDSET.sfx,AC.currentTime,.1);},
+ async buf(name){const t=this.tracks[name]||(this.tracks[name]={});if(t.buf||t.loading||this.failed[name])return t.buf;t.loading=true;
+  try{const r=await fetch('audio/'+name+'.ogg');if(!r.ok)throw 0;t.buf=await AC.decodeAudioData(await r.arrayBuffer());}catch(e){this.failed[name]=1;}t.loading=false;return t.buf;},
+ async want(name,vol=1){if(!AC||!this.bus)return;const t=this.tracks[name]||(this.tracks[name]={});t.target=vol;if(t.src)return;const b=await this.buf(name);if(!b||t.src||!(t.target>0))return;
+  const g=AC.createGain();g.gain.value=0;g.connect(this.bus);const s=AC.createBufferSource();s.buffer=b;s.loop=true;s.connect(g);s.start();t.src=s;t.g=g;},
+ tick(dt){if(!AC||muted&&false)return;this.init();if(!this.bus)return;
+  const menu=document.body.classList.contains('menu');let main='title_theme';
+  if(!menu){const near=enemiesAll().some(e=>e.isBoss?boss.active:(e.state&&e.state!=='idle'&&e.state!=='wander'&&!e.D.animal&&Math.hypot(e.pos.x-hero.position.x,e.pos.z-hero.position.z)<16));
+   if(boss.active&&boss.alive)main='boss_jorogumo';else if(near)main='combat';else if(isNight())main='night_ambient';else if(hero.position.z>112&&Math.abs(hero.position.x)<45)main='village_day';else main='forest_explore';}
+  if(main!==this.cur){this.cur=main;}
+  for(const n of this.LOOPS){const wantV=n===this.cur?(n==='combat'?.85:1):n==='storm_ambience'&&!menu&&S.weather==='storm'?.9:n==='storm_ambience'&&!menu&&S.weather==='warn'?.35:0;
+   const t=this.tracks[n];if(wantV>0&&(!t||!t.src))this.want(n,wantV);if(t){t.target=wantV;if(t.g){t.g.gain.setTargetAtTime(wantV,AC.currentTime,wantV>0?1.2:.8);if(wantV===0&&t.g.gain.value<.003&&t.src){try{t.src.stop()}catch(e){}t.src.disconnect();t.g.disconnect();t.src=null;t.g=null;}}}}
+  if(!menu&&S.started){if(this.lastLvl&&S.lvl>this.lastLvl)this.sting('level_up');if(S.shards>this.lastShard&&this.lastShard!==null&&this.lastLvl)this.sting('shard_get');this.lastLvl=S.lvl;this.lastShard=S.shards;}},
+ stingSrc:null,async sting(name){if(!AC)return;this.init();const b=await this.buf(name);if(!b)return;if(this.stingSrc){const o=this.stingSrc;try{o.g.gain.setTargetAtTime(0,AC.currentTime,.25);setTimeout(()=>{try{o.s.stop()}catch(e){}},1200);}catch(e){}}
+  const g=AC.createGain();g.gain.value=1;g.connect(this.stBus);const s=AC.createBufferSource();s.buffer=b;s.connect(g);s.start();this.stingSrc={s,g};
+  if(this.bus){this.bus.gain.setTargetAtTime(AUDSET.mus*.4,AC.currentTime,.15);setTimeout(()=>{if(this.bus)this.bus.gain.setTargetAtTime(AUDSET.mus,AC.currentTime,1.2);},2500);}}};
+window.AUDIO=AUDIO;
+{const _sr=shrineRest;shrineRest=function(){AUDIO.sting('bell_ring');return _sr.apply(this,arguments);};}
+addEventListener('pointerdown',()=>{audioInit();AUDIO.init();},{once:false,passive:true});
+/* =====================================================================
+   v0.3 SECTION: ANIMATION INTEGRATION LAYER — Aether's motion/v03
+   ren.glb + villager.glb + horse.glb + cart.glb driven by locomotion.js
+   (CharacterAnimator / HorseAnimator). Loaded at boot if present (re-checked
+   every 30 s otherwise). Any failure keeps the procedural Ren (fallback).
+   ?v03=0 forces the fallback.
+   ===================================================================== */
+const V03={state:'none',tries:0,LM:null,ren:null,anim:null,dummy:new THREE.Object3D(),villG:null,horseG:null,cartG:null,SkU:null,hidden:[],lastAtk:null,lastDodge:0,lastHp:0,riding:false,horse:null,horseAnim:null,cart:null};
+window.KMV03=null;
+async function probeV03(){if(V03.state!=='none'||location.protocol==='file:'||QS.get('v03')==='0')return;V03.tries++;
+ try{const r=await fetch('motion/v03/locomotion.js',{method:'HEAD',cache:'no-store'});if(!r.ok)return;}catch(e){return;}
+ V03.state='loading';
+ try{const[LM,{GLTFLoader},SkU]=await Promise.all([import('./motion/v03/locomotion.js'),import('three/addons/loaders/GLTFLoader.js'),import('three/addons/utils/SkeletonUtils.js')]);V03.LM=LM;V03.SkU=SkU;
+  const L=new GLTFLoader(),get=f=>L.loadAsync('motion/v03/'+f).catch(()=>null);
+  const[ren,vil,hor,cart]=await Promise.all([get('ren.glb'),get('villager.glb'),get('horse.glb'),get('cart.glb')]);
+  if(ren)attachRen(ren);V03.villG=vil;V03.horseG=hor;V03.cartG=cart;
+  window.KMV03={makeVillager:vil?makeVillagerRig:null,makeHorse:hor?makeHorseRig:null,makeCart:cart?()=>{const c=SkU.clone(cart.scene);LM.toonify(c);c.traverse(o=>{if(o.isMesh)o.castShadow=true});return c;}:null};
+  if(vil)buildPeople();if(hor&&horseMesh){scene.remove(horseMesh);horseMesh=null;if(cartMesh){scene.remove(cartMesh);cartMesh=null;}if(S.horse)mkHorse();}
+  V03.state='loaded';console.log('[kanemori] Aether v03 rigs loaded: ren',!!ren,'villager',!!vil,'horse',!!hor,'cart',!!cart);}
+ catch(e){V03.state='failed';console.warn('[kanemori] v03 motion load failed, keeping procedural Ren',e);}}
+function attachRen(g){try{const LM=V03.LM;LM.toonify(g.scene);
+  // hide the procedural body meshes (weapon pivot moves to Ren's hand socket)
+  body.traverse(m=>{if(m.isMesh&&!isUnder(m,weaponPivot)&&m.visible){m.visible=false;V03.hidden.push(m);}});
+  const holder=new THREE.Group();holder.add(g.scene);pose.add(holder);g.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.frustumCulled=false;}});
+  V03.anim=new LM.CharacterAnimator(g,{object:V03.dummy,turnInPlace:false,onFootstep:()=>{try{if(!P.inWater)noise(.04,900,.05)}catch(e){}}});
+  V03.ren=g.scene;V03.holder=holder;V03.sockR=g.scene.getObjectByName('socket_hand_R');V03.oldParent=weaponPivot.parent;V03.oldPos=weaponPivot.position.clone();
+  V03.kin=[];g.scene.traverse(o=>o.material&&[].concat(o.material).forEach(m=>{if(m.name==='kintsugi')V03.kin.push(m);}));
+  v03Weapon();console.log('[kanemori] Ren GLB active ('+Object.keys(V03.anim.clips).length+' clips)');}
+ catch(e){console.warn('[kanemori] Ren GLB attach failed, procedural fallback',e);restoreProcRen();}}
+function restoreProcRen(){for(const m of V03.hidden)m.visible=true;V03.hidden=[];if(V03.holder)pose.remove(V03.holder);if(V03.oldParent){V03.oldParent.add(weaponPivot);weaponPivot.position.copy(V03.oldPos);weaponPivot.rotation.set(0,0,0);}V03.anim=null;V03.ren=null;}
+function isUnder(m,anc){let p=m;while(p){if(p===anc)return true;p=p.parent;}return false;}
+let _v03eq='';
+function v03Weapon(){const a=V03.anim;if(!a)return;_v03eq=S.eq;const w=W();const own=k=>S.weapons.includes(k);
+ if(S.eq==='katana'){a.show('katana',true);a.attach('katana','socket_hand_R');weaponPivot.visible=false;}
+ else{if(own('katana')){a.show('katana',true);a.attach('katana','socket_hip_L');}else a.show('katana',false);a.show('saya',own('katana'));
+  if(w.ranged&&!w.thrown){weaponPivot.visible=false;}else{weaponPivot.visible=true;if(V03.sockR){V03.sockR.add(weaponPivot);weaponPivot.position.set(0,0,0);weaponPivot.rotation.set(0,0,0);}}}
+ const hasBow=own('yumi')||own('daikyu');a.show('bow',hasBow);if(hasBow)a.attach('bow',w.ranged&&!w.thrown?'socket_hand_L':'socket_back');}
+function makeVillagerRig(d){const LM=V03.LM,o=V03.SkU.clone(V03.villG.scene);LM.toonify(o);const wrap=new THREE.Group();wrap.add(o);const sc=(d.look&&d.look.scale)||1;o.scale.setScalar(sc);
+ o.traverse(m=>{if(m.isMesh){m.castShadow=true;m.frustumCulled=false;}});
+ // tint the robe from the persona colour where the material allows it
+ if(d.look&&d.look.robe){o.traverse(m=>{if(m.isMesh&&m.material&&/robe|cloth|kimono|body/i.test(m.material.name||'')){m.material=m.material.clone();if(m.material.color)m.material.color.lerp(new THREE.Color(d.look.robe),.6);}});}
+ const anim=new LM.CharacterAnimator({scene:o,animations:V03.villG.animations},{object:new THREE.Object3D(),turnInPlace:false,autoStartStop:false});
+ const hatOn=d.look&&d.look.hat;anim.show('hat_kasa',!!hatOn||/farmer|stable|fish|hunt|scout/i.test(d.role||''));anim.show('hat_band',!hatOn&&/smith|guard/i.test(d.role||''));
+ const role=(d.role||'').toLowerCase();wrap.userData.work=/smith|cast/.test(role)?'hammer_work':/shop|herb|inn|monger|merchant/.test(role)?'sweep':null;wrap.userData.prop=/smith|cast/.test(role)?'prop_hammer':/shop|herb|inn/.test(role)?'prop_broom':null;
+ wrap.userData.anim=anim;wrap.userData.v03=true;return wrap;}
+function makeHorseRig(){const LM=V03.LM,o=V03.SkU.clone(V03.horseG.scene);LM.toonify(o);o.traverse(m=>{if(m.isMesh){m.castShadow=true;m.frustumCulled=false;}});const wrap=new THREE.Group();wrap.add(o);
+ wrap.userData.anim=new LM.HorseAnimator({scene:o,animations:V03.horseG.animations},{object:new THREE.Object3D()});wrap.userData.legs=[];wrap.userData.v03=true;wrap.userData.saddle=o.getObjectByName('socket_saddle');return wrap;}
+// per-NPC animation (called from villageUpdate via mesh.userData)
+function v03NpcAnim(n,sp,dt,talking){const ud=n.mesh.userData;if(!ud.anim)return;const a=ud.anim;a.setMove(sp,0);
+ if(n.comp&&n.atkT>0&&!ud.atkPlayed&&a.clips.spear_thrust){ud.atkPlayed=true;a.show('prop_spear',true);a.play('spear_thrust',{fade:.06});}if(n.atkT<=0)ud.atkPlayed=false;
+ const home=n.mode==='home'&&sp<.05;const atWork=n.mode==='work'&&sp<.05&&!talking;const want=talking?'talk_gesture':n.comp&&sp<.05&&a.clips.fight_ready&&enemiesAll().some(e=>Math.hypot(e.pos.x-n.x,e.pos.z-n.z)<14)?'fight_ready':home&&a.clips.sit?'sit':atWork&&ud.work?ud.work:(n.d.persona&&S.weather==='storm'&&sp<.05?'fear_cower':null);
+ if(want!==ud.cur){if(ud.cur)a.stop('full',.3);if(want)a.play(want,{loop:true,fade:.3});ud.cur=want;if(ud.prop)a.show(ud.prop,want===ud.work);if(n.comp)a.show('prop_spear',true);}
+ a.update(dt);}
+function v03Update(dt){const a=V03.anim;if(!a)return;try{
+ if(_v03eq!==S.eq)v03Weapon();
+ const spd=P.vel.length();a.setSpeedScale(TIME.freeze>0?0:1);
+ if(P.swim){if(!V03.swimL){V03.swimL=a.play('swim',{loop:true,fade:.25});}}else if(V03.swimL){a.stop('full',.25);V03.swimL=null;}
+ a.setMove(RIDE.on?0:spd,P.yaw);
+ // one-shots mirror the game state machine
+ if(P.atk&&P.atk!==V03.lastAtk){const at=P.atk;V03.lastAtk=at;
+  if(at.bow){const w=W();if(w.thrown){const kc=a.clips.kunai_throw?'kunai_throw':'katana_light_1';a.show('kunai',true);a.play(kc,{layer:'upper',fade:.04,timeScale:(kc==='kunai_throw'?.22:.12)/Math.max(.04,at.hitAt),onEvent:e=>{if(e==='release')a.show('kunai',false);}});setTimeout(()=>{if(V03.anim)a.show('kunai',false);},450);}else if(!at.heavy&&a.clips.bow_quick){a.play('bow_quick',{layer:'upper',fade:.04,timeScale:.2/Math.max(.04,at.hitAt)});}else{a.play('bow_draw',{layer:'upper',fade:.08,timeScale:.62/Math.max(.1,at.hitAt||.3)});setTimeout(()=>{if(V03.anim)a.play('bow_release',{layer:'upper',fade:.05});},Math.max(60,(at.hitAt||.3)*1000));}}
+  else if(at.heavy)a.play('katana_heavy',{fade:.06,timeScale:(.37/Math.max(.1,at.hitAt))});
+  else{const n=(at.idx||0)%3+1,hit=[.12,.13,.14][n-1];a.play('katana_light_'+n,{fade:.05,timeScale:hit/Math.max(.04,at.hitAt)});}}
+ if(!P.atk)V03.lastAtk=null;
+ if(P.dodge>0&&!V03.dodging){V03.dodging=true;a.play('dodge_roll',{fade:.05,timeScale:.7/.35});}if(P.dodge<=0)V03.dodging=false;
+ if(P.block&&!V03.blockL){V03.blockL=a.play('block',{layer:'upper',loop:true,fade:.1});}else if(!P.block&&V03.blockL){a.stop('upper',.15);V03.blockL=null;}
+ if(P.gatherT>.3&&!V03.gath){V03.gath=true;a.play('gather',{layer:'upper',fade:.1,timeScale:1.6});}if(P.gatherT<=0)V03.gath=false;
+ if(S.hp<V03.lastHp-4&&!P.atk&&!P.dead)a.play('hit_react',{layer:'upper',fade:.04});V03.lastHp=S.hp;
+ if(P.dead&&!V03.deadP){V03.deadP=true;a.play('death',{hold:true,fade:.1});}else if(!P.dead&&V03.deadP){V03.deadP=false;a.stop('full',.2);}
+ if(S.warm<20&&spd<.3&&!V03.shiv){V03.shiv=a.play('shiver',{layer:'upper',loop:true,fade:.4});}else if((S.warm>=20||spd>=.3)&&V03.shiv){a.stop('upper',.4);V03.shiv=null;}
+ // riding: static sit pose (no riding clip yet) — freeze idle on the saddle
+ if(RIDE.on!==V03.riding){V03.riding=RIDE.on;const ha=horseMesh&&horseMesh.userData.anim;
+  if(RIDE.on){a.stop('full',.1);if(ha&&a.clips.ride_idle){a.ride={horse:ha};if(a.clips.mount)a.play('mount',{fade:.05,fadeOut:.25,timeScale:2});}else{V03.sitL=a.play(a.clips.sit_rest?'sit_rest':'idle',{hold:true,fade:.2,timeScale:a.clips.sit_rest?1:0});V03.holder.position.y=.15;}}
+  else{a.ride=null;a.stop('full',.2);V03.holder.position.y=0;V03.holder.rotation.x=0;}}
+ if(W().ranged&&!W().thrown&&a.setAim)a.setAim(clamp((.28-P.camPitch)*110,-45,60));
+ TALK.n&&!V03.talkL?(V03.talkL=a.play('talk_gesture',{layer:'upper',loop:true,fade:.3})):(!TALK.n&&V03.talkL&&(a.stop('upper',.3),V03.talkL=null));
+ a.update(dt);
+ for(const m of V03.kin)m.emissiveIntensity=.35+S.shards*.25;
+ }catch(e){console.warn('[kanemori] v03 animator error, procedural fallback',e);restoreProcRen();}}
+probeV03();setInterval(()=>{if(V03.state==='none'&&V03.tries<40)probeV03();},30000);
+/* =====================================================================
+   v0.3 SECTION: WORLD ART — flowers, stone lanterns, varied rocks, fireflies,
+   birds, koi, low fog banks, wind; all instanced/cheap.
+   ===================================================================== */
+const ART={ff:null,birds:[],koi:[],fog:[]};
+{// flowers (instanced, wind sway) in meadows, path edges and the village
+ const kinds=[[0xf2f0f6,0xf4d03f],[0xe85a8a,0xffe08a],[0x8a6ae8,0xffe08a],[0xf4a03a,0x7a3a10],[0xe83a3a,0x2a1a10]];
+ for(const[pc,cc]of kinds){const parts=[{g:new THREE.CylinderGeometry(.015,.015,.45,3).translate(0,.22,0),c:0x4a7a3a}];for(let k=0;k<5;k++){const a=k/5*TAU;parts.push({g:new THREE.SphereGeometry(.07,4,3).scale(1,.35,1.6).translate(0,0,.08).rotateY(a).translate(0,.46,0),c:pc});}parts.push({g:new THREE.SphereGeometry(.045,4,3).translate(0,.48,0),c:cc});
+  const geo=mergeColored(parts),N=520,im=new THREE.InstancedMesh(geo,windMat(vmat,.22),N);let n=0;
+  for(let i=0;i<N*6&&n<N;i++){const cx=rnd(-185,185),cz=rnd(-150,178);const meadow=fbm(cx*.02,cz*.02)>.55||pathDist(cx,cz)<9||Math.hypot(cx,cz-148)<36;if(!meadow||inWater(cx,cz)||pathDist(cx,cz)<2.2)continue;const y=H(cx,cz);if(y<WATER_SEA+2.5||y>26)continue;
+   for(let c=0;c<3&&n<N;c++){const x=cx+rnd(-1.2,1.2),z=cz+rnd(-1.2,1.2);_p.set(x,H(x,z),z);_e.set(0,R()*TAU,0);_q.setFromEuler(_e);const s=rnd(.8,1.4);_s.set(s,s,s);_m.compose(_p,_q,_s);im.setMatrixAt(n++,_m);}}
+  im.count=n;scene.add(im);}}
+{// stone lanterns (tōrō) along the path + glowing caps that light up at night
+ const stoneM=std(0x9a968e),glowM=emis(0xffb35a,1.6);for(let i=0;i<pathPts.length-1;i++){const[a,b]=pathPts[i],[c,d]=pathPts[i+1];for(const t of[.33,.8]){const x=lerp(a,c,t)-3.2,z=lerp(b,d,t);if(inWater(x,z))continue;
+  const g=new THREE.Group();g.position.set(x,H(x,z),z);const base=new THREE.Mesh(new THREE.CylinderGeometry(.35,.45,.3,6),stoneM);base.position.y=.15;g.add(base);const post=new THREE.Mesh(new THREE.CylinderGeometry(.14,.16,.9,6),stoneM);post.position.y=.75;g.add(post);
+  const box=new THREE.Mesh(new THREE.BoxGeometry(.5,.42,.5),glowM);box.position.y=1.4;g.add(box);const cap=new THREE.Mesh(new THREE.ConeGeometry(.55,.38,4),stoneM);cap.rotation.y=Math.PI/4;cap.position.y=1.8;g.add(cap);g.traverse(o=>{if(o.isMesh)o.castShadow=true});scene.add(g);lamps.push(box);colliders.push({x,z,r:.4});}}}
+{// varied mossy rocks & boulders (instanced, decorative)
+ const geo=mergeColored([{g:new THREE.DodecahedronGeometry(1,0).scale(1,.62,.9),c:0x7a7870},{g:new THREE.DodecahedronGeometry(.7,0).scale(1,.3,1).translate(0,.45,0),c:0x5f8a4a}]);
+ const N=260,im=new THREE.InstancedMesh(geo,vmat,N);let n=0;for(let i=0;i<N*5&&n<N;i++){const x=rnd(-190,190),z=rnd(-160,176);if(inWater(x,z)||pathDist(x,z)<3||nearFlat(x,z,-2))continue;const y=H(x,z);if(y<WATER_SEA+2)continue;
+  _p.set(x,y-.15,z);_e.set(rnd(-.2,.2),R()*TAU,rnd(-.2,.2));_q.setFromEuler(_e);const s=R()<.12?rnd(1.6,2.6):rnd(.3,.9);_s.set(s,s,s);_m.compose(_p,_q,_s);im.setMatrixAt(n++,_m);if(s>1.5)colliders.push({x,z,r:s*.8});}im.count=n;im.castShadow=im.receiveShadow=true;scene.add(im);}
+{// fireflies (points) around forest + water, visible at dusk/night
+ const N=420,pos=new Float32Array(N*3),seed=new Float32Array(N);for(let i=0;i<N;i++){let x,z;for(let k=0;k<10;k++){x=rnd(-120,90);z=rnd(-130,160);if(x<45||Math.abs(x-RIVX(z))<20)break;}pos[i*3]=x;pos[i*3+1]=H(x,z)+rnd(.5,2.5);pos[i*3+2]=z;seed[i]=R()*100;}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));const m=new THREE.PointsMaterial({color:0xd8ff7a,size:.7,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending});
+ ART.ff=new THREE.Points(g,m);ART.ffBase=pos.slice();ART.ffSeed=seed;scene.add(ART.ff);}
+{// birds: small flocks circling over the valley
+ const wingG=new THREE.BufferGeometry();wingG.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,-.6,.1,-.2,0,0,.25, 0,0,0,0,0,.25,.6,.1,-.2],3));wingG.computeVertexNormals();const bm=new THREE.MeshBasicMaterial({color:0x1a1a22,side:THREE.DoubleSide});
+ for(let f=0;f<4;f++){const c=[rnd(-120,80),rnd(-110,140)],r=rnd(25,55),h=rnd(28,48),sp=rnd(.08,.16)*(R()<.5?1:-1);for(let i=0;i<5;i++){const b=new THREE.Mesh(wingG,bm);scene.add(b);ART.birds.push({b,c,r:r+rnd(-4,4),h:h+rnd(-2,2),sp,ph:R()*TAU*.08+f*1.7,off:i*.06});}}}
+{// koi in Taki Pool and the village pond-ish river bend
+ const km=[std(0xff7a2a,{emissive:0x5a1a00,emissiveIntensity:.3}),std(0xf4f0e8),std(0xe8b84a,{metalness:.6,emissive:0x5a4010,emissiveIntensity:.6})];
+ for(let i=0;i<9;i++){const k=new THREE.Mesh(new THREE.SphereGeometry(.22,6,4).scale(1,.4,2.2),km[i%3]);scene.add(k);const pool=i<6?[66,-104,5]:[RIVX(118),118,3];ART.koi.push({k,cx:pool[0],cz:pool[1],r:rnd(1.5,pool[2]),sp:rnd(.3,.7)*(R()<.5?1:-1),ph:R()*TAU});}}
+{// low drifting fog banks in the forest (soft sprites)
+ const cv=document.createElement('canvas');cv.width=cv.height=64;const g=cv.getContext('2d');const gr=g.createRadialGradient(32,32,2,32,32,32);gr.addColorStop(0,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);
+ const tex=new THREE.CanvasTexture(cv);for(let i=0;i<26;i++){const m=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,color:0xcfd8ff,transparent:true,opacity:.22,depthWrite:false,fog:true}));const x=rnd(-150,40),z=rnd(-130,100);m.position.set(x,H(x,z)+2.2,z);m.scale.set(rnd(18,30),rnd(5,8),1);scene.add(m);ART.fog.push({m,x,z,ph:R()*TAU});}}
+function artUpdate(dt){const t=performance.now()/1000;WIND.t.value=t*(S.weather==='storm'?2.2:S.weather==='warn'||S.weather==='rain'?1.5:1);
+ const night=isNight();const ffm=ART.ff.material;ffm.opacity=lerp(ffm.opacity,night?.9:0,dt*.6);if(ffm.opacity>.02){const p=ART.ff.geometry.attributes.position,b=ART.ffBase,s=ART.ffSeed;for(let i=0;i<s.length;i++){p.array[i*3]=b[i*3]+Math.sin(t*.5+s[i])*1.2;p.array[i*3+1]=b[i*3+1]+Math.sin(t*.9+s[i]*2)*.5;p.array[i*3+2]=b[i*3+2]+Math.cos(t*.4+s[i])*1.2;}p.needsUpdate=true;}
+ for(const o of ART.birds){const a=t*o.sp+o.ph-o.off;o.b.position.set(o.c[0]+Math.cos(a)*o.r,o.h+Math.sin(t*.7+o.ph)*2,o.c[1]+Math.sin(a)*o.r);o.b.rotation.set(0,-a+(o.sp>0?Math.PI:0),Math.sin(t*9+o.ph*10)*.5);o.b.visible=!night&&S.weather!=='storm';}
+ for(const o of ART.koi){const a=t*o.sp+o.ph;const x=o.cx+Math.cos(a)*o.r,z=o.cz+Math.sin(a)*o.r;o.k.position.set(x,(o.cz<-50?riverY(-104):riverY(o.cz))-.25,z);o.k.rotation.y=-a+(o.sp>0?0:Math.PI);}
+ for(const f of ART.fog){f.m.position.x=f.x+Math.sin(t*.05+f.ph)*6;f.m.material.opacity=(night?.3:.16)+(S.weather==='storm'||S.weather==='rain'?.12:0);}}
 /* ============ UI ============ */
 function show(id){$(id).classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();updLockOverlay();}
 function hide(id){$(id).classList.add('hidden');setTimeout(updLockOverlay,0);}
@@ -1016,7 +1617,7 @@ function refreshHotbar(){const hb=$('hotbar');hb.innerHTML='';hotbarItems().forE
  for(let i=hotbarItems().length;i<8;i++){const d=document.createElement('div');d.className='slot';d.innerHTML=`<span class="k">${i+1}</span>`;hb.appendChild(d);}}
 let invTab='Weapons';
 function openInv(tab){if(tab)invTab=tab;renderInv();show('inv');}
-function renderInv(){const it=$('items');it.innerHTML='';for(const k in S.inv){if(!(S.inv[k]>0)||!ITEMS[k])continue;const d=document.createElement('div');d.className='it';d.innerHTML=`<span class="ic">${ITEMS[k][0]}</span>${ITEMS[k][1]}<br><span class="n">×${S.inv[k]}</span>`;
+function renderInv(){const it=$('items');it.innerHTML='';for(const k in S.inv){if(!(S.inv[k]>0)||!ITEMS[k])continue;const d=document.createElement('div');d.className='it';d.dataset.k=k;d.innerHTML=`<span class="ic">${ITEMS[k][0]}</span>${J(ITEMS[k][1])}<br><span class="n">×${S.inv[k]}</span>`;
  if(FOOD[k]||['salve','tea','tonic'].includes(k)){d.style.cursor='pointer';d.title='Click to use';d.onclick=()=>{useItem(k);renderInv();};}it.appendChild(d);}
  $('eqInfo').innerHTML=S.weapons.map(w=>`<button class="btn ${w===S.eq?'':'cy'}" style="padding:5px 9px;font-size:11px" data-w="${w}">${WEAPONS[w].icon} ${WEAPONS[w].name}</button>`).join('')+`<div style="font-size:11px;opacity:.8;margin-top:4px">${W().name}: light ${W().dmg} · heavy ${W().heavy} · reach ${W().reach} m · ${W().combo}-hit combo</div>`;
  $('eqInfo').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{equip(b.dataset.w);renderInv();});
@@ -1024,9 +1625,9 @@ function renderInv(){const it=$('items');it.innerHTML='';for(const k in S.inv){i
  $('recipes').innerHTML='';RECIPES.filter(r=>r.cat===invTab).forEach(r=>{const d=document.createElement('div');d.className='rec';const ok=canCraft(r);
   const cost=Object.keys(r.cost).map(k=>`<span class="${(S.inv[k]||0)>=costOf(r,k)?'ok':'no'}">${ITEMS[k][0]} ${ITEMS[k][1]} ${S.inv[k]||0}/${costOf(r,k)}</span>`).join(' · ');
   const need=r.need==='forge'?(nearForge()?'':' <span class="no">needs a lit campfire or the Kanemura forge</span>'):r.need==='fire'?(nearFire()?'':' <span class="no">needs a lit campfire</span>'):'';
-  d.innerHTML=`<div><div class="nm">${r.out.startsWith('w:')?WEAPONS[r.id].icon:ITEMS[r.id]?ITEMS[r.id][0]:ITEMS[r.id+'_kit']?ITEMS[r.id+'_kit'][0]:''} ${r.out.startsWith('w:')?WEAPONS[r.id].name:ITEMS[r.id]?ITEMS[r.id][1]:ITEMS[r.id+'_kit'][1]}</div><div class="ds">${r.ds}</div><div class="cost">${cost}${need}</div></div>`;
+  d.innerHTML=`<div><div class="nm">${r.out.startsWith('w:')?WEAPONS[r.out.slice(2)].icon:ITEMS[r.id]?ITEMS[r.id][0]:ITEMS[r.id+'_kit']?ITEMS[r.id+'_kit'][0]:''} ${r.out.startsWith('w:')?J(WEAPONS[r.out.slice(2)].name):ITEMS[r.id]?ITEMS[r.id][1]:ITEMS[r.id+'_kit'][1]}</div><div class="ds">${r.ds}</div><div class="cost">${cost}${need}</div></div>`;
   const b=document.createElement('button');b.textContent='CRAFT';b.disabled=!ok;b.onclick=()=>craft(r.id);d.appendChild(b);$('recipes').appendChild(d);});}
-function renderSkills(){$('skP').textContent=S.skp;const t=$('tree');t.innerHTML='';for(const bk in SKILLS){const B=SKILLS[bk];const col=document.createElement('div');col.className='branch';col.innerHTML=`<h3 style="color:${B.col}">${B.en}<small>${B.jp}</small></h3>`;
+function renderSkills(){$('skP').textContent=S.skp;const t=$('tree');t.innerHTML='';for(const bk in SKILLS){const B=SKILLS[bk];const col=document.createElement('div');col.className='branch';col.innerHTML=`<h3 style="color:${B.col}">${B.en}<small>${SHOWJP?B.jp:''}</small></h3>`;
  B.nodes.forEach((n,i)=>{const own=has(n.id),prev=i===0||has(B.nodes[i-1].id),can=!own&&prev&&S.skp>0;const d=document.createElement('div');d.className='node'+(own?' own':can?' can':!prev?' lock':'');d.innerHTML=`<b>${own?'◆ ':''}${n.n}</b>${n.d}`;
   d.onclick=()=>{if(!can)return;S.skills[n.id]=1;S.skp--;bellTone(1);toast('Learned '+n.n);renderSkills();};col.appendChild(d);});t.appendChild(col);}}
 // minimap + scroll map
@@ -1047,7 +1648,7 @@ function drawMini(){const c=$('mini').getContext('2d'),s=160,scale=1.6;// px per
  c.restore();c.fillStyle='#fff';c.save();c.translate(80,80);c.rotate(P.yaw-P.camYaw);c.beginPath();c.moveTo(0,-7);c.lineTo(5,5);c.lineTo(-5,5);c.closePath();c.fill();c.restore();}
 function drawRing(){const r=[['hun','#ffb347',S.hun/100],['warm','#ff6a3a',S.warm/100],['wet','#6fb8ff',S.wet/100]];let h='';const arc=(a0,a1,rad)=>{const p=(a)=>[95+Math.cos(a)*rad,95+Math.sin(a)*rad];const[x0,y0]=p(a0),[x1,y1]=p(a1);return`M${x0} ${y0}A${rad} ${rad} 0 ${a1-a0>Math.PI?1:0} 1 ${x1} ${y1}`;};
  r.forEach(([k,col,v],i)=>{const a0=Math.PI*.62+i*Math.PI*.6,a1=a0+Math.PI*.52;h+=`<path d="${arc(a0,a1,90)}" stroke="#0008" stroke-width="7" fill="none"/><path d="${arc(a0,a0+(a1-a0)*clamp(v,0.001,1),90)}" stroke="${col}" stroke-width="5" fill="none" stroke-linecap="round"/>`;});
- h+=`<text x="22" y="182" fill="#ffb347" font-size="11" font-weight="900">食</text><text x="88" y="190" fill="#ff6a3a" font-size="11" font-weight="900">暖</text><text x="158" y="182" fill="#6fb8ff" font-size="11" font-weight="900">濡</text>`;$('ring').innerHTML=h;}
+ h+=`<text x="18" y="182" fill="#ffb347" font-size="10" font-weight="900">${SHOWJP?"食":"FOOD"}</text><text x="82" y="190" fill="#ff6a3a" font-size="10" font-weight="900">${SHOWJP?"暖":"WARM"}</text><text x="152" y="182" fill="#6fb8ff" font-size="10" font-weight="900">${SHOWJP?"濡":"WET"}</text>`;$('ring').innerHTML=h;}
 function drawBell(){let h='<path d="M17 2 C8 4 6 14 5 28 L2 33 L32 33 L29 28 C28 14 26 4 17 2Z" fill="#0008" stroke="#f4ead2" stroke-width="1.5"/>';for(let i=0;i<8;i++){const x=4+i*3.3;h+=`<rect x="${x}" y="${30-((i%2)?14:20)}" width="2.4" height="${(i%2)?14:20}" fill="${i<S.shards?'#ffcf5a':'#ffffff22'}"/>`;}$('bellSvg').innerHTML=h;$('shN').textContent=S.shards;}
 function drawMap(){const cv=$('mapcv'),c=cv.getContext('2d'),Wd=cv.width,Hd=cv.height;c.fillStyle='#e9dcbc';c.fillRect(0,0,Wd,Hd);
  // whole Nemuriyama: playable valley = lower-middle area
@@ -1056,34 +1657,34 @@ function drawMap(){const cv=$('mapcv'),c=cv.getContext('2d'),Wd=cv.width,Hd=cv.h
  c.strokeStyle='#2a2016';c.lineWidth=2;c.stroke();
  for(const r of REGIONS.filter(r=>!r.playable)){const x=r.mx*Wd,y=r.my*Hd;c.save();c.fillStyle='rgba(60,50,40,.18)';c.beginPath();c.ellipse(x,y,70,42,0,0,TAU);c.fill();c.strokeStyle='rgba(60,50,40,.4)';c.setLineDash([4,4]);c.stroke();c.setLineDash([]);
   c.beginPath();c.ellipse(x,y,70,42,0,0,TAU);c.clip();c.strokeStyle='rgba(60,50,40,.25)';for(let k=-120;k<120;k+=8){c.beginPath();c.moveTo(x+k,y-50);c.lineTo(x+k+60,y+50);c.stroke();}c.restore();
-  c.fillStyle='#2a2016';c.font='900 15px "Noto Sans CJK JP",sans-serif';c.textAlign='center';c.fillText(r.jp,x,y-4);c.font='700 11px system-ui';c.fillText(r.en+' · 🔒 '+r.boss,x,y+12);}
- c.fillStyle='#2a2016';c.font='900 13px system-ui';c.textAlign='center';c.fillText('▲ 鐘守寺 Summit — Orochi sleeps',Wd*.5,Hd*.035+14);
+  c.fillStyle='#2a2016';c.font='900 15px "Noto Sans CJK JP",sans-serif';c.textAlign='center';c.fillText(SHOWJP?r.jp:r.en,x,y-4);c.font='700 11px system-ui';c.fillText((SHOWJP?r.en+' · ':'')+'🔒 '+r.boss,x,y+12);}
+ c.fillStyle='#2a2016';c.font='900 13px system-ui';c.textAlign='center';c.fillText(J('▲ 鐘守寺 Summit — Orochi sleeps'),Wd*.5,Hd*.035+14);
  // valley inset with fog of war
  const tmp=document.createElement('canvas');tmp.width=DISC*5;tmp.height=DISC*5;const tc=tmp.getContext('2d');tc.drawImage(mapImg,0,0,tmp.width,tmp.height);tc.fillStyle='#cdbf9e';
  for(let j=0;j<DISC;j++)for(let i=0;i<DISC;i++)if(!discSet.has(i+j*DISC))tc.fillRect(i*5,j*5,5.5,5.5);
  c.save();c.drawImage(tmp,vx,vy,vw,vh);c.strokeStyle='#2a2016';c.lineWidth=3;c.strokeRect(vx,vy,vw,vh);
  const m=(x,z)=>{const[a,b]=w2m(x,z,vw,vh);return[vx+a,vy+b];};c.textAlign='center';
- for(const r of REGIONS.filter(r=>r.playable)){const[a,b]=m(r.x,r.z);if(!discSet.has(discIdx(r.x,r.z))&&!S.discovered[r.id])continue;c.fillStyle='#2a2016';c.font='900 13px "Noto Sans CJK JP",sans-serif';c.fillText(r.jp,a,b);c.font='700 10px system-ui';c.fillText(r.en,a,b+12);}
+ for(const r of REGIONS.filter(r=>r.playable)){const[a,b]=m(r.x,r.z);if(!discSet.has(discIdx(r.x,r.z))&&!S.discovered[r.id])continue;c.fillStyle='#2a2016';c.font='900 13px "Noto Sans CJK JP",sans-serif';c.fillText(SHOWJP?r.jp:r.en,a,b);c.font='700 10px system-ui';if(SHOWJP)c.fillText(r.en,a,b+12);}
  for(const s of structures){const[a,b]=m(s.x,s.z);c.fillStyle=s.type==='campfire'?'#e3402c':'#6a4a30';c.fillRect(a-3,b-3,6,6);}
  if(!S.boss.dead){const[a,b]=m(ARENA.x,ARENA.z);c.fillStyle='#ffb000';c.strokeStyle='#2a2016';c.beginPath();c.arc(a,b-12,8,0,TAU);c.fill();c.stroke();c.fillStyle='#2a2016';c.font='900 10px system-ui';c.fillText('KAKERA 1',a,b-24);}
  const[px,pz]=m(hero.position.x,hero.position.z);c.translate(px,pz);c.rotate(-P.yaw+Math.PI);c.fillStyle='#e3402c';c.beginPath();c.moveTo(0,-9);c.lineTo(6,6);c.lineTo(-6,6);c.closePath();c.fill();c.restore();
- c.fillStyle='#2a2016';c.font='800 12px system-ui';c.textAlign='left';c.fillText('眠り山 NEMURIYAMA · v0.1 valley (boxed) · sealed regions open in later versions',14,Hd-12);}
+ c.fillStyle='#2a2016';c.font='800 12px system-ui';c.textAlign='left';c.fillText(J('眠り山 NEMURIYAMA · the valley (boxed) · sealed regions open in later versions'),14,Hd-12);}
 function drawCompass(){const el=$('compass');let h='';const dirs=[['N',Math.PI],['NE',Math.PI*.75],['E',Math.PI*.5],['SE',Math.PI*.25],['S',0],['SW',-Math.PI*.25],['W',-Math.PI*.5],['NW',-Math.PI*.75]];
  const put=(a,txt,cls)=>{const d=wrapPi(a-P.camYaw);if(Math.abs(d)>1.4)return;h+=`<span class="tick ${cls}" style="left:${210-d/1.4*200}px">${txt}</span>`;};
  dirs.forEach(([n,a])=>put(a,n,n==='N'?'n':''));const qa=questTarget();if(qa)put(Math.atan2(qa[0]-hero.position.x,qa[1]-hero.position.z),'◆','q');el.innerHTML=h;}
 function questTarget(){if(S.quest>=5&&!S.boss.dead)return[ARENA.x,ARENA.z];if(S.quest===3&&!nearForge())return[FORGE.x,FORGE.z];return null;}
 function updQuest(){while(S.quest<QUEST.length-1&&QUEST[S.quest].chk(S)){S.quest++;if(S.quest>0){bellTone(1);toast('✔ Goal complete');gainXP(25);}if(S.quest===4){S.stormArmed=true;if(['clear','cloudy'].includes(S.weather))setWeather('rain',25);}save();}
  const q=QUEST[S.quest];$('qT').textContent=q.t;$('qS').textContent=q.s;
- const side=[];if(!S.stat.fish)side.push('Fish at the river or Taki Pool (E)');if(!S.stat.cooked)side.push('Cook food at a campfire');if(S.skp>0)side.push(`${S.skp} skill point${S.skp>1?'s':''} to spend (K)`);if(!has('fire'))side.push('Learn the Fire ofuda (Kami branch)');
- $('qSide').innerHTML=side.slice(0,3).map(s=>'· '+s).join('<br>');}
+ const side=[];if(!S.stat.fish)side.push('Fish at the river or Taki Pool (E)');if(!S.stat.cooked)side.push('Cook food at a campfire');if(S.skp>0)side.push(`${S.skp} skill point${S.skp>1?'s':''} to spend (K)`);if(!has('fire'))side.push('Learn the Fire ofuda (Kami branch)');try{for(const id in(S.q2||{})){const g=qGoal(id);if(g){const q=qDef(id);side.unshift((q.type==='main'?'★ ':q.type==='secret'?'✦ ':'◆ ')+q.title+': '+q.steps[S.q2[id].step].text);}}if(!S.q2||!Object.keys(S.q2).length)side.unshift('Talk to the villagers of Kanemura (E) · J journal');}catch(e){}
+ $('qSide').innerHTML=side.slice(0,4).map(s=>'· '+s).join('<br>');}
 let statusCache='';
 function updHUD(){$('bHP').style.width=clamp(S.hp/DERIV.maxHp()*100,0,100)+'%';$('bST').style.width=clamp(S.st/DERIV.maxSt()*100,0,100)+'%';$('bSP').style.width=clamp(S.sp/DERIV.maxSp()*100,0,100)+'%';
  $('bXP').style.width=(S.xp/xpNeed(S.lvl)*100)+'%';$('lvN').textContent=S.lvl;$('spN').textContent=S.skp?S.skp+' skill pt (K)':'';
  const st=[];if(nearFire())st.push(['🔥 By the fire','warm']);if(sheltered())st.push(['⛺ Sheltered','good']);if(S.wet>50)st.push(['💧 Soaked','bad']);if(S.warm<25)st.push(['❄ Freezing','bad']);if(S.hun<20)st.push(['🍙 Starving','bad']);
- if(P.poison>0)st.push(['☠ Poisoned','bad']);if(S.eq==='yumi')st.push(['➶ '+(S.inv.arrow||0)+' arrows','good']);if(P.swim)st.push(['🏊 Swimming','bad']);if(nearWall())st.push(['🪨 Earth wall','good']);if(P.rooted>0)st.push(['🕸 Rooted','bad']);if(P.buffs.tea>0)st.push(['🍵 Tea','good']);if(P.buffs.tonic>0)st.push(['🧪 Tonic','good']);if(P.buffs.might>0)st.push(['🍖 +10% dmg','good']);if(P.regen.length)st.push(['🩹 Healing','good']);
+ if(P.poison>0)st.push(['☠ Poisoned','bad']);if(W().ranged)st.push([W().thrown?'🗡 '+(S.inv.kunai||0)+' kunai':(ammoFor(W())==='firearrow'?'🔥 '+(S.inv.firearrow||0)+' fire arrows':'➶ '+(S.inv.arrow||0)+' arrows')+(W().thrown?'':' (R swaps)'),'good']);if(P.swim)st.push(['🏊 Swimming','bad']);if(nearWall())st.push(['🪨 Earth wall','good']);if(P.rooted>0)st.push(['🕸 Rooted','bad']);if(P.buffs.tea>0)st.push(['🍵 Tea','good']);if(P.buffs.tonic>0)st.push(['🧪 Tonic','good']);if(P.buffs.might>0)st.push(['🍖 +10% dmg','good']);if(P.regen.length)st.push(['🩹 Healing','good']);
  const sh=st.map(([t,c])=>`<span class="st ${c}">${t}</span>`).join('');if(sh!==statusCache){$('status').innerHTML=sh;statusCache=sh;}
  const hh=Math.floor((S.time*24+6)%24),mm=Math.floor((S.time*24*60)%60);const wxn={clear:'晴れ Clear',cloudy:'曇り Cloudy',rain:'雨 Rain',storm:'嵐 STORM',fog:'霧 Fog',warn:'⚠ Storm coming'}[S.weather];
- $('time').textContent=`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')} ${isNight()?'🌙 night (yokai +30%)':'☀ day'} · ${wxn} · ${Math.round(S.warm)}° warmth`;
+ $('time').textContent=J(`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')} ${isNight()?'🌙 night (yokai +30%)':'☀ day'} · ${wxn} · ${Math.round(S.warm)}° warmth`);
  $('cold').style.opacity=S.warm<30?String((30-S.warm)/30*.9):'0';
  const it=findInteract();const pr=$('prompt');if(FISH.on&&FISH.state==='bite'){pr.style.display='none';}else if(it){pr.style.display='block';pr.innerHTML=`<kbd>E</kbd>${it.verb}`;}else pr.style.display='none';
  const lk=$('lock');if(P.lock&&P.lock.alive!==false){_v.copy(P.lock.pos).add(new V3(0,P.lock.isBoss?2:1,0)).project(camera);lk.style.display='block';lk.style.left=((_v.x+1)/2*innerWidth)+'px';lk.style.top=((1-_v.y)/2*innerHeight)+'px';}else lk.style.display='none';}
@@ -1098,7 +1699,7 @@ function onKey(code){
  if(code==='KeyK'){if(o&&o.id==='skills'){hide('skills');return;}if(!o){renderSkills();show('skills');}return;}
  if(code==='KeyM'){if(o&&o.id==='map'){hide('map');return;}if(!o){drawMap();show('map');}return;}
  if(o||document.body.classList.contains('menu'))return;
- if(code==='KeyE')interact();if(code==='KeyB')placeBuild();if(code==='KeyX')castFire();if(code==='KeyZ')castEarth();
+ if(code==='KeyJ'){openJournal();return;}if(code==='KeyR'){toggleAmmo();return;}if(code==='KeyH'){toggleRide();return;}if(code==='KeyE')interact();if(code==='KeyB')placeBuild();if(code==='KeyX')castFire();if(code==='KeyZ')castEarth();
  if(code==='Tab'){if(P.lock){P.lock=null;}else{let best=null,bd=26;for(const e of enemiesAll()){if(e.D&&e.D.animal&&!e.hb.g.visible)continue;const d=e.pos.distanceTo(hero.position);if(d<bd){bd=d;best=e;}}P.lock=best;}}
  if(/^Digit[1-8]$/.test(code)){const s=hotbarItems()[+code.slice(5)-1];if(s){if(s.w)equip(s.w);else useItem(s.it);}}}
 
@@ -1112,12 +1713,12 @@ function updPlayer(dt,time){const p=hero.position;if(P.dead){body.rotation.x=ler
  const wantBlock=!ui&&keys.KeyF&&!P.atk&&P.dodge<=0;if(wantBlock&&!P.block)P.blockT=0;P.block=wantBlock;if(P.block)P.blockT+=dt;
  if(pressed.Space&&!ui&&P.ground&&P.dodge<=0&&P.rooted<=0){P.vy=7;P.ground=false;useSt(6);}
  for(const k in pressed)delete pressed[k];
- let speed=6;const sprint=keys.ShiftLeft&&P.moving&&S.st>1&&!P.block;if(sprint){speed=9;S.st-=12*dt;P.stDelay=.6;}if(P.block)speed=2.2;if(S.warm<=0)speed*=.75;if(P.slowT>0){P.slowT-=dt;speed*=.45;}P.swim=inDeep(p.x,p.z);if(P.inWater)speed*=P.swim?.5:.6;if(P.swim){S.st-=4*dt;P.stDelay=.6;if(S.st<=0)hurtTick(4*dt,'drowning');}
- if(P.atk)speed*=.25;if(P.rooted>0){P.rooted-=dt;speed=0;}if(FISH.on)speed=0;
+ let speed=5.5;const sprint=keys.ShiftLeft&&P.moving&&S.st>1&&!P.block;if(sprint){speed=8;S.st-=12*dt;P.stDelay=.6;}if(P.block)speed=2.2;if(S.warm<=0)speed*=.75;if(P.slowT>0){P.slowT-=dt;speed*=.45;}P.swim=inDeep(p.x,p.z);if(P.inWater)speed*=P.swim?.5:.6;if(P.swim){S.st-=4*dt;P.stDelay=.6;if(S.st<=0)hurtTick(4*dt,'drowning');}
+ if(RIDE.on){speed*=sprint?1.75:2.1;if(P.swim){RIDE.on=false;toast('Your horse refuses deep water');}}if(P.atk)speed*=.25;if(P.rooted>0){P.rooted-=dt;speed=0;}if(FISH.on)speed=0;
  if(P.dodge>0){P.dodge-=dt;const k=P.dodge/.35;P.iframe=(k<.857&&k>.143)?1:0;p.addScaledVector(P.dodgeDir,12*dt);P.yaw=Math.atan2(P.dodgeDir.x,P.dodgeDir.z);}
  else{P.iframe=0;const target=mv.clone().multiplyScalar(speed);P.vel.lerp(target,Math.min(1,dt*(P.moving?10:12)));p.addScaledVector(P.vel,dt);
   if(P.lock&&P.lock.alive!==false&&P.lock.pos.distanceTo(p)<30){const ty=Math.atan2(P.lock.pos.x-p.x,P.lock.pos.z-p.z);P.yaw+=wrapPi(ty-P.yaw)*Math.min(1,dt*12);}else if(P.lock)P.lock=null;
-  if(P.moving&&!P.atk){const ty=Math.atan2(mv.x,mv.z);const dy=wrapPi(ty-P.yaw);if(!P.lock)P.yaw+=dy*Math.min(1,dt*12);P.lean=lerp(P.lean,clamp(dy,-.6,.6)*.5,dt*8);}else P.lean=lerp(P.lean,0,dt*6);}
+  if(P.moving&&!P.atk){const ty=Math.atan2(mv.x,mv.z);const dy=wrapPi(ty-P.yaw);if(!P.lock)P.yaw+=dy*Math.min(1,dt*(P.vel.length()>7?7:10));P.lean=lerp(P.lean,clamp(dy,-.6,.6)*.5*clamp(P.vel.length()/6,.3,1.3),dt*7);}else P.lean=lerp(P.lean,0,dt*6);}
  p.x=clamp(p.x,WMIN,WMAX);p.z=clamp(p.z,ZMIN,ZMAX);collide(p,.4);
  const gy=H(p.x,p.z);P.inWater=inWater(p.x,p.z);if(p.z>ZMAX-4||gy<WATER_SEA-.5){p.z=Math.min(p.z,ZMAX-4);}
  const surf=pool.position.y-1.15;if(P.swim&&p.y<surf){p.y=lerp(p.y,surf+Math.sin(time*2)*.05,Math.min(1,dt*6));P.vy=0;P.ground=true;}
@@ -1126,9 +1727,9 @@ function updPlayer(dt,time){const p=hero.position;if(P.dead){body.rotation.x=ler
  if(P.comboT>0){P.comboT-=dt;if(P.comboT<=0)P.combo=0;}
  hero.rotation.y=P.yaw;
  // ---- procedural animation (Aether: tiered motion, lean, squash, survival body states) ----
- const tier=S.shards>=6?2:S.shards>=3?1:0;const spd=P.vel.length();const cyc=time*(spd>7?13:10);const amp=clamp(spd/6,0,1.3)*(tier?0.8:1);
+ const tier=S.shards>=6?2:S.shards>=3?1:0;const spd=P.vel.length();P.ph=(P.ph||0)+dt*(spd<.3?0:Math.max(6.5,spd*1.75));const cyc=P.ph;/* distance-locked stride: feet plant instead of sliding */const amp=clamp(spd/6,0,1.3)*(tier?0.8:1);
  legL.rotation.x=Math.sin(cyc)*.7*amp;legR.rotation.x=-Math.sin(cyc)*.7*amp;hips.position.y=1.0+Math.abs(Math.sin(cyc))*.06*amp;
- const cold=S.warm<30,tired=S.st<20;chest.rotation.x=lerp(chest.rotation.x,(spd>7?.25:spd>1?.1:0)+(cold?.25:0)+(tired?.15:0),dt*6);if(cold)chest.position.x=Math.sin(time*40)*.012;else chest.position.x=0;
+ const cold=S.warm<30,tired=S.st<20;chest.rotation.x=lerp(chest.rotation.x,(spd>7?.25:spd>1?.1:0)+(cold?.25:0)+(tired?.15:0),dt*6);if(cold)chest.position.x=Math.sin(time*40)*.012;else chest.position.x=0;{const br=spd<.5?Math.sin(time*1.9)*.018:0;chest.scale.set(1+br,1+br*.6,1+br);}
  P.landSquash=Math.max(0,P.landSquash-dt);if(!KMF.ok){const sway=[.035,.018,.005][tier];body.rotation.z=-P.lean*.6+(spd<.5?Math.sin(time*1.7)*sway:0);body.scale.set(1+P.landSquash*.5,1-P.landSquash*.8,1+P.landSquash*.5);}else{body.rotation.z=0;body.scale.set(1,1,1);}
  armL.rotation.set(-Math.sin(cyc)*.6*amp,0,-.12);
  if(P.atk){const a=P.atk,k=a.t/a.dur,wf=Math.max(.05,(a.hitAt-.03)/a.dur);const yari=S.eq==='yari'&&!a.sweep;
@@ -1164,9 +1765,9 @@ function loop(){requestAnimationFrame(loop);let raw=Math.min(clock.getDelta(),.0
  renderFrame();}
 function frame(raw){const menu=document.body.classList.contains('menu');const paused=menu||(!$('pause').classList.contains('hidden'))||(!$('dead').classList.contains('hidden'));
  let dt=raw;if(TIME.freeze>0){TIME.freeze-=raw;dt=0;}if(TIME.slowT>0){TIME.slowT-=raw;dt*=TIME.slow;}
- if(paused){updSky(raw);updCamera(raw);return;}
+ if(paused){updSky(raw);updCamera(raw);try{AUDIO.tick(raw);}catch(e){}return;}
  gtime+=dt;S.time=(S.time+dt/DAY_LEN)%1;
- updPlayer(dt,gtime);survivalTick(dt);updWalls(dt);motionUpdate(dt,raw);weatherTick(dt);updSky(dt);
+ updPlayer(dt,gtime);survivalTick(dt);updWalls(dt);motionUpdate(dt,raw);try{villageUpdate(dt);AUDIO.tick(dt);v03Update(dt);artUpdate(dt);}catch(e){if(!window._vuErr){window._vuErr=1;console.warn('[kanemori] village update',e);}}weatherTick(dt);updSky(dt);
  for(const m of minions)updMinion(m,dt,gtime);updBoss(dt,gtime);updProjs(dt);updLoot(dt);updParts(dt);updRings(raw);updFishing(dt);regrowTick(dt);
  spawnT-=dt;if(spawnT<=0){spawnT=4;spawnTick(false);}
  fallTex.offset.y-=dt*1.6;mist.forEach((m,i)=>{m.position.y=riverY(-110)+Math.sin(gtime+i)*.4;m.rotation.y+=dt*.3;});arenaMist.forEach((m,i)=>m.position.x+=Math.sin(gtime*.3+i)*dt*.5);
@@ -1184,8 +1785,23 @@ function applyLoaded(){hero.position.set(S.pos[0],H(S.pos[0],S.pos[2]),S.pos[2])
  if(S.boss.dead){boss.alive=false;boss.state='done';bossG.visible=false;silkLine.visible=false;shardBeacon.visible=false;webG.visible=true;}
  discSet=new Set(S.disc||[]);setWeather(S.weather,S.wxT);refreshHotbar();}
 const _save=save;save=function(m){S.disc=[...discSet];_save(m);};
-function startGame(cont){audioInit();P.dead=false;hide('dead');if(!(cont&&load())){S=freshState();applyLoaded();setWeather('clear',150);}document.body.classList.remove('menu');hide('start');if(!QS.has('shots')&&PL_OK)requestLock();S.started=true;spawnTick(true);spawnTick(true);
- areaTitle('鐘守','KANEMORI','Kanemura · the bell is broken');refreshHotbar();updQuest();drawBell();}
+function startGame(cont){audioInit();P.dead=false;hide('dead');if(!(cont&&load())){S=freshState();applyLoaded();setWeather('clear',150);}try{afterStateReset();}catch(e){console.warn(e);}document.body.classList.remove('menu');hide('start');if(!QS.has('shots')&&PL_OK)requestLock();S.started=true;spawnTick(true);spawnTick(true);
+ areaTitle('鐘守','KANEMORI','Keeper of the Shattered Bell · Kanemura');refreshHotbar();updQuest();drawBell();}
+wrapJP(document.body);setJP(SHOWJP);
+/* ---- settings ---- */
+const LLM={url:lsGet('km_llm_url')||'',key:lsGet('km_llm_key')||'',model:lsGet('km_llm_model')||''};
+const AUDSET={mus:+(lsGet('km_vol_mus')||0.6),sfx:+(lsGet('km_vol_sfx')||0.8)};
+function openSettings(){$('sJP').checked=SHOWJP;$('sMus').value=AUDSET.mus;$('sSfx').value=AUDSET.sfx;$('sSens').value=MSET.sens;$('sInv').checked=MSET.inv;$('sLlmUrl').value=LLM.url;$('sLlmKey').value=LLM.key;$('sLlmModel').value=LLM.model;show('settings');}
+$('sJP').onchange=e=>{setJP(e.target.checked);refreshHotbar();updQuest();};$('sMus').oninput=e=>{AUDSET.mus=+e.target.value;lsSet('km_vol_mus',AUDSET.mus);if(window.AUDIO)AUDIO.setVol();};
+$('sSfx').oninput=e=>{AUDSET.sfx=+e.target.value;lsSet('km_vol_sfx',AUDSET.sfx);if(master)master.gain.value=muted?0:.7*AUDSET.sfx;};
+$('sSens').oninput=e=>{MSET.sens=+e.target.value;lsSet('km_sens',MSET.sens);};$('sInv').onchange=e=>{MSET.inv=e.target.checked;lsSet('km_invy',MSET.inv?'1':'0');};
+['Url','Key','Model'].forEach(k=>$('sLlm'+k).oninput=e=>{LLM[k.toLowerCase()]=e.target.value.trim();lsSet('km_llm_'+k.toLowerCase(),LLM[k.toLowerCase()]);});
+const setLLM=(u,m,k)=>{LLM.url=u;LLM.model=m;if(k!==undefined)LLM.key=k;lsSet('km_llm_url',u);lsSet('km_llm_model',m);if(k!==undefined)lsSet('km_llm_key',k);$('sLlmUrl').value=LLM.url;$('sLlmModel').value=LLM.model;$('sLlmKey').value=LLM.key;};
+$('sOllama').onclick=()=>{setLLM('http://localhost:11434/v1/chat/completions','llama3.2','');toast('NPC AI: Ollama preset (llama3.2)');};
+$('sCustom').onclick=()=>{setLLM(LLM.url&&!LLM.url.includes('11434')?LLM.url:'https://api.openai.com/v1/chat/completions',LLM.model&&LLM.model!=='llama3.2'?LLM.model:'gpt-4o-mini');toast('Enter your key, then talk to a villager');};
+$('sOff').onclick=()=>{setLLM('','');toast('NPC AI off: built-in persona engine');};
+$('sClearKey').onclick=()=>{LLM.key='';$('sLlmKey').value='';try{localStorage.removeItem('km_llm_key')}catch(e){}toast('API key cleared');};
+$('bSet').onclick=openSettings;$('pSetB').onclick=openSettings;
 $('bNew').onclick=()=>startGame(false);$('bCont').onclick=()=>startGame(true);$('bCont').disabled=!lsGet(SAVE_KEY);
 $('pRes').onclick=()=>{hide('pause');if(PL_OK&&!QS.has('shots'))requestLock();};$('pSave').onclick=()=>save(true);$('pLoad').onclick=()=>{if(load()){toast('Loaded');hide('pause');}};
 $('pMute').onclick=()=>{muted=!muted;lsSet('km_mute',muted?'1':'0');if(master)master.gain.value=muted?0:.7;toast(muted?'Muted':'Sound on');};
@@ -1199,6 +1815,7 @@ window.KM={S:()=>S,P,boss,minions,hero,give,gainXP,setWeather,startGame,craft,pl
  tp:(x,z)=>{hero.position.set(x,H(x,z),z);},setTime:t=>S.time=t,cam:(y,p)=>{P.camYaw=y;P.camPitch=p;},drawMap,renderSkills,show,hide,learn:id=>{S.skills[id]=1;},spawnMinion,
  key:(c)=>{pressed[c]=true;onKey(c);},attack:h=>startAttack(h),ARENA,keys,pressed,useItem,equip,castEarth,H,TIME,
  sim(sec,bot,step=1/30){const n=Math.round(sec/step);for(let i=0;i<n;i++){if(bot&&bot(i*step)===false)return i*step;frame(step);}return sec;}};
+Object.assign(window.KM,{V03,PEOPLE,DATA,openTalk,closeTalk,sendTalk,personaReply,openJournal,renderJournal,toggleRide,RIDE,startQuest,relOf,setJP,tradeMenu,giftMenu,recruit});
 loop();
 </script>
 </body></html>

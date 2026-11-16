@@ -1,0 +1,659 @@
+{
+ "quests": [
+  {
+   "id": "m_first_shard",
+   "title": "The First Voice",
+   "type": "main",
+   "giver": "soen",
+   "desc": "Sōen says the first kakera fell into Sugi no Mori, where the Lady of the Canopy weaves her web.",
+   "steps": [
+    {
+     "text": "Speak with Kiku in the forest",
+     "goal": {
+      "type": "talk",
+      "target": "kiku"
+     }
+    },
+    {
+     "text": "Find the great web",
+     "goal": {
+      "type": "visit",
+      "x": -85,
+      "z": -100,
+      "r": 25
+     }
+    },
+    {
+     "text": "Defeat Jorōgumo",
+     "goal": {
+      "type": "kill",
+      "target": "jorogumo",
+      "n": 1
+     }
+    },
+    {
+     "text": "Bring the kakera to Sōen",
+     "goal": {
+      "type": "talk",
+      "target": "soen"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 500,
+    "coins": 100,
+    "affinity": {
+     "soen": 20
+    },
+    "rep": {
+     "village": 25
+    },
+    "lore": [
+     "l_orochi_hint"
+    ]
+   }
+  },
+  {
+   "id": "m_raid",
+   "title": "Spears Against the Web",
+   "type": "main",
+   "giver": "ryu",
+   "desc": "Ryū will lead a raid on Jorōgumo if you prove you can work with others.",
+   "after": "q_ryu_boar",
+   "steps": [
+    {
+     "text": "Recruit Kaito, Suzu or Kiku",
+     "goal": {
+      "type": "recruit",
+      "target": "kaito"
+     }
+    },
+    {
+     "text": "Craft 10 fire arrows",
+     "goal": {
+      "type": "collect",
+      "item": "firearrow",
+      "n": 10
+     }
+    },
+    {
+     "text": "Meet Ryū at the forest edge",
+     "goal": {
+      "type": "visit",
+      "x": -30,
+      "z": 40,
+      "r": 10
+     }
+    }
+   ],
+   "reward": {
+    "xp": 200,
+    "affinity": {
+     "ryu": 20,
+     "kaito": 10
+    },
+    "rep": {
+     "forest": 20
+    }
+   }
+  },
+  {
+   "id": "m_three_voices",
+   "title": "Three Voices",
+   "type": "main",
+   "giver": "soen",
+   "desc": "Sōen will speak the name under the mountain once you carry three shards.",
+   "after": "m_first_shard",
+   "steps": [
+    {
+     "text": "Recover 3 kakera",
+     "goal": {
+      "type": "shard",
+      "n": 3
+     }
+    },
+    {
+     "text": "Return to Sōen",
+     "goal": {
+      "type": "talk",
+      "target": "soen"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 1000,
+    "lore": [
+     "l_orochi"
+    ]
+   }
+  },
+  {
+   "id": "q_hana_herbs",
+   "title": "Bitter Medicine",
+   "type": "side",
+   "giver": "hana",
+   "desc": "Hana needs herbs for her salves.",
+   "steps": [
+    {
+     "text": "Gather 6 herbs",
+     "goal": {
+      "type": "collect",
+      "item": "herb",
+      "n": 6
+     }
+    },
+    {
+     "text": "Give them to Hana",
+     "goal": {
+      "type": "give",
+      "item": "herb",
+      "n": 6,
+      "target": "hana"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 60,
+    "coins": 20,
+    "items": {
+     "salve": 2
+    },
+    "affinity": {
+     "hana": 15
+    },
+    "rep": {
+     "village": 5
+    }
+   }
+  },
+  {
+   "id": "q_hana_fever",
+   "title": "Sota's Fever",
+   "type": "side",
+   "giver": "hana",
+   "after": "q_hana_herbs",
+   "desc": "Sota's fever is spirit-sickness. The Masked Hermit might know a cure.",
+   "steps": [
+    {
+     "text": "Find the Masked Hermit in the deep grove at night",
+     "goal": {
+      "type": "talk",
+      "target": "hermit"
+     }
+    },
+    {
+     "text": "Bring Jorōgumo silk to Hana",
+     "goal": {
+      "type": "give",
+      "item": "silk",
+      "n": 1,
+      "target": "hana"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 250,
+    "items": {
+     "tonic": 3
+    },
+    "affinity": {
+     "hana": 30
+    },
+    "rep": {
+     "village": 15
+    },
+    "lore": [
+     "l_hana_secret"
+    ]
+   }
+  },
+  {
+   "id": "q_genzo_iron",
+   "title": "Iron for the Old Man",
+   "type": "side",
+   "giver": "genzo",
+   "desc": "Genzō will forge you a real blade, if you bring the iron.",
+   "steps": [
+    {
+     "text": "Mine 3 iron near the waterfall cliffs",
+     "goal": {
+      "type": "collect",
+      "item": "iron",
+      "n": 3
+     }
+    },
+    {
+     "text": "Give the iron to Genzō",
+     "goal": {
+      "type": "give",
+      "item": "iron",
+      "n": 3,
+      "target": "genzo"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 80,
+    "items": {
+     "kunai": 5
+    },
+    "affinity": {
+     "genzo": 15
+    }
+   }
+  },
+  {
+   "id": "q_genzo_truth",
+   "title": "The Crack in the Bronze",
+   "type": "secret",
+   "giver": "genzo",
+   "after": "m_first_shard",
+   "desc": "Genzō drinks at the inn and finally talks about the day he cast the bell.",
+   "steps": [
+    {
+     "text": "Bring Genzō a cup of tea at the inn after dark",
+     "goal": {
+      "type": "give",
+      "item": "tea",
+      "n": 1,
+      "target": "genzo"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 300,
+    "affinity": {
+     "genzo": 30
+    },
+    "lore": [
+     "l_genzo_crack"
+    ]
+   }
+  },
+  {
+   "id": "q_mio_fish",
+   "title": "Stew Night",
+   "type": "side",
+   "giver": "mio",
+   "desc": "Storm's coming and the inn is out of fish.",
+   "steps": [
+    {
+     "text": "Catch 4 fish",
+     "goal": {
+      "type": "collect",
+      "item": "fish",
+      "n": 4
+     }
+    },
+    {
+     "text": "Give them to Mio",
+     "goal": {
+      "type": "give",
+      "item": "fish",
+      "n": 4,
+      "target": "mio"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 50,
+    "coins": 30,
+    "affinity": {
+     "mio": 15
+    },
+    "rep": {
+     "village": 5
+    },
+    "lore": [
+     "l_rumors"
+    ]
+   }
+  },
+  {
+   "id": "q_daichi_wolves",
+   "title": "Foals and Fangs",
+   "type": "side",
+   "giver": "daichi",
+   "desc": "Packs are hunting near the stable. Thin them out, starting with the alpha.",
+   "steps": [
+    {
+     "text": "Defeat 4 deer-hunting predators near the stable (tanuki)",
+     "goal": {
+      "type": "kill",
+      "target": "tanuki",
+      "n": 4
+     }
+    },
+    {
+     "text": "Tell Daichi",
+     "goal": {
+      "type": "talk",
+      "target": "daichi"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 120,
+    "coins": 60,
+    "affinity": {
+     "daichi": 25
+    }
+   }
+  },
+  {
+   "id": "q_kaito_duel",
+   "title": "Wooden Swords",
+   "type": "side",
+   "giver": "kaito",
+   "desc": "Kaito challenges you to a sparring match at the bell frame.",
+   "steps": [
+    {
+     "text": "Meet Kaito at the bell frame",
+     "goal": {
+      "type": "visit",
+      "x": 0,
+      "z": 150,
+      "r": 8
+     }
+    },
+    {
+     "text": "Talk to Kaito after the spar",
+     "goal": {
+      "type": "talk",
+      "target": "kaito"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 80,
+    "affinity": {
+     "kaito": 20
+    }
+   }
+  },
+  {
+   "id": "q_kaito_betrayal",
+   "title": "Ash on His Hands",
+   "type": "secret",
+   "giver": "kaito",
+   "after": "m_first_shard",
+   "desc": "Kaito has been meeting a pilgrim in grey. If your bond is strong, he confesses. If not...",
+   "steps": [
+    {
+     "text": "Find the Pilgrim of Ash at night",
+     "goal": {
+      "type": "talk",
+      "target": "pilgrim"
+     }
+    },
+    {
+     "text": "Confront Kaito",
+     "goal": {
+      "type": "talk",
+      "target": "kaito"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 400,
+    "affinity": {
+     "kaito": 25
+    },
+    "lore": [
+     "l_pilgrim"
+    ]
+   }
+  },
+  {
+   "id": "q_ryu_boar",
+   "title": "The Organized Hunt",
+   "type": "side",
+   "giver": "ryu",
+   "desc": "Ryū tests you: hunt with the group, not alone.",
+   "steps": [
+    {
+     "text": "Recruit Suzu for the hunt",
+     "goal": {
+      "type": "recruit",
+      "target": "suzu"
+     }
+    },
+    {
+     "text": "Hunt 3 deer",
+     "goal": {
+      "type": "kill",
+      "target": "deer",
+      "n": 3
+     }
+    },
+    {
+     "text": "Bring Ryū 3 hides",
+     "goal": {
+      "type": "give",
+      "item": "hide",
+      "n": 3,
+      "target": "ryu"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 150,
+    "items": {
+     "arrow": 20
+    },
+    "affinity": {
+     "ryu": 20,
+     "suzu": 10
+    },
+    "rep": {
+     "forest": 15
+    }
+   }
+  },
+  {
+   "id": "q_ryu_jin",
+   "title": "The Hunter Who Followed",
+   "type": "secret",
+   "giver": "ryu",
+   "after": "q_hana_fever",
+   "desc": "Ryū finally asks: did the Hermit say anything about a hunter named Jin?",
+   "steps": [
+    {
+     "text": "Ask the Masked Hermit about Jin",
+     "goal": {
+      "type": "talk",
+      "target": "hermit"
+     }
+    },
+    {
+     "text": "Tell Ryū the truth",
+     "goal": {
+      "type": "talk",
+      "target": "ryu"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 300,
+    "affinity": {
+     "ryu": 35
+    },
+    "lore": [
+     "l_jin"
+    ]
+   }
+  },
+  {
+   "id": "q_suzu_falls",
+   "title": "Behind the Water",
+   "type": "side",
+   "giver": "suzu",
+   "desc": "Suzu swears there's a cave behind Taki falls. Swim through with her.",
+   "steps": [
+    {
+     "text": "Swim to the Taki Pool",
+     "goal": {
+      "type": "visit",
+      "x": 66,
+      "z": -104,
+      "r": 15
+     }
+    },
+    {
+     "text": "Find who sings behind the falls",
+     "goal": {
+      "type": "talk",
+      "target": "priestess"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 200,
+    "affinity": {
+     "suzu": 25
+    },
+    "rep": {
+     "river": 10
+    }
+   }
+  },
+  {
+   "id": "q_ume_koi",
+   "title": "One More Golden Koi",
+   "type": "side",
+   "giver": "ume",
+   "desc": "Grandma Ume wants to see the Golden Koi one last time.",
+   "steps": [
+    {
+     "text": "Catch the Golden Koi in Taki Pool",
+     "goal": {
+      "type": "collect",
+      "item": "koi",
+      "n": 1
+     }
+    },
+    {
+     "text": "Show it to Ume",
+     "goal": {
+      "type": "give",
+      "item": "koi",
+      "n": 1,
+      "target": "ume"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 300,
+    "coins": 80,
+    "affinity": {
+     "ume": 40
+    },
+    "rep": {
+     "river": 25
+    },
+    "lore": [
+     "l_koi"
+    ]
+   }
+  },
+  {
+   "id": "q_tetsu_partner",
+   "title": "Partners",
+   "type": "side",
+   "giver": "tetsu",
+   "desc": "Tetsu wants an investor. Bring coin and goods, get a cut of his trade.",
+   "steps": [
+    {
+     "text": "Give Tetsu 50 coin",
+     "goal": {
+      "type": "give",
+      "item": "coin",
+      "n": 50,
+      "target": "tetsu"
+     }
+    },
+    {
+     "text": "Bring Tetsu 3 hides to sell",
+     "goal": {
+      "type": "give",
+      "item": "hide",
+      "n": 3,
+      "target": "tetsu"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 120,
+    "coins": 120,
+    "affinity": {
+     "tetsu": 25
+    },
+    "rep": {
+     "river": 10
+    }
+   }
+  },
+  {
+   "id": "q_kiku_kodama",
+   "title": "Gifts for the Little Ones",
+   "type": "side",
+   "giver": "kiku",
+   "desc": "Leave sap for the kodama and they'll show you a hidden path.",
+   "steps": [
+    {
+     "text": "Gather 3 sap",
+     "goal": {
+      "type": "collect",
+      "item": "sap",
+      "n": 3
+     }
+    },
+    {
+     "text": "Give the sap to Kiku",
+     "goal": {
+      "type": "give",
+      "item": "sap",
+      "n": 3,
+      "target": "kiku"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 100,
+    "affinity": {
+     "kiku": 25
+    },
+    "rep": {
+     "forest": 15
+    },
+    "lore": [
+     "l_kodama"
+    ]
+   }
+  },
+  {
+   "id": "q_secret_mask",
+   "title": "The Bronze Mask",
+   "type": "secret",
+   "giver": "hermit",
+   "desc": "The Hermit's mask is made of bell bronze. She'll tell you why, for an offering.",
+   "steps": [
+    {
+     "text": "Offer the Hermit a Golden Koi",
+     "goal": {
+      "type": "give",
+      "item": "koi",
+      "n": 1,
+      "target": "hermit"
+     }
+    }
+   ],
+   "reward": {
+    "xp": 400,
+    "lore": [
+     "l_mask"
+    ]
+   }
+  }
+ ]
+}

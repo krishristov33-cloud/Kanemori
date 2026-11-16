@@ -1,0 +1,1056 @@
+{
+ "factions": [
+  {
+   "id": "village",
+   "name": "Kanemura Folk",
+   "desc": "Bell-town people: smiths, shopkeepers, priests. They fear the night now the bell is silent.",
+   "area": "kanemura"
+  },
+  {
+   "id": "forest",
+   "name": "Forest Folk",
+   "desc": "Charcoal burners and kodama keepers of Sugi no Mori. Wary of outsiders, loyal once trusted.",
+   "area": "sugi"
+  },
+  {
+   "id": "river",
+   "name": "River People",
+   "desc": "Fishers and ferry folk of Kawa Gorge and Taki Pool. Superstitious, generous, proud.",
+   "area": "kawa"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "soen",
+   "name": "Priest Sōen",
+   "nameJp": "宗円",
+   "role": "Bell Priest",
+   "faction": "village",
+   "home": "shrine",
+   "work": "temple",
+   "schedule": [
+    {
+     "from": 5,
+     "to": 19,
+     "at": "work"
+    },
+    {
+     "from": 19,
+     "to": 22,
+     "at": "wander"
+    },
+    {
+     "from": 22,
+     "to": 5,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "calm, old, guilt-ridden, speaks in careful half-truths",
+    "fears": [
+     "the bell staying broken",
+     "what sleeps under the mountain"
+    ],
+    "wants": [
+     "the kakera returned",
+     "forgiveness"
+    ],
+    "speech": "slow, formal, calls Ren 'Kanemori'",
+    "secret": "His order has known for centuries the bell holds Yamata no Orochi asleep. He never told the village."
+   },
+   "greeting": "Kanemori. The bell chose you the night it broke. I am sorry for that.",
+   "lines": {
+    "bell": [
+     "Eight shards, eight voices. The bell was never silent before.",
+     "Bring them home, and I will recast it with Genzō."
+    ],
+    "orochi": [
+     "Some names should not be spoken under this roof.",
+     "...Not yet. Ask me again when you carry three shards."
+    ],
+    "forest": [
+     "The Lady of the Canopy took the first shard. She was never a lady."
+    ],
+    "fear": [
+     "Since the bell cracked, the dead sleep badly."
+    ],
+    "bye": [
+     "Walk with the bell, Kanemori."
+    ]
+   },
+   "likes": [
+    "tea",
+    "koi",
+    "ofuda"
+   ],
+   "dislikes": [
+    "meat"
+   ],
+   "recruitable": false,
+   "quests": [
+    "m_first_shard",
+    "m_three_voices"
+   ],
+   "start": {
+    "affinity": 10,
+    "trust": 10,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#e8e1d0",
+    "hat": true,
+    "hair": "#bbb",
+    "scale": 0.95
+   }
+  },
+  {
+   "id": "genzo",
+   "name": "Old Genzō",
+   "nameJp": "源蔵",
+   "role": "Smith & Bell-caster",
+   "faction": "village",
+   "home": "house1",
+   "work": "smith",
+   "schedule": [
+    {
+     "from": 6,
+     "to": 20,
+     "at": "work"
+    },
+    {
+     "from": 20,
+     "to": 22,
+     "at": "wander"
+    },
+    {
+     "from": 22,
+     "to": 6,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "gruff, honest, secretly sentimental, judges people by their hands",
+    "fears": [
+     "his hands shaking too much to cast again"
+    ],
+    "wants": [
+     "iron",
+     "tamahagane",
+     "a worthy student"
+    ],
+    "speech": "grunts, short blunt sentences, calls Ren 'boy'",
+    "secret": "He cast the crack into the bell himself, forty years ago, by mistake, and has lied about it ever since."
+   },
+   "greeting": "Hm. Show me your hands. ...Calluses. Good. You'll do.",
+   "lines": {
+    "bell": [
+     "Bronze remembers. Every crack is a story it can't stop telling."
+    ],
+    "forge": [
+     "Bring iron, I'll make you a blade. Bring tamahagane, I'll make you a legend."
+    ],
+    "fear": [
+     "Night's louder every week. Sleep with your sword, boy."
+    ],
+    "trade": [
+     "Coin's coin. Iron's better."
+    ],
+    "bye": [
+     "Go. Don't break my blade."
+    ]
+   },
+   "likes": [
+    "iron",
+    "silk",
+    "tea"
+   ],
+   "dislikes": [
+    "mushroom"
+   ],
+   "shop": {
+    "sells": [
+     {
+      "item": "arrow",
+      "price": 2
+     },
+     {
+      "item": "kunai",
+      "price": 6
+     },
+     {
+      "item": "iron",
+      "price": 15
+     }
+    ],
+    "buys": [
+     "iron",
+     "hide",
+     "silk",
+     "stone"
+    ]
+   },
+   "recruitable": false,
+   "quests": [
+    "q_genzo_iron",
+    "q_genzo_truth"
+   ],
+   "start": {
+    "affinity": 0,
+    "trust": 0,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#4a3a2e",
+    "hat": false,
+    "hair": "#999",
+    "scale": 1.1
+   }
+  },
+  {
+   "id": "hana",
+   "name": "Hana",
+   "nameJp": "花",
+   "role": "Herbalist",
+   "faction": "village",
+   "home": "house2",
+   "work": "shop",
+   "schedule": [
+    {
+     "from": 6,
+     "to": 19,
+     "at": "work"
+    },
+    {
+     "from": 19,
+     "to": 22,
+     "at": "wander"
+    },
+    {
+     "from": 22,
+     "to": 6,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "patient, sharp-tongued, curious, hides worry behind jokes",
+    "fears": [
+     "the forest at night",
+     "her brother dying"
+    ],
+    "wants": [
+     "a cure for her brother Sota's fever",
+     "rare herbs"
+    ],
+    "speech": "short sentences, dry humor",
+    "secret": "She sold Jorōgumo silk to a hooded stranger for medicine money. The stranger was the Pilgrim of Ash."
+   },
+   "greeting": "Bleeding? Poisoned? Or just lost? I charge for two of those.",
+   "lines": {
+    "herbs": [
+     "Green herb heals, red root warms, the blue cap kills. Mostly."
+    ],
+    "brother": [
+     "Sota's fever won't break. Normal herbs don't touch it."
+    ],
+    "forest": [
+     "Don't eat anything that glows. Learned that one the hard way."
+    ],
+    "trade": [
+     "Salves, tea, tonics. Fair prices for a hero. Unfair for everyone else."
+    ],
+    "bye": [
+     "Don't die. It's bad for business."
+    ]
+   },
+   "likes": [
+    "herb",
+    "mushroom",
+    "sap"
+   ],
+   "dislikes": [
+    "meat"
+   ],
+   "shop": {
+    "sells": [
+     {
+      "item": "salve",
+      "price": 12
+     },
+     {
+      "item": "tea",
+      "price": 8
+     },
+     {
+      "item": "tonic",
+      "price": 18
+     }
+    ],
+    "buys": [
+     "herb",
+     "mushroom",
+     "sap",
+     "fish"
+    ]
+   },
+   "recruitable": false,
+   "quests": [
+    "q_hana_herbs",
+    "q_hana_fever"
+   ],
+   "start": {
+    "affinity": 5,
+    "trust": 5,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#5f7a4a",
+    "hat": false,
+    "hair": "#2a1a14",
+    "scale": 0.9
+   }
+  },
+  {
+   "id": "mio",
+   "name": "Mio",
+   "nameJp": "美緒",
+   "role": "Innkeeper",
+   "faction": "village",
+   "home": "inn",
+   "work": "inn",
+   "schedule": [
+    {
+     "from": 7,
+     "to": 24,
+     "at": "work"
+    },
+    {
+     "from": 0,
+     "to": 7,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "warm, gossipy, shrewd, knows everyone's business",
+    "fears": [
+     "empty tables",
+     "the village dying"
+    ],
+    "wants": [
+     "news",
+     "fresh fish",
+     "customers"
+    ],
+    "speech": "chatty, calls Ren 'little bell'",
+    "secret": "She keeps a ledger of every villager's debts and secrets, just in case."
+   },
+   "greeting": "Little bell! Sit, eat. Then tell me everything.",
+   "lines": {
+    "rumor": [
+     "They say a woman with a wooden mask walks the deep grove at night. Bring her something sweet.",
+     "Old Genzō hasn't slept well since the bell broke. Guilt, if you ask me.",
+     "Behind the falls there's singing. Fishermen won't go near."
+    ],
+    "food": [
+     "Miso stew warms the bones. Rain's coming, eat."
+    ],
+    "trade": [
+     "Rooms are cheap. Gossip is free. Stew is not."
+    ],
+    "bye": [
+     "Come back alive, I hate rewriting the ledger."
+    ]
+   },
+   "likes": [
+    "fish",
+    "koi",
+    "tea"
+   ],
+   "dislikes": [
+    "stone"
+   ],
+   "shop": {
+    "sells": [
+     {
+      "item": "gfish",
+      "price": 10
+     },
+     {
+      "item": "skewer",
+      "price": 12
+     },
+     {
+      "item": "tea",
+      "price": 8
+     }
+    ],
+    "buys": [
+     "fish",
+     "meat",
+     "mushroom"
+    ]
+   },
+   "recruitable": false,
+   "quests": [
+    "q_mio_fish"
+   ],
+   "start": {
+    "affinity": 15,
+    "trust": 5,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#a3423a",
+    "hat": false,
+    "hair": "#1a1a1a",
+    "scale": 0.95
+   }
+  },
+  {
+   "id": "daichi",
+   "name": "Daichi",
+   "nameJp": "大地",
+   "role": "Stablemaster",
+   "faction": "village",
+   "home": "house3",
+   "work": "stable",
+   "schedule": [
+    {
+     "from": 5,
+     "to": 18,
+     "at": "work"
+    },
+    {
+     "from": 18,
+     "to": 21,
+     "at": "wander"
+    },
+    {
+     "from": 21,
+     "to": 5,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "quiet, gentle with animals, awkward with people",
+    "fears": [
+     "wolves",
+     "his horses panicking in storms"
+    ],
+    "wants": [
+     "good hay",
+     "someone who treats horses right"
+    ],
+    "speech": "few words, talks to horses more than people",
+    "secret": "He once saw Jorōgumo as a beautiful woman and followed her into the trees. He came back three days later with no memory."
+   },
+   "greeting": "...Horse needs brushing. You need something?",
+   "lines": {
+    "horse": [
+     "Kaze's fast but scared of thunder. Mochi's slow, never scared of anything."
+    ],
+    "cart": [
+     "A cart doubles what you carry to Takimura. Merchants pay well for that."
+    ],
+    "trade": [
+     "Horse is four hundred. Horse and cart, nine. Treat them well, I'll know."
+    ],
+    "fear": [
+     "Wolves took two foals last moon. Packs are bolder now."
+    ],
+    "bye": [
+     "...Bye."
+    ]
+   },
+   "likes": [
+    "fiber",
+    "bamboo",
+    "meat"
+   ],
+   "dislikes": [
+    "ofuda"
+   ],
+   "shop": {
+    "sells": [
+     {
+      "item": "horse",
+      "price": 400
+     },
+     {
+      "item": "cart",
+      "price": 900
+     }
+    ],
+    "buys": [
+     "fiber",
+     "hide",
+     "bamboo"
+    ]
+   },
+   "recruitable": false,
+   "quests": [
+    "q_daichi_wolves"
+   ],
+   "start": {
+    "affinity": 0,
+    "trust": 0,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#6b5a3a",
+    "hat": true,
+    "hair": "#3a2a1a",
+    "scale": 1.05
+   }
+  },
+  {
+   "id": "kaito",
+   "name": "Kaito",
+   "nameJp": "海斗",
+   "role": "Village Guard",
+   "faction": "village",
+   "home": "house4",
+   "work": "bellframe",
+   "schedule": [
+    {
+     "from": 8,
+     "to": 22,
+     "at": "work"
+    },
+    {
+     "from": 22,
+     "to": 24,
+     "at": "wander"
+    },
+    {
+     "from": 24,
+     "to": 8,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "boastful, brave, jealous of Ren, wants glory badly",
+    "fears": [
+     "being nobody",
+     "dying unremembered"
+    ],
+    "wants": [
+     "a kakera of his own",
+     "a duel with Ren"
+    ],
+    "speech": "loud, competitive, calls Ren 'shard-thief'",
+    "secret": "The Pilgrim of Ash has promised him the power of a shard if he steals one from Ren."
+   },
+   "greeting": "So you're the 'bell-keeper'. Funny. Nobody asked me.",
+   "lines": {
+    "duel": [
+     "Spar with me. Wooden swords. Unless you're scared."
+    ],
+    "bell": [
+     "Why you? I've guarded this frame for six years."
+    ],
+    "raid": [
+     "You hunting the spider? I'm coming. Try and stop me."
+    ],
+    "fear": [
+     "I'm not afraid of the night. I'm just... careful."
+    ],
+    "bye": [
+     "Watch your back, shard-thief."
+    ]
+   },
+   "likes": [
+    "meat",
+    "skewer",
+    "kunai"
+   ],
+   "dislikes": [
+    "tea"
+   ],
+   "recruitable": true,
+   "combat": {
+    "hp": 140,
+    "dmg": 11
+   },
+   "quests": [
+    "q_kaito_duel",
+    "q_kaito_betrayal"
+   ],
+   "start": {
+    "affinity": -10,
+    "trust": 0,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#2e3f6b",
+    "hat": false,
+    "hair": "#111",
+    "scale": 1.05
+   }
+  },
+  {
+   "id": "ryu",
+   "name": "Ryū",
+   "nameJp": "竜",
+   "role": "Hunt Leader",
+   "faction": "forest",
+   "home": {
+    "x": -20,
+    "z": 60
+   },
+   "work": {
+    "x": -30,
+    "z": 40
+   },
+   "schedule": [
+    {
+     "from": 5,
+     "to": 17,
+     "at": "work"
+    },
+    {
+     "from": 17,
+     "to": 22,
+     "at": "wander"
+    },
+    {
+     "from": 22,
+     "to": 5,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "proud, tactical, respects strength and silence",
+    "fears": [
+     "losing another hunter",
+     "packs that think like men"
+    ],
+    "wants": [
+     "the Great Boar's tusk",
+     "worthy hunters"
+    ],
+    "speech": "clipped, tactical, speaks in plans",
+    "secret": "His old partner Jin didn't die in a hunt. He walked into the forest to follow the Masked Hermit and never came back."
+   },
+   "greeting": "You walk loud. We'll fix that.",
+   "lines": {
+    "hunt": [
+     "Packs follow the alpha. Kill it, scare it, and the rest scatter.",
+     "Beaters drive, archers wait downwind, spears hold. Simple."
+    ],
+    "raid": [
+     "The spider? With five good spears and fire arrows, yes. Alone, you're food."
+    ],
+    "jin": [
+     "Don't ask about Jin."
+    ],
+    "bye": [
+     "Move quiet."
+    ]
+   },
+   "likes": [
+    "hide",
+    "meat",
+    "arrow"
+   ],
+   "dislikes": [
+    "salve"
+   ],
+   "recruitable": true,
+   "combat": {
+    "hp": 160,
+    "dmg": 13
+   },
+   "quests": [
+    "q_ryu_boar",
+    "q_ryu_jin"
+   ],
+   "start": {
+    "affinity": 0,
+    "trust": 0,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#3d4a2a",
+    "hat": false,
+    "hair": "#222",
+    "scale": 1.1
+   }
+  },
+  {
+   "id": "suzu",
+   "name": "Suzu",
+   "nameJp": "鈴",
+   "role": "Scout",
+   "faction": "forest",
+   "home": {
+    "x": -10,
+    "z": 70
+   },
+   "work": {
+    "x": 20,
+    "z": 0
+   },
+   "schedule": [
+    {
+     "from": 6,
+     "to": 20,
+     "at": "work"
+    },
+    {
+     "from": 20,
+     "to": 23,
+     "at": "wander"
+    },
+    {
+     "from": 23,
+     "to": 6,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "bright, reckless, fearless, talks fast",
+    "fears": [
+     "staying in the village forever"
+    ],
+    "wants": [
+     "to see the summit",
+     "to map the whole mountain"
+    ],
+    "speech": "excited, many questions, calls Ren 'big bell'",
+    "secret": "She has already found the sealed cave mouth and heard something breathing inside."
+   },
+   "greeting": "You're going up the mountain? Take me! I know every path. Well. Most paths.",
+   "lines": {
+    "map": [
+     "I'm mapping everything! There's a waterfall nobody's been behind."
+    ],
+    "summit": [
+     "One day I'll stand on top and see the sea from the snow."
+    ],
+    "cave": [
+     "The sealed cave breathes. In, out. Like it's asleep."
+    ],
+    "bye": [
+     "Don't go anywhere cool without me!"
+    ]
+   },
+   "likes": [
+    "koi",
+    "fish",
+    "tea"
+   ],
+   "dislikes": [
+    "stone"
+   ],
+   "recruitable": true,
+   "combat": {
+    "hp": 90,
+    "dmg": 8
+   },
+   "quests": [
+    "q_suzu_falls"
+   ],
+   "start": {
+    "affinity": 20,
+    "trust": 10,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#d98a2b",
+    "hat": false,
+    "hair": "#3a1a10",
+    "scale": 0.85
+   }
+  },
+  {
+   "id": "ume",
+   "name": "Grandma Ume",
+   "nameJp": "梅",
+   "role": "Fishmonger",
+   "faction": "river",
+   "home": {
+    "x": 75,
+    "z": 40
+   },
+   "work": {
+    "x": 70,
+    "z": 20
+   },
+   "schedule": [
+    {
+     "from": 4,
+     "to": 15,
+     "at": "work"
+    },
+    {
+     "from": 15,
+     "to": 20,
+     "at": "wander"
+    },
+    {
+     "from": 20,
+     "to": 4,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "tiny, ancient, terrifyingly direct, knows every fish and every legend",
+    "fears": [
+     "nothing, at her age"
+    ],
+    "wants": [
+     "the Golden Koi seen once more before she dies"
+    ],
+    "speech": "blunt, old proverbs, calls Ren 'skinny'",
+    "secret": "She knew the Koi Priestess when they were both girls. One of them went behind the waterfall and never aged."
+   },
+   "greeting": "Skinny. Eat fish. Then we talk.",
+   "lines": {
+    "fish": [
+     "Ayu in clear water, eel in rain. The Golden Koi only in the pool below the falls, and only for the patient."
+    ],
+    "koi": [
+     "When the koi climbs the falls it becomes a dragon. Everyone knows that. Nobody believes it."
+    ],
+    "trade": [
+     "I buy fish, I sell fish. Simple life. Good life."
+    ],
+    "bye": [
+     "Eat."
+    ]
+   },
+   "likes": [
+    "koi",
+    "fish",
+    "tea"
+   ],
+   "dislikes": [
+    "meat"
+   ],
+   "shop": {
+    "sells": [
+     {
+      "item": "gfish",
+      "price": 9
+     }
+    ],
+    "buys": [
+     "fish",
+     "koi"
+    ]
+   },
+   "recruitable": false,
+   "quests": [
+    "q_ume_koi"
+   ],
+   "start": {
+    "affinity": 5,
+    "trust": 5,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#3a5f7a",
+    "hat": true,
+    "hair": "#ddd",
+    "scale": 0.8
+   }
+  },
+  {
+   "id": "tetsu",
+   "name": "Tetsu",
+   "nameJp": "鉄",
+   "role": "Travelling Merchant",
+   "faction": "river",
+   "home": {
+    "x": 60,
+    "z": 90
+   },
+   "work": {
+    "x": 40,
+    "z": 130
+   },
+   "schedule": [
+    {
+     "from": 7,
+     "to": 19,
+     "at": "work"
+    },
+    {
+     "from": 19,
+     "to": 22,
+     "at": "wander"
+    },
+    {
+     "from": 22,
+     "to": 7,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "charming, greedy, surprisingly loyal to partners",
+    "fears": [
+     "bandits",
+     "debt"
+    ],
+    "wants": [
+     "a business partner with a cart",
+     "exclusive deals"
+    ],
+    "speech": "salesman patter, calls Ren 'partner' after trust 30",
+    "secret": "He smuggles monster parts to collectors in the lowlands."
+   },
+   "greeting": "A customer! Or, dare I hope, an investor?",
+   "lines": {
+    "trade": [
+     "Buy low in Takimura, sell high in Kanemura. That's the whole secret. Don't tell anyone."
+    ],
+    "invest": [
+     "Fund my stall, I give you a cut every dawn. Honest. Mostly."
+    ],
+    "rumor": [
+     "Silk from the spider sells for a fortune down the mountain. Just saying."
+    ],
+    "bye": [
+     "Pleasure, partner."
+    ]
+   },
+   "likes": [
+    "coin",
+    "silk",
+    "hide"
+   ],
+   "dislikes": [
+    "herb"
+   ],
+   "shop": {
+    "sells": [
+     {
+      "item": "flint",
+      "price": 4
+     },
+     {
+      "item": "fiber",
+      "price": 3
+     },
+     {
+      "item": "firearrow",
+      "price": 6
+     },
+     {
+      "item": "ofuda",
+      "price": 20
+     }
+    ],
+    "buys": [
+     "silk",
+     "hide",
+     "iron",
+     "mushroom",
+     "fish",
+     "koi"
+    ]
+   },
+   "recruitable": false,
+   "quests": [
+    "q_tetsu_partner"
+   ],
+   "start": {
+    "affinity": 5,
+    "trust": 0,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#7a5a2a",
+    "hat": true,
+    "hair": "#2a2a2a",
+    "scale": 1.0
+   }
+  },
+  {
+   "id": "kiku",
+   "name": "Kiku",
+   "nameJp": "菊",
+   "role": "Charcoal Burner",
+   "faction": "forest",
+   "home": {
+    "x": -60,
+    "z": 20
+   },
+   "work": {
+    "x": -70,
+    "z": 0
+   },
+   "schedule": [
+    {
+     "from": 6,
+     "to": 18,
+     "at": "work"
+    },
+    {
+     "from": 18,
+     "to": 21,
+     "at": "wander"
+    },
+    {
+     "from": 21,
+     "to": 6,
+     "at": "home"
+    }
+   ],
+   "persona": {
+    "personality": "soot-covered, superstitious, kind to kodama",
+    "fears": [
+     "people who hurt kodama",
+     "fire spreading"
+    ],
+    "wants": [
+     "kodama left alone",
+     "resin and sap"
+    ],
+    "speech": "whispers in the forest, normal voice outside it",
+    "secret": "She feeds the kodama, and they tell her where Jorōgumo sleeps."
+   },
+   "greeting": "Shh. The little ones are watching. Be gentle here.",
+   "lines": {
+    "kodama": [
+     "Kodama aren't enemies. Hit one and the forest remembers.",
+     "Leave sap at a stump at dusk. They'll bring you something back."
+    ],
+    "web": [
+     "She sleeps in the high web when the mist is thick. Fire wakes her angry."
+    ],
+    "bye": [
+     "Walk soft."
+    ]
+   },
+   "likes": [
+    "sap",
+    "mushroom",
+    "tea"
+   ],
+   "dislikes": [
+    "meat",
+    "wood"
+   ],
+   "recruitable": true,
+   "combat": {
+    "hp": 100,
+    "dmg": 7
+   },
+   "quests": [
+    "q_kiku_kodama"
+   ],
+   "start": {
+    "affinity": 0,
+    "trust": 0,
+    "fear": 0
+   },
+   "look": {
+    "robe": "#333",
+    "hat": true,
+    "hair": "#111",
+    "scale": 0.9
+   }
+  }
+ ]
+}

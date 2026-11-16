@@ -1,0 +1,180 @@
+{
+ "mystery": [
+  {
+   "id": "hermit",
+   "name": "The Masked Hermit",
+   "area": "sugi",
+   "x": -150,
+   "z": -20,
+   "look": "hermit",
+   "time": "night",
+   "persona": {
+    "personality": "ancient, gentle, unsettling, speaks in riddles but never lies",
+    "fears": [
+     "the bell going fully silent"
+    ],
+    "wants": [
+     "offerings",
+     "a Golden Koi"
+    ],
+    "speech": "riddles, second person, calls Ren 'little bronze'"
+   },
+   "greeting": "Little bronze. You ring so quietly. Sit.",
+   "lines": {
+    "bell": [
+     "A bell is a sleeping song. Yours has eight verses missing."
+    ],
+    "orochi": [
+     "Eight heads dream eight dreams. You have already killed one dream. Did it look like a spider to you?"
+    ],
+    "fever": [
+     "The boy's fever is a dream that wandered out of the forest. Spider silk will tie it back."
+    ],
+    "jin": [
+     "The hunter? He stayed. He is small now, and green, and he laughs. Tell his friend he is not sorry."
+    ],
+    "mask": [
+     "Bring me the golden fish, and I'll tell you whose face this was."
+    ]
+   },
+   "lore": [
+    "l_bell"
+   ],
+   "quest": "q_secret_mask"
+  },
+  {
+   "id": "smith",
+   "name": "The Blind Smith",
+   "area": "cave",
+   "x": -145,
+   "z": -112,
+   "look": "generic",
+   "time": "any",
+   "persona": {
+    "personality": "deaf to flattery, hears metal, patient as stone",
+    "fears": [
+     "silence"
+    ],
+    "wants": [
+     "kakera to listen to",
+     "tamahagane"
+    ],
+    "speech": "describes everything by sound"
+   },
+   "greeting": "You walk like an unfinished blade. Come closer. Let me hear you.",
+   "lines": {
+    "forge": [
+     "Every weapon has a true name. Bring me a shard, and I will strike it out."
+    ],
+    "bell": [
+     "I made the clapper. It still rings, somewhere under this mountain. Can't you hear it?"
+    ],
+    "cave": [
+     "The seal will open when you carry two voices. Not before."
+    ]
+   },
+   "lore": [
+    "l_blind_smith"
+   ]
+  },
+  {
+   "id": "priestess",
+   "name": "The Koi Priestess",
+   "area": "taki",
+   "x": 70,
+   "z": -112,
+   "look": "fox",
+   "time": "any",
+   "persona": {
+    "personality": "serene, playful, lonely, sixty years unaged",
+    "fears": [
+     "Ume dying before she visits"
+    ],
+    "wants": [
+     "news of Ume",
+     "the Golden Koi to stay free"
+    ],
+    "speech": "soft, flowing, laughs at odd moments"
+   },
+   "greeting": "Oh! A visitor who swam. How rude. How lovely.",
+   "lines": {
+    "ume": [
+     "Is she still alive? Does she still say 'eat'? Tell her I kept my promise."
+    ],
+    "koi": [
+     "Catch the golden one, show it to who you must, then let it go. Promise me."
+    ],
+    "dragon": [
+     "One koi climbed already. It is up there, angry, holding something that hums."
+    ]
+   },
+   "lore": [
+    "l_priestess"
+   ]
+  },
+  {
+   "id": "pilgrim",
+   "name": "The Pilgrim of Ash",
+   "area": "kanemura",
+   "x": -40,
+   "z": 110,
+   "look": "ringer",
+   "time": "night",
+   "persona": {
+    "personality": "polite, kind-sounding, completely cold",
+    "fears": [
+     "the bell recast"
+    ],
+    "wants": [
+     "the shards gathered in one place",
+     "Kaito's ambition"
+    ],
+    "speech": "soft, flattering, always asks a question back"
+   },
+   "greeting": "The bell-keeper, walking alone at night. Brave. Or tired?",
+   "lines": {
+    "bell": [
+     "Why recast a cage? Wouldn't you rather hear what's inside?"
+    ],
+    "kaito": [
+     "The boy only wants to matter. Is that so wrong?"
+    ],
+    "orochi": [
+     "You say 'monster'. I say 'mountain'. It was here first."
+    ]
+   },
+   "lore": [
+    "l_pilgrim"
+   ]
+  },
+  {
+   "id": "ferryman",
+   "name": "The Shadowless Ferryman",
+   "area": "kawa",
+   "x": 82,
+   "z": 10,
+   "look": "generic",
+   "time": "night",
+   "persona": {
+    "personality": "quiet, sad, trades only in true stories",
+    "fears": [
+     "forgetting"
+    ],
+    "wants": [
+     "a true story from Ren"
+    ],
+    "speech": "few words, long pauses"
+   },
+   "greeting": "No coin. Tell me something true, and I'll take you where the river forgets.",
+   "lines": {
+    "story": [
+     "That was true. I felt it. Get in."
+    ],
+    "river": [
+     "Every river remembers its source. Yours is the bell."
+    ]
+   },
+   "lore": []
+  }
+ ]
+}
