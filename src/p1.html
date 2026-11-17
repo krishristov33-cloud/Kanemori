@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KANEMORI — Keeper of the Shattered Bell (v0.5)</title>
+<style>
+:root{--ink:#0b0d1c;--cream:#f4ead2;--red:#e3402c;--orange:#ffb347;--gold:#ffcf5a;--cyan:#6fe6ff;--panel:rgba(12,14,32,.72)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0b0d1c;color:var(--cream);font-family:system-ui,"Segoe UI",sans-serif;user-select:none}
+canvas#gl{display:block;position:fixed;inset:0}
+.jp{font-family:"Noto Sans CJK JP","Yu Gothic","Hiragino Sans",sans-serif}
+#hud{position:fixed;inset:0;pointer-events:none;z-index:5}
+body.menu #hud{display:none}
+.bars{position:absolute;left:18px;top:16px;width:290px}
+.bar{position:relative;height:13px;margin:5px 0;background:rgba(0,0,0,.45);clip-path:polygon(2% 0,100% 8%,98% 100%,0 88%)}
+.bar i{position:absolute;inset:0;width:50%;transition:width .12s}
+.bar.hp i{background:linear-gradient(90deg,#9e1b22,#ff4b4b)}.bar.st i{background:linear-gradient(90deg,#3d8b3a,#a6f07a)}.bar.sp i{background:linear-gradient(90deg,#2b4fb8,#7fc8ff)}
+.bar b{position:absolute;left:8px;top:-1px;font:800 10px/15px system-ui;letter-spacing:.12em;text-shadow:0 1px 2px #000}
+.bar.xp{height:5px;margin-top:8px}.bar.xp i{background:linear-gradient(90deg,#b8862b,#ffd36e)}
+#lvl{font:900 13px system-ui;letter-spacing:.1em;margin-top:2px;text-shadow:0 1px 3px #000}#lvl span{color:var(--gold)}
+#status{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.st{font:800 10px system-ui;padding:2px 6px;background:var(--panel);border-left:3px solid var(--cyan);letter-spacing:.06em}
+.st.bad{border-color:#ff5a6a}.st.good{border-color:#9df59d}.st.warm{border-color:var(--orange)}
+#mapwrap{position:absolute;right:18px;top:40px;width:190px;height:190px}
+#mini{position:absolute;left:15px;top:15px;width:160px;height:160px;border-radius:50%;border:3px solid rgba(244,234,210,.8);box-shadow:0 0 0 2px #000,0 4px 14px #0008;background:#1b2340}
+#ring{position:absolute;inset:0}
+#compass{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:420px;height:26px;overflow:hidden;background:linear-gradient(90deg,transparent,var(--panel) 15%,var(--panel) 85%,transparent);font:800 12px system-ui}
+#compass .tick{position:absolute;top:5px;transform:translateX(-50%);opacity:.85}#compass .tick.n{color:var(--red)}#compass .tick.q{color:var(--gold)}
+#compass:after{content:"";position:absolute;left:50%;top:0;width:2px;height:6px;background:var(--gold)}
+#bellTrack{position:absolute;right:30px;top:238px;display:flex;align-items:center;gap:8px;font:800 11px system-ui;letter-spacing:.08em}
+#quest{position:absolute;right:18px;top:290px;width:270px;background:linear-gradient(90deg,transparent,var(--panel) 12%);padding:10px 12px 10px 30px;text-align:right}
+#quest h4{margin:0 0 3px;font:900 12px system-ui;letter-spacing:.14em;color:var(--gold)}#quest .t{font:700 14px system-ui}#quest .s{font:600 11.5px system-ui;opacity:.8;margin-top:3px}
+#quest .side{font:600 11px system-ui;opacity:.7;margin-top:6px;border-top:1px solid #fff2;padding-top:4px}
+#hotbar{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:6px}
+.slot{width:54px;height:54px;background:var(--panel);border:2px solid rgba(244,234,210,.35);position:relative;font:800 10px system-ui;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;padding:2px}
+.slot .k{position:absolute;left:3px;top:1px;opacity:.6}.slot .n{position:absolute;right:3px;bottom:1px;color:var(--gold)}.slot .ic{font-size:20px}
+.slot.eq{border-color:var(--gold);box-shadow:0 0 10px #ffcf5a88}
+#prompt{position:absolute;left:50%;top:62%;transform:translateX(-50%);font:800 14px system-ui;background:var(--panel);padding:5px 12px;display:none;border-left:3px solid var(--gold)}
+#prompt kbd,kbd{display:inline-block;background:var(--cream);color:var(--ink);padding:0 5px;font:900 11px/16px system-ui;margin-right:5px;border-radius:2px}
+#bossbar{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:min(620px,70vw);display:none;text-align:center}
+#bossbar .nm{font:900 15px system-ui;letter-spacing:.18em;text-shadow:0 2px 4px #000}#bossbar .bb{height:12px;background:#0009;border:1px solid #fff5;margin-top:4px;position:relative}#bossbar .bb i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#7a1030,#e3402c);width:100%;transition:width .15s}
+#bossbar .bb:after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--gold)}
+#toasts{position:absolute;right:18px;bottom:110px;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.toast{font:800 12.5px system-ui;background:var(--panel);padding:3px 10px;border-right:3px solid var(--gold);animation:tin .25s ease-out}
+@keyframes tin{from{transform:translateX(30px);opacity:0}}
+#dmg{position:absolute;inset:0;overflow:hidden}.dn{position:absolute;font:900 18px system-ui;color:#fff;text-shadow:0 2px 0 #000,0 0 6px #000;transform:translate(-50%,-50%);white-space:nowrap}
+.dn.crit{color:var(--gold);font-size:24px}.dn.pl{color:#ff6b6b}.dn.heal{color:#9df59d}.dn.fire{color:#ffa040}
+#lock{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid var(--gold);transform:rotate(45deg);display:none;box-shadow:0 0 8px var(--gold)}
+#title{position:absolute;left:0;right:0;top:24%;text-align:center;opacity:0;transition:opacity .8s}
+#title .a{font:900 54px "Noto Sans CJK JP",sans-serif;color:var(--cream);text-shadow:0 4px 18px #000;letter-spacing:.12em}
+#title .b{font:800 16px system-ui;letter-spacing:.5em;color:var(--gold);text-shadow:0 2px 6px #000}#title .c{font:600 13px system-ui;opacity:.85;margin-top:6px;text-shadow:0 2px 6px #000}
+#cross{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;background:#fff8;border-radius:50%}
+#time{position:absolute;left:18px;bottom:18px;font:800 12px system-ui;background:var(--panel);padding:5px 10px;border-left:3px solid var(--orange);letter-spacing:.06em}
+#warnbig{position:absolute;left:50%;top:16%;transform:translateX(-50%);font:900 18px system-ui;color:var(--orange);text-shadow:0 2px 6px #000;letter-spacing:.08em;display:none;text-align:center}
+#ripple{position:fixed;inset:0;pointer-events:none;z-index:6;opacity:0;background:radial-gradient(circle at 50% 55%,transparent 0,transparent 30%,rgba(255,207,90,.35) 33%,transparent 38%)}
+#hurt{position:fixed;inset:0;pointer-events:none;z-index:6;opacity:0;box-shadow:inset 0 0 140px 30px rgba(200,0,30,.7);transition:opacity .25s}
+#cold{position:fixed;inset:0;pointer-events:none;z-index:4;opacity:0;box-shadow:inset 0 0 160px 50px rgba(160,210,255,.55);transition:opacity 1s}
+#flash{position:fixed;inset:0;pointer-events:none;z-index:6;background:#e8f0ff;opacity:0}
+#vign{position:fixed;inset:0;pointer-events:none;z-index:3;background:radial-gradient(ellipse at center,transparent 55%,rgba(5,6,20,.55) 100%)}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(6,8,22,.62);backdrop-filter:blur(2px)}
+.hidden{display:none!important}
+.card{background:linear-gradient(160deg,#1a1d3c,#0d0f24);border:2px solid rgba(244,234,210,.5);box-shadow:8px 8px 0 #000;padding:22px 26px;max-width:min(980px,94vw);max-height:92vh;overflow:auto;text-align:center}
+.card h1{font:900 54px "Noto Sans CJK JP",sans-serif;margin:0;letter-spacing:.1em}.card h1 span{color:var(--red)}
+.card h2{font:900 24px "Noto Sans CJK JP",system-ui;margin:0 0 10px;letter-spacing:.08em}
+.card p{line-height:1.5;max-width:640px;margin:10px auto}
+.lbl{font:800 11px system-ui;letter-spacing:.16em;opacity:.75;text-transform:uppercase}
+.btn{pointer-events:auto;background:var(--red);color:#fff;border:0;padding:10px 18px;margin:6px;font:900 14px system-ui;letter-spacing:.08em;cursor:pointer;box-shadow:4px 4px 0 #000}
+.btn.cy{background:#27305e}.btn:hover{filter:brightness(1.2)}.btn:disabled{opacity:.4;cursor:default}
+.ctl{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 16px;text-align:left;font-size:12.5px;margin-top:12px}
+#inv .cols{display:grid;grid-template-columns:1fr 1.25fr;gap:18px;text-align:left}
+.items{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.it{background:#0008;border:1px solid #fff3;padding:6px 4px;text-align:center;font:700 11px system-ui}.it .ic{font-size:20px;display:block}.it .n{color:var(--gold);font-weight:900}
+.rec{display:flex;align-items:center;justify-content:space-between;background:#0006;border:1px solid #fff2;padding:6px 8px;margin:4px 0;font-size:12.5px}
+.rec .nm{font-weight:900}.rec .ds{font-size:11px;opacity:.75}.rec .cost{font-size:11px;color:var(--orange)}.rec .cost .ok{color:#9df59d}.rec .cost .no{color:#ff7a90}
+.rec button{pointer-events:auto;background:var(--red);color:#fff;border:0;padding:6px 10px;font:900 11px system-ui;cursor:pointer}.rec button:disabled{background:#444;cursor:default}
+.tabs button{pointer-events:auto;background:#27305e;color:#fff;border:0;padding:5px 10px;margin:0 3px 6px 0;font:800 11px system-ui;cursor:pointer}.tabs button.on{background:var(--gold);color:#000}
+#skills .tree{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
+.branch h3{margin:0 0 6px;font:900 14px system-ui;letter-spacing:.1em}.branch h3 small{display:block;font:700 11px "Noto Sans CJK JP",sans-serif;opacity:.7}
+.node{pointer-events:auto;background:#0007;border:2px solid #fff3;padding:8px;margin:0 0 8px;cursor:pointer;text-align:left;font-size:12px;position:relative}
+.node b{display:block;font-size:13px}.node.own{border-color:var(--gold);background:rgba(255,207,90,.14);box-shadow:0 0 12px #ffcf5a55}.node.lock{opacity:.45;cursor:default}.node.can{border-color:#9df59d}
+#mapcv{width:min(900px,90vw);height:min(620px,74vh);background:#e9dcbc;border:3px solid #2a2016;box-shadow:6px 6px 0 #000}
+#fish{position:fixed;left:50%;top:58%;transform:translateX(-50%);z-index:8;display:none;text-align:center;font:800 13px system-ui;background:var(--panel);padding:8px 14px}
+#fishbar{width:280px;height:16px;background:#0009;position:relative;margin-top:6px;border:1px solid #fff5}#fishzone{position:absolute;top:0;bottom:0;background:#4fd36a88}#fishmk{position:absolute;top:-3px;bottom:-3px;width:4px;background:#fff}
+#err{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:99999;max-width:min(860px,94vw);max-height:80vh;overflow:auto;background:#1a0b14;color:#ffe3ea;border:3px solid #ff3b5c;box-shadow:6px 6px 0 #000;padding:14px 18px;font:13px/1.45 ui-monospace,Consolas,monospace;white-space:pre-wrap;display:none}
+#err b{color:#ff7a90;font:700 15px system-ui,sans-serif;display:block;margin-bottom:6px}#err button{margin-top:10px;margin-right:8px;background:#ff3b5c;color:#fff;border:0;padding:6px 12px;font-weight:700;cursor:pointer}
+#warnbox{position:fixed;left:16px;bottom:56px;z-index:99998;max-width:420px;background:rgba(20,16,40,.92);color:#ffd9a0;border:2px solid #ffb347;padding:8px 12px;font:12px/1.4 system-ui,sans-serif;display:none}
+#loading{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#0b0d1c;font:800 14px system-ui;letter-spacing:.3em}
+body:not(.showjp) .jpx{display:none!important}
+.talkc{width:min(760px,95vw);text-align:left}.tkhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.tkhead h2{margin:0}
+#tkRel{min-width:230px}.relb{display:flex;align-items:center;gap:6px;font:700 11px system-ui;margin:2px 0}.relb span{width:62px}.relb i{flex:1;height:7px;background:rgba(0,0,0,.25);border-radius:4px;overflow:hidden}.relb b{display:block;height:100%}.relb em{width:28px;text-align:right;font-style:normal;opacity:.8}
+#tkLog{height:min(34vh,300px);overflow:auto;margin:10px 0;padding:8px 10px;background:rgba(0,0,0,.18);border-radius:8px}.tkl{margin:5px 0;line-height:1.4}.tkl b{color:var(--gold);margin-right:6px}.tkl.me b{color:#8fd0ff}
+#tkSub{margin-bottom:6px}#tkSub .btn,.btn.sm{padding:5px 9px;font-size:11px;margin:2px}.tkin{display:flex;gap:8px}.tkin textarea{flex:1;resize:none;font:15px/1.35 Georgia,serif;padding:8px;border-radius:6px;border:1px solid rgba(200,160,80,.6);background:rgba(255,250,235,.92);color:#2a2016}
+.tkbtns{margin-top:6px;text-align:center}.jent{margin:8px 0;padding:8px 12px;background:rgba(0,0,0,.14);border-left:3px solid var(--gold);border-radius:4px}.jent h4{margin:0 0 4px}.jent h4 small{margin-left:8px;opacity:.6;font-weight:600;text-transform:uppercase;font-size:10px}.jent.secret{border-left-color:#c58cff}.jent p{margin:4px 0;line-height:1.45}.jn{font-size:13px;opacity:.85;margin:2px 0}
+.setrow{margin:8px 0}.setrow input[type=text],.setrow input:not([type]),.setrow input[type=password]{padding:6px;border-radius:5px;border:1px solid #9a8; background:rgba(255,250,235,.9)}
+</style>
+<script>
+/* Boot guard (from Mountain Drop v5): on-screen errors, CDN fallback (?cdn=1 = jsDelivr), boot watchdog. */
+(function(){
+  var CDNS=[['unpkg','https://unpkg.com/three@0.164.1/'],['jsdelivr','https://cdn.jsdelivr.net/npm/three@0.164.1/']];
+  var q=location.search.match(/[?&]cdn=(\d)/),ci=q?Math.min(+q[1],CDNS.length-1):0,cdn=CDNS[ci];
+  window.KM_CDN={i:ci,name:cdn[0],base:cdn[1]};
+  var im=document.createElement('script');im.type='importmap';
+  im.textContent=JSON.stringify({imports:{'three':cdn[1]+'build/three.module.js','three/addons/':cdn[1]+'examples/jsm/'}});
+  document.currentScript.after(im);
+  var errs=[];
+  function box(){return document.getElementById('err')||(function(){var d=document.createElement('div');d.id='err';(document.body||document.documentElement).appendChild(d);return d;})();}
+  window.kmFatal=function(title,detail){errs.push(title+(detail?'\n'+detail:''));var d=box();d.innerHTML='';
+    var b=document.createElement('b');b.textContent='Kanemori hit an error. Please screenshot this box.';d.appendChild(b);
+    var t=document.createElement('div');t.textContent=errs.slice(-4).join('\n\n')+'\n\nBrowser: '+navigator.userAgent+'\nCDN: '+cdn[0];d.appendChild(t);
+    var r=document.createElement('button');r.textContent='Reload';r.onclick=function(){location.reload()};d.appendChild(r);
+    var c=document.createElement('button');c.textContent='Dismiss';c.onclick=function(){d.style.display='none'};d.appendChild(c);
+    d.style.display='block';try{console.error('[KM]',title,detail||'')}catch(e){}};
+  window.kmWarn=function(msg){var w=document.getElementById('warnbox');if(!w){w=document.createElement('div');w.id='warnbox';(document.body||document.documentElement).appendChild(w);}
+    w.textContent=msg;w.style.display='block';clearTimeout(w._t);w._t=setTimeout(function(){w.style.display='none'},8000);};
+  window.addEventListener('error',function(e){
+    if(e&&e.target&&e.target!==window){var t=e.target;if(t.tagName==='SCRIPT'&&t.type==='module'&&!window.__kmBooted){bootFail();return;}window.kmWarn('Could not load '+(t.src||t.href||t.tagName));return;}
+    window.kmFatal('Script error: '+(e.message||e),(e.filename||'')+':'+(e.lineno||'')+':'+(e.colno||'')+(e.error&&e.error.stack?'\n'+e.error.stack:''));},true);
+  window.addEventListener('unhandledrejection',function(e){var r=e.reason;if(r&&(r.name==='NotAllowedError'||r.name==='AbortError'))return;
+    window.kmFatal('Unhandled promise rejection: '+(r&&r.message||r),r&&r.stack||'');});
+  var failed=false;
+  function bootFail(){if(window.__kmBooted||failed)return;failed=true;
+    if(ci+1<CDNS.length&&!/[?&]cdn=/.test(location.search)){var sp=new URLSearchParams(location.search);sp.set('cdn',ci+1);location.replace(location.pathname+'?'+sp.toString()+location.hash);return;}
+    window.kmFatal('The game script did not start.','The game needs internet access to load three.js from unpkg or jsDelivr. If a blocker or proxy blocks those sites, allow them and reload.');}
+  window.addEventListener('load',function(){setTimeout(bootFail,20000);});
+})();
+</script>
+</head>
+<body class="menu">
+<div id="loading">鐘守 · LOADING</div>
+<div id="vign"></div><div id="cold"></div><div id="hurt"></div><div id="ripple"></div><div id="flash"></div>
+<div id="hud">
+  <div class="bars">
+    <div class="bar hp"><i id="bHP"></i><b>体力 HEALTH</b></div>
+    <div class="bar st"><i id="bST"></i><b>気力 STAMINA</b></div>
+    <div class="bar sp"><i id="bSP"></i><b>霊力 SPIRIT</b></div>
+    <div class="bar xp"><i id="bXP"></i></div>
+    <div id="lvl">LV <span id="lvN">1</span> · <span id="spN"></span></div>
+    <div id="status"></div>
+  </div>
+  <div id="compass"></div>
+  <div id="mapwrap"><canvas id="mini" width="160" height="160"></canvas><svg id="ring" viewBox="0 0 190 190"></svg></div>
+  <div id="bellTrack"><svg id="bellSvg" width="34" height="38" viewBox="0 0 34 38"></svg><span>欠片 KAKERA <b id="shN">0</b>/8</span></div>
+  <div id="quest"><h4>目的 GOAL</h4><div class="t" id="qT"></div><div class="s" id="qS"></div><div class="side" id="qSide"></div></div>
+  <div id="hotbar"></div>
+  <div id="prompt"></div>
+  <div id="bossbar"><div class="nm" id="bossNm"></div><div class="bb"><i id="bossHP"></i></div></div>
+  <div id="toasts"></div><div id="dmg"></div><div id="lock"></div><div id="cross"></div>
+  <div id="title"><div class="a" id="tA"></div><div class="b" id="tB"></div><div class="c" id="tC"></div></div>
+  <div id="time"></div><div id="warnbig"></div>
+</div>
+<div id="fish"><div id="fishTxt">Waiting for a bite…</div><div id="fishbar"><div id="fishzone"></div><div id="fishmk"></div></div></div>
+<div id="start" class="overlay hidden"><div class="card">
+  <h1>鐘守 <span>KANEMORI</span></h1>
+  <div class="lbl">Keeper of the Shattered Bell · prototype v0.3 · Apex Team</div>
+  <p><i>Typhoon night on Nemuriyama, the Sleeping Mountain.</i> For a thousand years the great bell of Kanemura kept something asleep inside the mountain. Tonight it cracked, and its eight shards, the <b>kakera</b>, flew up the slopes. The old bell-keeper died putting his rope belt in your hands.</p>
+  <p>You are <b>Ren</b>, the new Kanemori. Survive the cedar forest of <b>Sugi no Mori</b>, arm yourself, and take the first kakera back from <b>Jorōgumo</b>, the spider woman in the canopy.</p>
+  <button class="btn" id="bNew">NEW JOURNEY ▶</button><button class="btn cy" id="bCont">CONTINUE</button><button class="btn cy" id="bSet">SETTINGS</button>
+  <div class="ctl" id="ctlStart"></div>
+  <div class="lbl" style="margin-top:10px">Click the game to look around with the mouse · F1 controls · Esc pause</div>
+</div></div>
+<div id="clickplay" style="position:fixed;inset:0;z-index:15;display:none;align-items:center;justify-content:center;background:rgba(6,8,22,.35);cursor:pointer"><div class="card" style="padding:16px 26px"><h2 style="margin:0">🖱 Click to look around</h2><div class="lbl">Mouse moves the camera · Esc pauses and frees the cursor · Esc again resumes</div></div></div>
+<div id="pause" class="overlay hidden"><div class="card">
+  <h2>一時停止 PAUSED</h2>
+  <button class="btn" id="pRes">RESUME ▶</button><button class="btn cy" id="pSave">SAVE</button><button class="btn cy" id="pLoad">LOAD</button>
+  <button class="btn cy" id="pMute">MUTE</button><button class="btn cy" id="pSetB">SETTINGS</button><button class="btn cy" id="pFx">POST FX</button><button class="btn cy" id="pNew">NEW GAME</button>
+  <div style="margin:10px auto;font:700 13px system-ui;display:flex;gap:16px;justify-content:center;align-items:center;pointer-events:auto"><label>Mouse sensitivity <input id="sens" type="range" min="0.2" max="3" step="0.05" style="vertical-align:middle"> <b id="sensV"></b></label><label><input id="invy" type="checkbox"> Invert Y</label></div>
+  <div class="ctl" id="ctlPause"></div>
+</div></div>
+<div id="help" class="overlay hidden"><div class="card"><h2>操作 CONTROLS</h2><div class="ctl" id="ctlHelp"></div><button class="btn" data-close>CLOSE (F1)</button></div></div>
+<div id="inv" class="overlay hidden"><div class="card" style="width:min(960px,94vw)">
+  <h2>持ち物 · 工作 INVENTORY &amp; CRAFTING</h2>
+  <div class="cols"><div><div class="lbl">Inventory</div><div class="items" id="items"></div><div class="lbl" style="margin-top:12px">Equipped</div><div id="eqInfo" style="font-size:13px;margin-top:4px"></div></div>
+  <div><div class="tabs" id="ctabs"></div><div id="recipes"></div></div></div>
+  <button class="btn" data-close>CLOSE (I / C)</button></div></div>
+<div id="skills" class="overlay hidden"><div class="card" style="width:min(1000px,96vw)">
+  <h2>技 SKILL TREE</h2><div class="lbl">Skill points: <b id="skP" style="color:var(--gold)">0</b> · one point per level · nodes unlock top to bottom</div>
+  <div class="tree" id="tree"></div><button class="btn" data-close>CLOSE (K)</button></div></div>
+<div id="map" class="overlay hidden"><div class="card"><h2>絵巻 NEMURIYAMA — SCROLL MAP</h2><canvas id="mapcv" width="900" height="620"></canvas>
+  <div class="lbl">Grey ink = undiscovered · hatched = sealed regions (later versions) · gold bell = kakera</div><button class="btn" data-close>CLOSE (M)</button></div></div>
+<div id="menu2" class="overlay hidden"><div class="card" style="min-width:420px"><h2 id="m2T"></h2><div id="m2B" style="text-align:left"></div><button class="btn" data-close>CLOSE (Esc)</button></div></div>
+<div id="settings" class="overlay hidden"><div class="card" style="width:min(640px,94vw);text-align:left">
+  <h2 style="text-align:center">SETTINGS</h2>
+  <div class="setrow"><label><input type="checkbox" id="sJP"> Show Japanese names (kanji &amp; romaji flavour)</label></div>
+  <div class="setrow"><label>Music volume <input type="range" id="sMus" min="0" max="1" step="0.05"></label> <label>Effects volume <input type="range" id="sSfx" min="0" max="1" step="0.05"></label></div>
+  <div class="setrow"><label>Mouse sensitivity <input type="range" id="sSens" min="0.2" max="3" step="0.05"></label> <label><input type="checkbox" id="sInv"> Invert Y</label></div>
+  <h3 style="margin:12px 0 4px">NPC conversation AI (optional)</h3>
+  <div class="lbl" style="text-transform:none;letter-spacing:0">Villagers answer with the built-in persona engine. To let them answer with your own language model, enter an OpenAI-compatible endpoint, key and model. Stored only in this browser (localStorage), never sent anywhere except that endpoint.</div>
+  <div class="setrow"><button class="btn cy sm" id="sOllama">OLLAMA (LOCAL, FREE)</button><button class="btn cy sm" id="sCustom">CUSTOM OPENAI-COMPATIBLE</button><button class="btn cy sm" id="sOff">OFF (BUILT-IN ONLY)</button></div>
+  <div class="lbl" style="text-transform:none;letter-spacing:0">Ollama: install it, run <code>ollama pull llama3.2</code>, and allow this page's origin: set <code>OLLAMA_ORIGINS=https://krishristov33-cloud.github.io</code> (or <code>*</code> when playing locally), then restart Ollama. If the model doesn't answer within ~8 s, villagers fall back to the built-in persona engine.</div>
+  <div class="setrow"><input id="sLlmUrl" placeholder="https://api.openai.com/v1/chat/completions" style="width:100%"></div>
+  <div class="setrow"><input id="sLlmKey" type="password" placeholder="API key (optional)" style="width:58%"> <input id="sLlmModel" placeholder="model, e.g. gpt-4o-mini" style="width:38%"></div>
+  <div style="text-align:center"><button class="btn cy" id="sClearKey">CLEAR KEY</button><button class="btn" data-close>DONE</button></div>
+</div></div>
+<div id="talk" class="overlay hidden"><div class="card talkc">
+  <div class="tkhead"><div><h2 id="tkName"></h2><div class="lbl" id="tkRole"></div></div><div id="tkRel"></div></div>
+  <div id="tkLog"></div><div id="tkSub"></div>
+  <div class="tkin"><textarea id="tkIn" rows="2" placeholder="Say anything… (Enter to send, Shift+Enter for a new line). Try: “Do you need help?”, “What do you fear?”, “Join me on a hunt”"></textarea><button class="btn" id="tkSend">SAY ⏎</button></div>
+  <div class="tkbtns"><button class="btn cy sm" id="tkGift">GIFT</button><button class="btn cy sm" id="tkTrade">TRADE</button><button class="btn cy sm" id="tkJoin">RECRUIT</button><button class="btn cy sm" id="tkQ">ASK FOR WORK</button><button class="btn sm" id="tkBye">GOODBYE (Esc)</button></div>
+</div></div>
+<div id="journal" class="overlay hidden"><div class="card" style="width:min(820px,94vw);text-align:left"><h2 style="text-align:center">JOURNAL</h2><div class="tabs" id="jTabs"></div><div id="jBody" style="max-height:58vh;overflow:auto"></div><div style="text-align:center"><button class="btn" data-close>CLOSE (J)</button></div></div></div>
+<div id="dead" class="overlay hidden"><div class="card"><h2>倒れた YOU FELL</h2><p id="deadWhy"></p><button class="btn" id="bRespawn">RISE AGAIN ▶</button></div></div>
+<div id="win" class="overlay hidden"><div class="card"><h1 style="font-size:40px">欠片 <span>1/8</span></h1><h2>THE FIRST KAKERA</h2><p id="winTxt"></p><button class="btn" id="bWin">KEEP EXPLORING ▶</button></div></div>
