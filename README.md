@@ -1,15 +1,16 @@
 # KANEMORI 鐘守 — Keeper of the Shattered Bell
 
-KANEMORI is a third-person open-world action-survival game on Nemuriyama, the Sleeping Mountain. Ren recovers the kakera, the shards of a shattered bell. v0.4 is the Forest and Waterfall slice with the Jorōgumo boss and the living village.
+KANEMORI is a third-person open-world action-survival game on Nemuriyama, the Sleeping Mountain. Ren recovers the kakera, the shards of a shattered bell. v0.5 is the Forest and Waterfall slice with the Jorōgumo boss and the living village.
 
-Play v0.4 in the browser: [https://krishristov33-cloud.github.io/Kanemori/](https://krishristov33-cloud.github.io/Kanemori/)
+Play v0.5 in the browser: [https://krishristov33-cloud.github.io/Kanemori/](https://krishristov33-cloud.github.io/Kanemori/)
 
-## What's new in v0.4
+## What's new in v0.5
 
-- Combat combos: light chains, heavy branches, sprint attacks, and plunging strikes
-- Charge attacks with a gold ribbon trail and afterimages
-- Smoother movement: ground stick, slope weight, and foot placement on the terrain
-- Terrain and lighting pass: ridged highlands, splat materials, time-of-day light, height fog, and god rays
+- Ghibli visual pass: wind-bent grass, painted trees, golden hour, and Low / Medium / High quality
+- Flowing water, with bank foam, waterfall spray, and swim ripples
+- Kanemura rebuilt: minka roofs, lanterns, chimney smoke, and villager routines
+- Cloth on Ren: scarf, obi, hair, and hat that follow the wind
+- Jorōgumo redesigned, with a new move set
 
 ## Controls
 
@@ -41,8 +42,8 @@ Play v0.4 in the browser: [https://krishristov33-cloud.github.io/Kanemori/](http
 
 ## Screenshots
 
-![Ren on the cedar path, jingasa and red sode](screenshots/shot_v02_explore.png)
+![Ren in the wind-bent grass above the valley](shot_v05_01_grass_vista.png)
 
-![Swimming in Taki Pool, where the river falls](screenshots/shot_v02_swim_falls.png)
+![The falls into Taki Pool](shot_v05_04_river_falls.png)
 
-![Ren's new look at the Kanemura torii](screenshots/shot_v02_ren.png)
+![Kanemura in the afternoon, torii and lanterns](shot_v05_07_village_day.png)
